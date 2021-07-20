@@ -4,7 +4,7 @@
       <b-row align-h="center">
         <b-col cols="6">
           <b-card
-            title="Scatterplot with Wrapper">
+            title="Event Sequence PrefixSuffixTree">
             <prefix-suffix-tree :eventSequenceData="getEventSequenceData" />
           </b-card>
         </b-col>
