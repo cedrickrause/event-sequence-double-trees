@@ -1,7 +1,8 @@
 import { RootState } from './RootState';
 
 const state: RootState = {
-  data: null,
+  eventData: null,
+  eventSequenceData: null,
   selectedElementId: null,
 };
 

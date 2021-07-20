@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <ProjectTitle msg="Dashboard Boilerplate" />
+    <ProjectTitle msg="Soccer Event Graph" />
     <navigation-bar />
     <router-view/>
   </div>

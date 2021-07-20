@@ -1,6 +1,8 @@
-import { MultivariateDataset } from '@/models/MultivariateDataset';
+import { EventDataset } from '@/models/EventDataset';
+import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 
 export interface RootState {
-  data: MultivariateDataset | null,
+  eventData: EventDataset | undefined | null,
+  eventSequenceData: EventSequenceDataset | undefined | null,
   selectedElementId: string | null,
 }
