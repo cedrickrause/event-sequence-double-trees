@@ -1,18 +1,18 @@
 import { BaseDataset } from './BaseDataset';
 import { EventDatasetEntry } from './EventDataset';
 
-export type EventSequenceDatasetEntry = {
+export type EventSequence = {
   events: Array<EventDatasetEntry>
 };
 
 export interface EventSequenceDataset extends BaseDataset {
-  data: Array<EventSequenceDatasetEntry>,
+  data: Array<EventSequence>,
 }
 
 export class EventSequenceDatasetImpl implements EventSequenceDataset {
-  data: Array<EventSequenceDatasetEntry>;
+  data: Array<EventSequence>;
 
-  constructor(data: Array<EventSequenceDatasetEntry>) {
+  constructor(data: Array<EventSequence>) {
     this.data = data;
   }
 }
