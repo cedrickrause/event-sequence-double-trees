@@ -21,7 +21,7 @@ import * as d3 from 'd3';
 import Vue from 'vue';
 import { BaseType, ScaleLinear } from 'd3';
 import { MultivariateDataset } from '@/models/MultivariateDataset';
-import { SvgSelection } from '@/models/SvgTypes';
+import { SvgSelection } from '@/helpers/d3helpers';
 import { mapActions, mapGetters } from 'vuex';
 import { Getters } from '@/store/getters';
 import { Actions } from '@/store/actions';
