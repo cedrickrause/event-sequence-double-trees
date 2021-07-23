@@ -1,3 +1,9 @@
 // $primary: #a1f;
 
+$highlight: #FEEC8F;
+
+$theme-colors: (
+  "highlight": $highlight,
+);
+
 @import '~bootstrap/scss/bootstrap.scss';
