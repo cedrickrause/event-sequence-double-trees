@@ -28,7 +28,7 @@
           />
           <text
             text-anchor="middle"
-            dy="0.31em"
+            dy="0.35em"
             >
             {{ node.data.type.slice(0,1) }}
           </text>
@@ -55,7 +55,7 @@ export default Vue.extend({
     return {
       render: false,
       width: 800,
-      height: 600,
+      height: 400,
       margin: {
         top: 40, right: 40, bottom: 40, left: 40,
       },
@@ -89,7 +89,7 @@ export default Vue.extend({
     createTreeFromTrieData() {
       let trieData = {} as HierarchyDatum;
       if (this.eventSequenceData) {
-        trieData = this.buildTrie({ data: this.eventSequenceData.data.slice(0, 10) }, 'root');
+        trieData = this.buildTrie({ data: this.eventSequenceData.data.slice(0, 15) }, 'root');
       }
       const root = d3.hierarchy<HierarchyDatum>(trieData);
 
@@ -193,5 +193,14 @@ circle:hover {
 
 text:hover {
   cursor: pointer;
+}
+
+text {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
 }
 </style>
