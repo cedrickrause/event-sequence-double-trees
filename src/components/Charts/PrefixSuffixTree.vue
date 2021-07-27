@@ -6,22 +6,32 @@
         font-size="14"
         font-family="sans-serif"
         >
-        <path v-for="(link, index) in createTreeFromTrieData.links()" :key="'link' + index"
+        <path v-for="(link, index) in links" :key="'link' + index"
+          :class="{ highlight: link.target.data.highlight }"
           :stroke="lineColor"
           fill="none"
           :stroke-opacity="1"
           :stroke-width="lineWidth"
           :d="linkPath(link)"
           />
-        <g v-for="(node, index) in createTreeFromTrieData.descendants()" :key="'node' + index"
-        :transform="`translate(${node.y},${node.x})`"
-        >
+        <g v-for="(node, index) in nodes"
+          :key="'node' + index + render"
+          :transform="`translate(${node.y},${node.x})`"
+          v-on:click="handleClick(node)"
+          >
           <circle
+            :class="{ highlight: node.data.highlight }"
             :fill="nodeColor"
             :stroke="nodeStrokeColor"
             :r="nodeRadius"
             stroke-linejoin="round"
           />
+          <text
+            text-anchor="middle"
+            dy="0.31em"
+            >
+            {{ node.data.type.slice(0,1) }}
+          </text>
         </g>
       </g>
     </svg>
@@ -43,28 +53,44 @@ export default Vue.extend({
 
   data() {
     return {
+      render: false,
       width: 800,
       height: 600,
       margin: {
         top: 40, right: 40, bottom: 40, left: 40,
       },
-      strokeWidth: 3,
       nodeStrokeColor: '#555',
-      nodeRadius: 5.5,
+      nodeRadius: 7.5,
       nodeColor: 'white',
-      nodeHighlightColor: '#FEEC8F',
       lineWidth: 1.5,
       lineOpacity: 0.4,
       lineHighlightOpacity: 1,
       lineColor: '#aaa',
-      lineHighlightColor: '#FEEC8F',
       nodeTooltipYOffset: 20,
       centerEventType: 'Pass',
     };
   },
 
+  updated() {
+    console.log('UPDATED');
+  },
+
   computed: {
-    createTreeFromTrieData(): d3.HierarchyPointNode<HierarchyDatum> {
+    prefixtree(): d3.HierarchyPointNode<HierarchyDatum> {
+      return this.createTreeFromTrieData();
+    },
+
+    nodes(): d3.HierarchyPointNode<HierarchyDatum>[] {
+      return this.prefixtree.descendants();
+    },
+
+    links(): d3.HierarchyPointLink<HierarchyDatum>[] {
+      return this.prefixtree.links();
+    },
+  },
+
+  methods: {
+    createTreeFromTrieData() {
       let trieData = {} as HierarchyDatum;
       if (this.eventSequenceData) {
         trieData = this.buildTrie({ data: this.eventSequenceData.data.slice(0, 10) }, 'root');
@@ -79,9 +105,7 @@ export default Vue.extend({
         ])
         .separation(() => 2)(root);
     },
-  },
 
-  methods: {
     buildTrie(sequences: EventSequenceDataset, root: string): HierarchyDatum {
       let trie: HierarchyDatum = { type: root, value: 0, children: [] };
       sequences.data.forEach((sequence) => {
@@ -119,11 +143,54 @@ export default Vue.extend({
         .y((d) => d.x)(link);
       return path;
     },
+
+    handleClick(node: d3.HierarchyPointNode<HierarchyDatum>) {
+      console.log(node.data.highlight);
+      const isTurnOn = this.atLeastOneChildIsHighlighted(node) || !node.data.highlight;
+      this.highlightDownToLeaves(node, false);
+      this.highlightUpToRoot(node, isTurnOn);
+      this.render = !this.render;
+    },
+
+    highlightUpToRoot(node: d3.HierarchyPointNode<HierarchyDatum>, isTurnOn: boolean) {
+      // eslint-disable-next-line no-param-reassign
+      node.data.highlight = isTurnOn;
+      this.$set(node.data, 'highlight', isTurnOn);
+      if (node.parent && (isTurnOn || !this.atLeastOneChildIsHighlighted(node.parent))) {
+        this.highlightUpToRoot(node.parent, isTurnOn);
+      }
+    },
+
+    highlightDownToLeaves(node: d3.HierarchyPointNode<HierarchyDatum>, isTurnOn: boolean) {
+      // eslint-disable-next-line no-param-reassign
+      node.data.highlight = isTurnOn;
+      node.children?.forEach((child) => this.highlightDownToLeaves(child, isTurnOn));
+    },
+
+    atLeastOneChildIsHighlighted(node: d3.HierarchyPointNode<HierarchyDatum>) {
+      let atLeastOneChildIsHighlighted = false;
+      node.children?.forEach((child) => {
+        if (child.data.highlight === true) {
+          atLeastOneChildIsHighlighted = true;
+        }
+      });
+      return atLeastOneChildIsHighlighted;
+    },
   },
 });
 </script>
 
 <style lang="scss">
+@import '@/style/custom.scss';
+
+circle.highlight {
+  stroke: $highlight;
+}
+
+path.highlight {
+  stroke: $highlight;
+}
+
 circle:hover {
   cursor: pointer;
 }

@@ -6,4 +6,5 @@ export interface HierarchyDatum {
   type: string;
   value: number;
   children: Array<HierarchyDatum>;
+  highlight?: boolean;
 }
