@@ -71,10 +71,6 @@ export default Vue.extend({
     };
   },
 
-  updated() {
-    console.log('UPDATED');
-  },
-
   computed: {
     prefixtree(): d3.HierarchyPointNode<HierarchyDatum> {
       return this.createTreeFromTrieData();
@@ -145,7 +141,7 @@ export default Vue.extend({
     },
 
     handleClick(node: d3.HierarchyPointNode<HierarchyDatum>) {
-      console.log(node.data.highlight);
+      console.log(node.data.type);
       const isTurnOn = this.atLeastOneChildIsHighlighted(node) || !node.data.highlight;
       this.highlightDownToLeaves(node, false);
       this.highlightUpToRoot(node, isTurnOn);
