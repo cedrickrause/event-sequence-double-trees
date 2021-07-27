@@ -1,3 +1,4 @@
+import { compressEventSequences, removeEventsWithUnusedTypes } from '@/helpers/eventFiltering';
 import { EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
 import _ from 'lodash';
@@ -14,13 +15,15 @@ export enum Actions {
 export const actions: ActionTree<RootState, RootState> = {
   async [Actions.LOAD_EVENT_DATA](context, payload) : Promise<void> {
     const eventData = await StatsbombEventTransformerImpl.instance.transform(payload);
-    context.commit(Mutations.SET_EVENT_DATA, eventData);
+    const filteredEventData = removeEventsWithUnusedTypes(eventData);
+    context.commit(Mutations.SET_EVENT_DATA, filteredEventData);
 
-    const groupedEventArrays = Object.values(_.groupBy(eventData?.data, 'sequence'));
+    const groupedEventArrays = Object.values(_.groupBy(filteredEventData?.data, 'sequence'));
     const eventSequenceData = new EventSequenceDatasetImpl(
       groupedEventArrays.map((sequence) => ({ events: sequence })),
     );
-    context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, eventSequenceData);
+    const compressedEventSequenceData = compressEventSequences(eventSequenceData);
+    context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
   },
 
   [Actions.SELECT_ELEMENT](context, payload): void {
