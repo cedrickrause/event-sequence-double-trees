@@ -1,14 +1,24 @@
+import _ from 'lodash';
 import { EventDatasetEntry } from './EventDataset';
 
 export interface EventTreeNode {
   eventType: string,
   value: number,
   highlight?: boolean,
+  depth: number,
   parents: EventTreeNode[],
   children: EventTreeNode[],
 
   descendants(): EventTreeNode[];
   ancestors(): EventTreeNode[];
+  allNodes(): EventTreeNode[];
+
+  leaves(): EventTreeNode[];
+  founders(): EventTreeNode[];
+
+  maximumWidth(): number;
+  maximumHeight(): number;
+  layerHeight(): number;
 
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode;
   addParentEvent(parentEvent: EventDatasetEntry): EventTreeNode;
@@ -24,6 +34,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   highlight?: boolean | undefined;
 
+  depth: number;
+
   parents: EventTreeNode[];
 
   children: EventTreeNode[];
@@ -31,11 +43,13 @@ export class EventTreeNodeImpl implements EventTreeNode {
   constructor(
     eventType: string,
     value: number,
+    depth: number,
     parents: EventTreeNode[],
     children: EventTreeNode[],
   ) {
     this.eventType = eventType;
     this.value = value;
+    this.depth = depth;
     this.parents = parents;
     this.children = children;
   }
@@ -49,6 +63,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     const newChildNode = new EventTreeNodeImpl(
       childEvent.eventType,
       1,
+      this.depth + 1,
       [this],
       [],
     );
@@ -65,6 +80,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     const newParentNode = new EventTreeNodeImpl(
       parentEvent.eventType,
       1,
+      this.depth - 1,
       [],
       [this],
     );
@@ -95,10 +111,59 @@ export class EventTreeNodeImpl implements EventTreeNode {
     return [this, ...this.children.map((node) => node.descendants())].flat();
   }
 
+  leaves(): EventTreeNode[] {
+    if (this.children.length < 1) {
+      return [this];
+    }
+    return [...this.children.map((node) => node.leaves())].flat();
+  }
+
   ancestors(): EventTreeNode[] {
     if (this.parents.length < 1) {
       return [this];
     }
     return [this, ...this.parents.map((node) => node.ancestors())].flat();
+  }
+
+  founders(): EventTreeNode[] {
+    if (this.parents.length < 1) {
+      return [this];
+    }
+    return [...this.parents.map((node) => node.founders())].flat();
+  }
+
+  allNodes(): EventTreeNode[] {
+    // Filter descendants not to add 'this' a second time
+    return this.ancestors().concat(this.descendants().filter((node) => node !== this));
+  }
+
+  maximumWidth(): number {
+    let rightWidth = this.depth;
+    let leftWidth = this.depth;
+
+    this.leaves().forEach((leaf) => {
+      if (leaf.depth > rightWidth) {
+        rightWidth = leaf.depth;
+      }
+    });
+
+    this.founders().forEach((founder) => {
+      if (founder.depth < leftWidth) {
+        leftWidth = founder.depth;
+      }
+    });
+
+    return 1 - leftWidth + rightWidth;
+  }
+
+  maximumHeight(): number {
+    const groupedNodesByDepth = _.groupBy(this.allNodes(), 'depth');
+    const depths: number[] = [];
+    _.forIn(groupedNodesByDepth, (value) => depths.push(value.length));
+    return Math.max(...depths);
+  }
+
+  layerHeight(): number {
+    return this.allNodes().filter((node) => node.depth === this.depth).length;
   }
 }

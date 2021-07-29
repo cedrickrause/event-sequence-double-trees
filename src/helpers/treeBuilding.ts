@@ -2,7 +2,7 @@ import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTree';
 
 const createEmptyRoot = (centralEventType: string): EventTreeNode => new EventTreeNodeImpl(
-  centralEventType, 0, [], [],
+  centralEventType, 0, 0, [], [],
 );
 
 export default (
@@ -22,6 +22,5 @@ export default (
   });
 
   console.log(root);
-  console.log(root.descendants());
   return root;
 };
