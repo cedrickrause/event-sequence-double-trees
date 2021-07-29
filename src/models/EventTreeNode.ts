@@ -17,8 +17,11 @@ export interface EventTreeNode {
   founders(): EventTreeNode[];
 
   maximumWidth(): number;
+  rightMaximumWidth(): number;
+  leftMaximumWidth(): number;
   maximumHeight(): number;
   layerHeight(): number;
+  allNodesInLayer(depth: number): EventTreeNode[];
 
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode;
   addParentEvent(parentEvent: EventDatasetEntry): EventTreeNode;
@@ -138,22 +141,18 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   maximumWidth(): number {
-    let rightWidth = this.depth;
-    let leftWidth = this.depth;
-
-    this.leaves().forEach((leaf) => {
-      if (leaf.depth > rightWidth) {
-        rightWidth = leaf.depth;
-      }
-    });
-
-    this.founders().forEach((founder) => {
-      if (founder.depth < leftWidth) {
-        leftWidth = founder.depth;
-      }
-    });
+    const rightWidth = this.rightMaximumWidth();
+    const leftWidth = this.leftMaximumWidth();
 
     return 1 - leftWidth + rightWidth;
+  }
+
+  rightMaximumWidth(): number {
+    return Math.max(...this.leaves().map((leaf) => leaf.depth));
+  }
+
+  leftMaximumWidth(): number {
+    return Math.min(...this.founders().map((founder) => founder.depth));
   }
 
   maximumHeight(): number {
@@ -165,5 +164,10 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   layerHeight(): number {
     return this.allNodes().filter((node) => node.depth === this.depth).length;
+  }
+
+  allNodesInLayer(depth: number): EventTreeNode[] {
+    const groupedNodesByDepth = _.groupBy(this.allNodes(), 'depth');
+    return groupedNodesByDepth[depth];
   }
 }

@@ -1,11 +1,13 @@
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
-import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTree';
+import { EventTreeLayoutNode, EventTreeLayoutNodeImpl } from '@/models/EventTreeLayoutNode';
+import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTreeNode';
+import * as d3 from 'd3';
 
 const createEmptyRoot = (centralEventType: string): EventTreeNode => new EventTreeNodeImpl(
   centralEventType, 0, 0, [], [],
 );
 
-export default (
+const buildTreeModel = (
   eventSequenceDataset: EventSequenceDataset,
   centralEventType: string,
 ): EventTreeNode => {
@@ -21,6 +23,33 @@ export default (
     }
   });
 
-  console.log(root);
   return root;
+};
+
+export default (
+  eventSequenceDataset: EventSequenceDataset,
+  centralEventType: string,
+  width: number,
+  height: number,
+): EventTreeLayoutNode[] => {
+  const rootNode = buildTreeModel(eventSequenceDataset, centralEventType);
+
+  const xScale = d3.scaleLinear()
+    .domain([rootNode.leftMaximumWidth(), rootNode.rightMaximumWidth()])
+    .range([0, width]);
+
+  const yScale = d3.scaleLinear()
+    .domain([0, rootNode.maximumHeight()])
+    .range([0, height]);
+
+  const allLayoutNodes = rootNode.allNodes().map((node) => {
+    const x = xScale(node.depth);
+    const positionInLayer = rootNode.allNodesInLayer(node.depth)
+      .findIndex((layerNode) => layerNode === node);
+    const y = yScale(positionInLayer);
+
+    return new EventTreeLayoutNodeImpl(node, x, y);
+  });
+
+  return allLayoutNodes;
 };
