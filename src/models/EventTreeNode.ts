@@ -8,6 +8,8 @@ export interface EventTreeNode {
   depth: number,
   parents: EventTreeNode[],
   children: EventTreeNode[],
+  x?: number,
+  y?: number,
 
   descendants(): EventTreeNode[];
   ancestors(): EventTreeNode[];
@@ -28,6 +30,12 @@ export interface EventTreeNode {
 
   addEventSequenceToChildren(sequence: EventDatasetEntry[]): void;
   addEventSequenceToParents(sequence: EventDatasetEntry[]): void;
+
+  atLeastOneChildIsHighlighted(): boolean;
+  atLeastOneParentIsHighlighted(): boolean;
+
+  highlightAncestors(isTurnOn: boolean): void;
+  highlightDescendants(isTurnOn: boolean): void;
 }
 
 export class EventTreeNodeImpl implements EventTreeNode {
@@ -42,6 +50,10 @@ export class EventTreeNodeImpl implements EventTreeNode {
   parents: EventTreeNode[];
 
   children: EventTreeNode[];
+
+  x?: number;
+
+  y?: number;
 
   constructor(
     eventType: string,
@@ -169,5 +181,37 @@ export class EventTreeNodeImpl implements EventTreeNode {
   allNodesInLayer(depth: number): EventTreeNode[] {
     const groupedNodesByDepth = _.groupBy(this.allNodes(), 'depth');
     return groupedNodesByDepth[depth];
+  }
+
+  atLeastOneChildIsHighlighted(): boolean {
+    return this.children.findIndex((child) => child.highlight) >= 0;
+  }
+
+  atLeastOneParentIsHighlighted(): boolean {
+    return this.parents.findIndex((parent) => parent.highlight) >= 0;
+  }
+
+  highlightAncestors(isTurnOn: boolean): void {
+    this.highlight = isTurnOn;
+    if (this.depth === 0) {
+      return;
+    }
+    this.parents.forEach((parent) => {
+      if (isTurnOn || !parent.atLeastOneChildIsHighlighted()) {
+        parent.highlightAncestors(isTurnOn);
+      }
+    });
+  }
+
+  highlightDescendants(isTurnOn: boolean): void {
+    this.highlight = isTurnOn;
+    if (this.depth === 0) {
+      return;
+    }
+    this.children.forEach((child) => {
+      if (isTurnOn || !child.atLeastOneParentIsHighlighted()) {
+        child.highlightDescendants(isTurnOn);
+      }
+    });
   }
 }

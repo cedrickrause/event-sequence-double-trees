@@ -1,5 +1,5 @@
+/* eslint-disable no-param-reassign */
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
-import { EventTreeLayoutNode, EventTreeLayoutNodeImpl } from '@/models/EventTreeLayoutNode';
 import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTreeNode';
 import * as d3 from 'd3';
 
@@ -31,7 +31,7 @@ export default (
   centralEventType: string,
   width: number,
   height: number,
-): EventTreeLayoutNode[] => {
+): EventTreeNode[] => {
   const rootNode = buildTreeModel(eventSequenceDataset, centralEventType);
 
   const xScale = d3.scaleLinear()
@@ -48,7 +48,9 @@ export default (
       .findIndex((layerNode) => layerNode === node);
     const y = yScale(positionInLayer);
 
-    return new EventTreeLayoutNodeImpl(node, x, y);
+    node.x = x;
+    node.y = y;
+    return node;
   });
 
   return allLayoutNodes;
