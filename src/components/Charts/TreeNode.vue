@@ -60,6 +60,7 @@ text {
 }
 
 circle.highlight {
+  fill: $highlight;
   stroke: $highlight;
 }
 
