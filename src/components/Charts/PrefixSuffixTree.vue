@@ -6,14 +6,8 @@
         font-size="14"
         font-family="sans-serif"
         >
-        <path v-for="(link, index) in links" :key="'link' + index"
-          :class="{ highlight: isHighlight(link) }"
-          :stroke="lineColor"
-          fill="none"
-          :stroke-opacity="1"
-          :stroke-width="lineWidth"
-          :d="linkPath(link)"
-          />
+        <tree-link v-for="(link, index) in links" :key="'link' + index"
+          :link="link" />
         <tree-node v-for="(node, index) in nodes"
           :key="'node' + index"
           :node="node" />
@@ -25,14 +19,14 @@
 <script lang="ts">
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import treeBuildingMethod from '@/helpers/treeBuilding';
-import * as d3 from 'd3';
 import Vue from 'vue';
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
 import TreeNode from './TreeNode.vue';
+import TreeLink from './TreeLink.vue';
 
 export default Vue.extend({
-  components: { TreeNode },
+  components: { TreeNode, TreeLink },
   props: {
     eventSequenceData: {
       type: Object as () => EventSequenceDataset,
@@ -46,11 +40,6 @@ export default Vue.extend({
       margin: {
         top: 40, right: 40, bottom: 40, left: 40,
       },
-      lineWidth: 1.5,
-      lineOpacity: 0.4,
-      lineHighlightOpacity: 1,
-      lineColor: '#aaa',
-      nodeTooltipYOffset: 20,
       centerEventType: 'Dribble',
     };
   },
@@ -74,26 +63,6 @@ export default Vue.extend({
 
     links(): EventTreeLink[] {
       return this.prefixtree[0]?.links();
-    },
-  },
-
-  methods: {
-    linkPath(link: EventTreeLink) {
-      const points = [
-        [link.source.x, link.source.y],
-        [link.target.x, link.target.y]] as [number, number][];
-      return d3.line()
-        .curve(d3.curveBumpX)(points);
-    },
-
-    isHighlight(link: EventTreeLink): boolean {
-      if (link.source.depth > 0) {
-        return !!link.target.highlight;
-      }
-      if (link.source.depth < 0) {
-        return !!link.source.highlight;
-      }
-      return false;
     },
   },
 });
