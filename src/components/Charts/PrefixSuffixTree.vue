@@ -6,7 +6,8 @@
         font-size="14"
         font-family="sans-serif"
         >
-        <tree-link v-for="(link, index) in links" :key="'link' + index"
+        <tree-link v-for="(link, index) in links"
+          :key="'link' + index"
           :link="link" />
         <tree-node v-for="(node, index) in nodes"
           :key="'node' + index"
