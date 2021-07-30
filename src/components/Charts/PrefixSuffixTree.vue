@@ -14,25 +14,9 @@
           :stroke-width="lineWidth"
           :d="linkPath(link)"
           />
-        <g v-for="(node, index) in nodes"
-          :key="'node' + index + render"
-          :transform="`translate(${node.x},${node.y})`"
-          >
-          <circle
-            :class="{ highlight: node.highlight }"
-            :fill="nodeColor"
-            :stroke="nodeStrokeColor"
-            :r="nodeRadius"
-            stroke-linejoin="round"
-            @click="handleClick(node)"
-          />
-          <text
-            text-anchor="middle"
-            dy="0.35em"
-            >
-            <!-- {{ node.data.type.slice(0,1) }} -->
-          </text>
-        </g>
+        <tree-node v-for="(node, index) in nodes"
+          :key="'node' + index"
+          :node="node" />
       </g>
     </svg>
   </div>
@@ -45,8 +29,10 @@ import * as d3 from 'd3';
 import Vue from 'vue';
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
+import TreeNode from './TreeNode.vue';
 
 export default Vue.extend({
+  components: { TreeNode },
   props: {
     eventSequenceData: {
       type: Object as () => EventSequenceDataset,
@@ -55,15 +41,11 @@ export default Vue.extend({
 
   data() {
     return {
-      render: false,
       width: 800,
       height: 400,
       margin: {
         top: 40, right: 40, bottom: 40, left: 40,
       },
-      nodeStrokeColor: '#555',
-      nodeRadius: 7.5,
-      nodeColor: 'white',
       lineWidth: 1.5,
       lineOpacity: 0.4,
       lineHighlightOpacity: 1,
@@ -96,20 +78,6 @@ export default Vue.extend({
   },
 
   methods: {
-    handleClick(node: EventTreeNode) {
-      let isTurnOn = false;
-      if (node.depth >= 0) {
-        isTurnOn = node.atLeastOneChildIsHighlighted() || !node.highlight;
-        node.highlightDescendants(false);
-        node.highlightAncestors(isTurnOn);
-      } else {
-        isTurnOn = node.atLeastOneParentIsHighlighted() || !node.highlight;
-        node.highlightAncestors(false);
-        node.highlightDescendants(isTurnOn);
-      }
-      this.render = !this.render;
-    },
-
     linkPath(link: EventTreeLink) {
       const points = [
         [link.source.x, link.source.y],
@@ -131,7 +99,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/style/custom.scss';
 
 circle.highlight {
