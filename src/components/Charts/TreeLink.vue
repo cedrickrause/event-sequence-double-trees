@@ -2,6 +2,7 @@
   <path
     :class="{ highlight: isHighlight(link) }"
     fill="none"
+    :stroke-width="linkWidth(link)"
     :d="linkPath(link)"
     />
 </template>
@@ -42,6 +43,16 @@ export default Vue.extend({
       }
       return false;
     },
+
+    linkWidth(link: EventTreeLink): number {
+      if (link.target.depth > 0) {
+        return link.target.value;
+      }
+      if (link.source.depth < 0) {
+        return link.source.value;
+      }
+      return 0;
+    },
   },
 });
 </script>
@@ -51,11 +62,11 @@ export default Vue.extend({
 
 path {
   stroke: #aaa;
-  stroke-width: 1.5px;
-  stroke-opacity: 1;
+  stroke-opacity: 0.5;
 }
 
 path.highlight {
   stroke: $highlight;
+  stroke-opacity: 1;
 }
 </style>
