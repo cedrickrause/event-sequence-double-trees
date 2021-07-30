@@ -6,14 +6,14 @@
         font-size="14"
         font-family="sans-serif"
         >
-        <!-- <path v-for="(link, index) in links" :key="'link' + index"
-          :class="{ highlight: link.target.data.highlight }"
+        <path v-for="(link, index) in links" :key="'link' + index"
+          :class="{ highlight: isHighlight(link) }"
           :stroke="lineColor"
           fill="none"
           :stroke-opacity="1"
           :stroke-width="lineWidth"
           :d="linkPath(link)"
-          /> -->
+          />
         <g v-for="(node, index) in nodes"
           :key="'node' + index + render"
           :transform="`translate(${node.x},${node.y})`"
@@ -41,8 +41,10 @@
 <script lang="ts">
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import treeBuildingMethod from '@/helpers/treeBuilding';
+import * as d3 from 'd3';
 import Vue from 'vue';
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { EventTreeLink } from '@/models/EventTreeLink';
 
 export default Vue.extend({
   props: {
@@ -88,9 +90,9 @@ export default Vue.extend({
       return this.prefixtree;
     },
 
-    // links(): EventTreeLayoutNode[] {
-    //   return this.prefixtree.links();
-    // },
+    links(): EventTreeLink[] {
+      return this.prefixtree[0]?.links();
+    },
   },
 
   methods: {
@@ -106,6 +108,24 @@ export default Vue.extend({
         node.highlightDescendants(isTurnOn);
       }
       this.render = !this.render;
+    },
+
+    linkPath(link: EventTreeLink) {
+      const points = [
+        [link.source.x, link.source.y],
+        [link.target.x, link.target.y]] as [number, number][];
+      return d3.line()
+        .curve(d3.curveBumpX)(points);
+    },
+
+    isHighlight(link: EventTreeLink): boolean {
+      if (link.source.depth > 0) {
+        return !!link.target.highlight;
+      }
+      if (link.source.depth < 0) {
+        return !!link.source.highlight;
+      }
+      return false;
     },
   },
 });

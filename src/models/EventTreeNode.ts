@@ -1,5 +1,7 @@
+/* eslint-disable import/no-cycle */
 import _ from 'lodash';
 import { EventDatasetEntry } from './EventDataset';
+import { EventTreeLink } from './EventTreeLink';
 
 export interface EventTreeNode {
   eventType: string,
@@ -14,6 +16,7 @@ export interface EventTreeNode {
   descendants(): EventTreeNode[];
   ancestors(): EventTreeNode[];
   allNodes(): EventTreeNode[];
+  links(): EventTreeLink[];
 
   leaves(): EventTreeNode[];
   founders(): EventTreeNode[];
@@ -36,6 +39,7 @@ export interface EventTreeNode {
 
   highlightAncestors(isTurnOn: boolean): void;
   highlightDescendants(isTurnOn: boolean): void;
+
 }
 
 export class EventTreeNodeImpl implements EventTreeNode {
@@ -213,5 +217,13 @@ export class EventTreeNodeImpl implements EventTreeNode {
         child.highlightDescendants(isTurnOn);
       }
     });
+  }
+
+  links(): EventTreeLink[] {
+    return this.allNodes().map(
+      (node) => node.children.map(
+        (child) => ({ source: node, target: child }),
+      ),
+    ).flat();
   }
 }
