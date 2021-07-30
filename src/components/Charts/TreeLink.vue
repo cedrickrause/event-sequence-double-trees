@@ -34,7 +34,7 @@ export default Vue.extend({
     },
 
     isHighlight(link: EventTreeLink): boolean {
-      if (link.source.depth > 0) {
+      if (link.target.depth > 0) {
         return !!link.target.highlight;
       }
       if (link.source.depth < 0) {
