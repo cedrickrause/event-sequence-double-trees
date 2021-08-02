@@ -80,7 +80,8 @@ export default Vue.extend({
       const x = this.doubletree?.x ? this.doubletree.x : 0;
       const points = [
         [x, 0],
-        [x, this.height - this.margin.top - this.margin.bottom]] as [number, number][];
+        [x, this.height - this.margin.top - this.margin.bottom],
+      ] as [number, number][];
       return d3.line()
         .curve(d3.curveBumpX)(points);
     },
