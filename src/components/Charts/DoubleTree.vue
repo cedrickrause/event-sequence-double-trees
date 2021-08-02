@@ -6,12 +6,19 @@
         font-size="14"
         font-family="sans-serif"
         >
-        <tree-link v-for="(link, index) in links"
-          :key="'link' + index"
-          :link="link" />
-        <tree-node v-for="(node, index) in nodes"
-          :key="'node' + index"
-          :node="node" />
+        <path
+          :d="centralLine"
+          stroke="black" />
+        <g v-if="links">
+          <tree-link v-for="(link, index) in links"
+            :key="'link' + link.source.eventType + index"
+            :link="link" />
+        </g>
+        <g v-if="nodes">
+          <tree-node v-for="(node, index) in nodes"
+            :key="'node' + node.eventType + index"
+            :node="node" />
+        </g>
       </g>
     </svg>
   </div>
@@ -23,6 +30,7 @@ import treeBuildingMethod from '@/helpers/treeBuilding';
 import Vue from 'vue';
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
+import * as d3 from 'd3';
 import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
 
@@ -31,6 +39,9 @@ export default Vue.extend({
   props: {
     eventSequenceData: {
       type: Object as () => EventSequenceDataset,
+    },
+    centralEventType: {
+      type: String,
     },
   },
 
@@ -41,29 +52,37 @@ export default Vue.extend({
       margin: {
         top: 40, right: 40, bottom: 40, left: 40,
       },
-      centerEventType: 'Dribble',
     };
   },
 
   computed: {
-    prefixtree(): EventTreeNode[] {
+    doubletree(): EventTreeNode | undefined {
       if (!this.eventSequenceData) {
-        return [];
+        return undefined;
       }
       return treeBuildingMethod(
         this.eventSequenceData,
-        this.centerEventType,
+        this.centralEventType,
         this.width - this.margin.left - this.margin.right,
         this.height - this.margin.top - this.margin.bottom,
       );
     },
 
-    nodes(): EventTreeNode[] {
-      return this.prefixtree;
+    nodes(): EventTreeNode[] | undefined {
+      return this.doubletree?.allNodes();
     },
 
-    links(): EventTreeLink[] {
-      return this.prefixtree[0]?.links();
+    links(): EventTreeLink[] | undefined {
+      return this.doubletree?.links();
+    },
+
+    centralLine() {
+      const x = this.doubletree?.x ? this.doubletree.x : 0;
+      const points = [
+        [x, 0],
+        [x, this.height]] as [number, number][];
+      return d3.line()
+        .curve(d3.curveBumpX)(points);
     },
   },
 });

@@ -31,7 +31,7 @@ export default (
   centralEventType: string,
   width: number,
   height: number,
-): EventTreeNode[] => {
+): EventTreeNode => {
   const rootNode = buildTreeModel(eventSequenceDataset, centralEventType);
 
   const xScale = d3.scaleLinear()
@@ -42,7 +42,7 @@ export default (
     .domain([0, rootNode.maximumHeight()])
     .range([0, height]);
 
-  const allLayoutNodes = rootNode.allNodes().map((node) => {
+  rootNode.allNodes().map((node) => {
     const x = xScale(node.depth);
     const positionInLayer = rootNode.allNodesInLayer(node.depth)
       .findIndex((layerNode) => layerNode === node);
@@ -53,5 +53,5 @@ export default (
     return node;
   });
 
-  return allLayoutNodes;
+  return rootNode;
 };
