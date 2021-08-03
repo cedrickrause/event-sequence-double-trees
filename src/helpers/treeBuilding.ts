@@ -38,15 +38,23 @@ export default (
     .domain([rootNode.leftMaximumWidth(), rootNode.rightMaximumWidth()])
     .range([0, width]);
 
+  const maxHeightIndex = rootNode.maximumHeight();
   const yScale = d3.scaleLinear()
-    .domain([0, rootNode.maximumHeight()])
+    .domain([0, maxHeightIndex])
     .range([0, height]);
 
   rootNode.allNodes().map((node) => {
     const x = xScale(node.depth);
-    const positionInLayer = rootNode.allNodesInLayer(node.depth)
+    const layerNodes = rootNode.allNodesInLayer(node.depth);
+    const positionInLayer = layerNodes
       .findIndex((layerNode) => layerNode === node);
-    const y = yScale(positionInLayer);
+
+    const layerHeight = layerNodes.length;
+    const layerScale = d3.scaleLinear()
+      .domain([0, layerHeight])
+      .range([(maxHeightIndex - layerHeight) / 2, (maxHeightIndex + layerHeight) / 2]);
+
+    const y = yScale(layerScale(positionInLayer));
 
     node.x = x;
     node.y = y;
