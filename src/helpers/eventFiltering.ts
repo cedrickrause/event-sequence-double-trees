@@ -1,7 +1,7 @@
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequence, EventSequenceDataset } from '@/models/EventSequenceDataset';
 
-const removedEventTypes = ['Pressure', 'Ball Receipt*', 'Camera On', 'Camera off', 'Starting XI', 'Half Start'];
+const removedEventTypes = ['Pressure', 'Ball Receipt*', 'Camera On', 'Camera off', 'Starting XI', 'Half Start', 'Half End'];
 
 const EVENT_TYPE_PASS = 'Pass';
 const EVENT_TYPE_CARRY = 'Carry';
