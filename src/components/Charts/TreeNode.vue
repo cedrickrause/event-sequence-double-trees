@@ -30,16 +30,36 @@ export default Vue.extend({
 
   methods: {
     handleClick(): void {
-      let isTurnOn = false;
-      if (this.node.depth >= 0) {
-        isTurnOn = this.node.atLeastOneChildIsHighlighted() || !this.node.highlight;
-        this.node.highlightDescendants(false);
-        this.node.highlightAncestors(isTurnOn);
+      if (this.node.depth > 0) {
+        this.handleClickRightTree();
+      } else if (this.node.depth < 0) {
+        this.handleClickLeftTree();
       } else {
-        isTurnOn = this.node.atLeastOneParentIsHighlighted() || !this.node.highlight;
-        this.node.highlightAncestors(false);
-        this.node.highlightDescendants(isTurnOn);
+        this.handleClickRoot();
       }
+    },
+
+    handleClickRightTree(): void {
+      const isTurnOn = this.node.atLeastOneChildIsHighlighted() || !this.node.highlight;
+      this.node.highlightDescendants(false);
+      this.node.highlightAncestors(isTurnOn);
+    },
+
+    handleClickLeftTree(): void {
+      const isTurnOn = this.node.atLeastOneParentIsHighlighted() || !this.node.highlight;
+      this.node.highlightAncestors(false);
+      this.node.highlightDescendants(isTurnOn);
+    },
+
+    handleClickRoot(): void {
+      const isTurnOn = this.node.atLeastOneChildIsHighlighted()
+        || this.node.atLeastOneParentIsHighlighted()
+        || !this.node.highlight;
+
+      this.node.allNodes().forEach((node) => {
+        node.highlightNode(false);
+      });
+      this.node.highlightNode(isTurnOn);
     },
   },
 });

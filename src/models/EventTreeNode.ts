@@ -39,6 +39,7 @@ export interface EventTreeNode {
 
   highlightAncestors(isTurnOn: boolean): void;
   highlightDescendants(isTurnOn: boolean): void;
+  highlightNode(isTurnOn: boolean): void;
 
 }
 
@@ -227,6 +228,10 @@ export class EventTreeNodeImpl implements EventTreeNode {
         child.highlightDescendants(isTurnOn);
       }
     });
+  }
+
+  highlightNode(isTurnOn: boolean): void {
+    this.highlight = isTurnOn;
   }
 
   links(): EventTreeLink[] {
