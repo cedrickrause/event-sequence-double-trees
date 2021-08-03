@@ -207,9 +207,6 @@ export class EventTreeNodeImpl implements EventTreeNode {
     }
     this.parents.forEach((parent) => {
       if (isTurnOn || !parent.atLeastOneChildIsHighlighted()) {
-        if (parent.depth < 1 && parent.atLeastOneParentIsHighlighted()) {
-          return;
-        }
         parent.highlightAncestors(isTurnOn);
       }
     });
@@ -222,9 +219,6 @@ export class EventTreeNodeImpl implements EventTreeNode {
     }
     this.children.forEach((child) => {
       if (isTurnOn || !child.atLeastOneParentIsHighlighted()) {
-        if (child.depth > -1 && child.atLeastOneChildIsHighlighted()) {
-          return;
-        }
         child.highlightDescendants(isTurnOn);
       }
     });
