@@ -46,10 +46,10 @@ export default Vue.extend({
 
     linkWidth(link: EventTreeLink): number {
       if (link.target.depth > 0) {
-        return link.target.value;
+        return link.target.count;
       }
       if (link.source.depth < 0) {
-        return link.source.value;
+        return link.source.count;
       }
       return 0;
     },
