@@ -201,10 +201,14 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   highlightAncestors(isTurnOn: boolean): void {
-    this.highlight = isTurnOn;
     if (this.depth === 0) {
+      if (this.atLeastOneParentIsHighlighted()) {
+        return;
+      }
+      this.highlight = isTurnOn;
       return;
     }
+    this.highlight = isTurnOn;
     this.parents.forEach((parent) => {
       if (isTurnOn || !parent.atLeastOneChildIsHighlighted()) {
         parent.highlightAncestors(isTurnOn);
@@ -213,10 +217,14 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   highlightDescendants(isTurnOn: boolean): void {
-    this.highlight = isTurnOn;
     if (this.depth === 0) {
+      if (this.atLeastOneChildIsHighlighted()) {
+        return;
+      }
+      this.highlight = isTurnOn;
       return;
     }
+    this.highlight = isTurnOn;
     this.children.forEach((child) => {
       if (isTurnOn || !child.atLeastOneParentIsHighlighted()) {
         child.highlightDescendants(isTurnOn);
