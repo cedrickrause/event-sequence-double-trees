@@ -88,32 +88,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-@import '@/style/custom.scss';
-
-circle.highlight {
-  stroke: $highlight;
-}
-
-path.highlight {
-  stroke: $highlight;
-}
-
-circle:hover {
-  cursor: pointer;
-}
-
-text:hover {
-  cursor: pointer;
-}
-
-text {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  pointer-events: none;
-}
-</style>
