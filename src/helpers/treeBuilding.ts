@@ -49,7 +49,7 @@ export default (
     const positionInLayer = layerNodes
       .findIndex((layerNode) => layerNode === node);
 
-    const layerHeight = layerNodes.length;
+    const layerHeight = layerNodes.length - 1;
     const layerScale = d3.scaleLinear()
       .domain([0, layerHeight])
       .range([(maxHeightIndex - layerHeight) / 2, (maxHeightIndex + layerHeight) / 2]);
