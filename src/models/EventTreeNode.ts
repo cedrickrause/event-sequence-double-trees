@@ -62,14 +62,14 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   constructor(
     eventType: string,
-    value: number,
+    count: number,
     depth: number,
     highlight: boolean,
     parents: EventTreeNode[],
     children: EventTreeNode[],
   ) {
     this.eventType = eventType;
-    this.count = value;
+    this.count = count;
     this.depth = depth;
     this.highlight = highlight;
     this.parents = parents;
