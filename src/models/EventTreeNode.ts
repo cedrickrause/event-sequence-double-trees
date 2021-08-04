@@ -5,7 +5,7 @@ import { EventTreeLink } from './EventTreeLink';
 
 export interface EventTreeNode {
   eventType: string,
-  value: number,
+  count: number,
   highlight: boolean,
   depth: number,
   parents: EventTreeNode[],
@@ -46,7 +46,7 @@ export interface EventTreeNode {
 export class EventTreeNodeImpl implements EventTreeNode {
   eventType: string;
 
-  value: number;
+  count: number;
 
   highlight: boolean;
 
@@ -69,7 +69,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     children: EventTreeNode[],
   ) {
     this.eventType = eventType;
-    this.value = value;
+    this.count = value;
     this.depth = depth;
     this.highlight = highlight;
     this.parents = parents;
@@ -79,7 +79,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode {
     const child = this.children.find((node) => node.eventType === childEvent.eventType);
     if (child) {
-      child.value += 1;
+      child.count += 1;
       return child;
     }
     const newChildNode = new EventTreeNodeImpl(
@@ -97,7 +97,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
   addParentEvent(parentEvent: EventDatasetEntry): EventTreeNode {
     const parent = this.parents.find((node) => node.eventType === parentEvent.eventType);
     if (parent) {
-      parent.value += 1;
+      parent.count += 1;
       return parent;
     }
     const newParentNode = new EventTreeNodeImpl(

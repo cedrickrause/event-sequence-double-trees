@@ -17,7 +17,7 @@ const buildTreeModel = (
       (event) => event.eventType === centralEventType,
     );
     if (indexOfFirstOccurrence >= 0) {
-      root.value += 1;
+      root.count += 1;
       root.addEventSequenceToParents(sequence.events.slice(0, indexOfFirstOccurrence));
       root.addEventSequenceToChildren(sequence.events.slice(indexOfFirstOccurrence + 1));
     }
