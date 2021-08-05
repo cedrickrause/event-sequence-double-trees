@@ -81,7 +81,7 @@ text {
 
 circle.highlight {
   fill: $highlight;
-  stroke: $highlight;
+  // stroke: $highlight;
 }
 
 circle:hover {
