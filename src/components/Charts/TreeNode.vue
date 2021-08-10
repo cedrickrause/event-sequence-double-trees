@@ -8,11 +8,18 @@
     <text dy="0.35em">
       {{ node.eventType.slice(0,1) }}
     </text>
+    <path
+      :d="arc(0.8 , 0, firstHalfTime)" />
+    <path
+      class="blue"
+      :d="arc(0.4, firstHalfTime, firstHalfTime + secondHalfTime)" />
   </g>
 </template>
 
 <script lang="ts">
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { StatsbombVariableNames } from '@/transformer/StatsbombEventTransformer';
+import * as d3 from 'd3';
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -26,6 +33,21 @@ export default Vue.extend({
     return {
       value: this.node,
     };
+  },
+
+  computed: {
+    firstHalfTime(): number {
+      return this.node.variables.filter(
+        (variable) => variable.name === StatsbombVariableNames.HALF_TIME
+          && variable.value === 1,
+      ).length;
+    },
+    secondHalfTime(): number {
+      return this.node.variables.filter(
+        (variable) => variable.name === StatsbombVariableNames.HALF_TIME
+          && variable.value === 2,
+      ).length;
+    },
   },
 
   methods: {
@@ -60,6 +82,20 @@ export default Vue.extend({
         node.highlightNode(false);
       });
       this.node.highlightNode(isTurnOn);
+    },
+
+    arc(value: number, startAngle: number, endAngle: number) {
+      const arc = d3.arc();
+      const total = this.firstHalfTime + this.secondHalfTime;
+      const amount = endAngle - startAngle;
+      const share = amount / total;
+      const start = startAngle / total;
+      return arc({
+        innerRadius: 8,
+        outerRadius: 8 + 4 * value,
+        startAngle: start * 2 * Math.PI,
+        endAngle: (start + share) * 2 * Math.PI,
+      });
     },
   },
 });
@@ -99,5 +135,13 @@ text {
   -ms-user-select: none;
   user-select: none;
   pointer-events: none;
+}
+
+path {
+  fill: red;
+}
+
+path.blue {
+  fill: blue;
 }
 </style>

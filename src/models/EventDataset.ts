@@ -1,9 +1,11 @@
 import { BaseDataset } from './BaseDataset';
+import { Variable } from './Variable';
 
 export type EventDatasetEntry = {
   id: string,
   eventType: string,
   sequence: number,
+  variables: Variable[],
 };
 
 export interface EventDataset extends BaseDataset {
