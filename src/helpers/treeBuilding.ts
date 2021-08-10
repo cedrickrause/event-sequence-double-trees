@@ -25,12 +25,6 @@ const buildTreeModel = (
     }
   });
 
-  console.log(eventSequenceDataset.data.map(
-    (s) => s.events.filter(
-      (event) => event.variables.length > 7,
-    ),
-  ));
-
   return root;
 };
 
