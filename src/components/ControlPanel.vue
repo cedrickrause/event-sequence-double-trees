@@ -2,7 +2,7 @@
     <div>
       <b-form-group
         id="input-group-1"
-        label="Comparison Variable:"
+        label="Comparison Variable"
         label-for="comparisonVariableInput"
       >
         <b-form-select
@@ -20,6 +20,7 @@
 </template>
 
 <script lang="ts">
+import { Variable } from '@/models/Variable';
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
 import Vue from 'vue';
@@ -46,7 +47,7 @@ export default Vue.extend({
     selectableComparisonVariables(): string[] {
       if (this.getEventSequenceData) {
         return this.getEventSequenceData.data[0].events[0].variables.map(
-          (variable: string | null) => variable.name,
+          (variable: Variable | null) => variable?.name,
         );
       }
       return [];
