@@ -16,10 +16,23 @@
           </template>
         </b-form-select>
       </b-form-group>
+      <b-form-group
+        id="input-group-2"
+        label="Query"
+        label-for="queryInput"
+      >
+        <b-form-select v-for="queryElement in queryBuilderLengthRange"
+          :key="'query' + queryElement"
+          :id="'queryInput' + queryElement"
+          v-model="query[queryElement]"
+          :options="selectableEventTypes">
+        </b-form-select>
+      </b-form-group>
     </div>
 </template>
 
 <script lang="ts">
+import { EventDatasetEntry } from '@/models/EventDataset';
 import { Variable } from '@/models/Variable';
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
@@ -30,25 +43,40 @@ export default Vue.extend({
   data() {
     return {
       comparisonVariable: null,
+      query: [],
     };
   },
 
   watch: {
-    comparisonVariable() {
+    comparisonVariable(): void {
       this.selectComparisonVariable(this.comparisonVariable);
     },
   },
 
   computed: {
     ...mapGetters({
+      getEventData: Getters.GET_EVENT_DATA,
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
     }),
+
+    queryBuilderLengthRange(): number[] {
+      return Array.from(Array(this.query.length + 1).keys());
+    },
 
     selectableComparisonVariables(): string[] {
       if (this.getEventSequenceData) {
         return this.getEventSequenceData.data[0].events[0].variables.map(
           (variable: Variable | null) => variable?.name,
         );
+      }
+      return [];
+    },
+
+    selectableEventTypes(): string[] {
+      if (this.getEventData) {
+        return [...new Set<string>(this.getEventData.data.map(
+          (event: EventDatasetEntry) => event.eventType,
+        ))];
       }
       return [];
     },
