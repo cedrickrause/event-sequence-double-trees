@@ -8,19 +8,20 @@
     <text dy="0.35em">
       {{ node.eventType.slice(0,1) }}
     </text>
-    <path
-      :d="arc(0.8 , 0, firstHalfTime)" />
-    <path
-      class="blue"
-      :d="arc(0.4, firstHalfTime, firstHalfTime + secondHalfTime)" />
+    <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
+      :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
+      :fill="getColorScheme[keyValuePair.key]"
+      />
   </g>
 </template>
 
 <script lang="ts">
 import { EventTreeNode } from '@/models/EventTreeNode';
-import { StatsbombVariableNames } from '@/transformer/StatsbombEventTransformer';
+import { Getters } from '@/store/getters';
 import * as d3 from 'd3';
+import _ from 'lodash';
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 export default Vue.extend({
   props: {
@@ -36,17 +37,21 @@ export default Vue.extend({
   },
 
   computed: {
-    firstHalfTime(): number {
-      return this.node.variables.filter(
-        (variable) => variable.name === StatsbombVariableNames.HALF_TIME
-          && variable.value === 1,
-      ).length;
+    ...mapGetters({
+      getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
+      getComparisonVariableValues: Getters.GET_COMPARISON_VARIABLE_VALUES,
+      getColorScheme: Getters.GET_COLOR_SCHEME,
+    }),
+
+    comparisonValues(): {key: string, value: number}[] {
+      const filteredVariables = this.node.variables.filter(
+        (variable) => variable.name === this.getComparisonVariable,
+      );
+      return Object.keys(_.countBy(filteredVariables, 'value')).map((key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }));
     },
-    secondHalfTime(): number {
-      return this.node.variables.filter(
-        (variable) => variable.name === StatsbombVariableNames.HALF_TIME
-          && variable.value === 2,
-      ).length;
+
+    comparisonValueTotal(): number {
+      return _.reduce(this.comparisonValues, (sum, n) => sum + n.value, 0);
     },
   },
 
@@ -84,12 +89,12 @@ export default Vue.extend({
       this.node.highlightNode(isTurnOn);
     },
 
-    arc(value: number, startAngle: number, endAngle: number) {
+    arc(value: number, count: number, valuesBefore: {key: string, value: number}[]) {
       const arc = d3.arc();
-      const total = this.firstHalfTime + this.secondHalfTime;
-      const amount = endAngle - startAngle;
-      const share = amount / total;
-      const start = startAngle / total;
+      const total = this.comparisonValueTotal;
+      const share = count / total;
+      const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
+      const start = sumBefore / total;
       return arc({
         innerRadius: 8,
         outerRadius: 8 + 4 * value,
@@ -135,13 +140,5 @@ text {
   -ms-user-select: none;
   user-select: none;
   pointer-events: none;
-}
-
-path {
-  fill: red;
-}
-
-path.blue {
-  fill: blue;
 }
 </style>

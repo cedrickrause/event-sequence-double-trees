@@ -8,6 +8,13 @@
       </b-form-select>
     </div>
     <div>
+      <b-form-select
+        id="comparisonVariableInput"
+        v-model="comparisonVariable"
+        :options="selectableComparisonVariables">
+      </b-form-select>
+    </div>
+    <div>
       <double-tree
       :eventSequenceData="eventSequenceData"
       :centralEventType="centralEventType" />
@@ -18,9 +25,10 @@
 <script lang="ts">
 import { EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
+import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import DoubleTree from './DoubleTree.vue';
 
 export default Vue.extend({
@@ -34,7 +42,14 @@ export default Vue.extend({
   data() {
     return {
       centralEventType: 'Dribble',
+      comparisonVariable: '',
     };
+  },
+
+  watch: {
+    comparisonVariable() {
+      this.selectComparisonVariable(this.comparisonVariable);
+    },
   },
 
   computed: {
@@ -48,6 +63,19 @@ export default Vue.extend({
       }
       return [];
     },
+
+    selectableComparisonVariables(): string[] {
+      if (this.getEventData) {
+        return this.eventSequenceData.data[0].events[0].variables.map((variable) => variable.name);
+      }
+      return [];
+    },
+  },
+
+  methods: {
+    ...mapActions({
+      selectComparisonVariable: Actions.SELECT_COMPARISON_VARIABLE,
+    }),
   },
 
 });
