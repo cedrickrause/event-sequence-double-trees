@@ -43,7 +43,7 @@ export default Vue.extend({
   data() {
     return {
       comparisonVariable: null,
-      query: [],
+      query: [] as string[],
     };
   },
 
