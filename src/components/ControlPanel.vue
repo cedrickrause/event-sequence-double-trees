@@ -16,40 +16,23 @@
           </template>
         </b-form-select>
       </b-form-group>
-      <b-form-group
-        id="input-group-2"
-        label="Query"
-        label-for="queryInput"
-      >
-        <b-form-select v-for="queryElement in queryBuilderLengthRange"
-          :key="'query' + queryElement"
-          :id="'queryInput' + queryElement"
-          v-model="query[queryElement]"
-          :options="selectableEventTypes">
-        </b-form-select>
-        <b-button variant="primary" v-on:click="handleQuery">
-          Search
-        </b-button>
-        <b-button variant="outline-primary" v-on:click="handleRemove">
-          Remove
-        </b-button>
-      </b-form-group>
+      <query-builder />
     </div>
 </template>
 
 <script lang="ts">
-import { EventDatasetEntry } from '@/models/EventDataset';
 import { Variable } from '@/models/Variable';
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
+import QueryBuilder from './QueryBuilder.vue';
 
 export default Vue.extend({
+  components: { QueryBuilder },
   data() {
     return {
       comparisonVariable: null,
-      query: [] as string[],
     };
   },
 
@@ -65,10 +48,6 @@ export default Vue.extend({
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
     }),
 
-    queryBuilderLengthRange(): number[] {
-      return Array.from(Array(this.query.length + 1).keys());
-    },
-
     selectableComparisonVariables(): string[] {
       if (this.getEventSequenceData) {
         return this.getEventSequenceData.data[0].events[0].variables.map(
@@ -77,33 +56,12 @@ export default Vue.extend({
       }
       return [];
     },
-
-    selectableEventTypes(): string[] {
-      if (this.getEventData) {
-        return [...new Set<string>(this.getEventData.data.map(
-          (event: EventDatasetEntry) => event.eventType,
-        ))];
-      }
-      return [];
-    },
   },
 
   methods: {
     ...mapActions({
       selectComparisonVariable: Actions.SELECT_COMPARISON_VARIABLE,
-      filterEventSequencesWithQuery: Actions.FILTER_EVENT_SEQUENCE_WITH_QUERY,
-      resetEventSequenceData: Actions.RESET_EVENT_SEQUENCE_DATA,
     }),
-
-    handleQuery() {
-      this.resetEventSequenceData();
-      this.filterEventSequencesWithQuery(this.query);
-    },
-
-    handleRemove() {
-      this.query = [];
-      this.resetEventSequenceData();
-    },
   },
 });
 </script>
