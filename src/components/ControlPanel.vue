@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="control-panel">
       <b-form-group
         id="input-group-1"
         label="Comparison Variable"
@@ -16,6 +16,7 @@
           </template>
         </b-form-select>
       </b-form-group>
+      <category-color-mapping-list />
       <query-builder />
     </div>
 </template>
@@ -26,10 +27,11 @@ import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
+import CategoryColorMappingList from './CategoryColorMappingList.vue';
 import QueryBuilder from './QueryBuilder.vue';
 
 export default Vue.extend({
-  components: { QueryBuilder },
+  components: { QueryBuilder, CategoryColorMappingList },
   data() {
     return {
       comparisonVariable: null,
@@ -65,3 +67,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+#control-panel {
+  text-align: left;
+}
+</style>
