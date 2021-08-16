@@ -6,6 +6,7 @@ import { RootState } from './RootState';
 
 export enum Getters {
   GET_EVENT_DATA = 'getEventData',
+  GET_INITIAL_EVENT_SEQUENCE_DATA = 'getInitialEventSequenceData',
   GET_EVENT_SEQUENCE_DATA = 'getEventSequenceData',
   GET_COMPARISON_VARIABLE = 'getComparisonVariable',
   GET_COMPARISON_VARIABLE_VALUES = 'getComparisonVariableValues',
@@ -16,6 +17,10 @@ export enum Getters {
 export const getters: GetterTree<RootState, RootState> = {
   [Getters.GET_EVENT_DATA](state) : EventDataset | undefined | null {
     return state.eventData;
+  },
+
+  [Getters.GET_INITIAL_EVENT_SEQUENCE_DATA](state) : EventSequenceDataset | undefined | null {
+    return state.initialEventSequenceData;
   },
 
   [Getters.GET_EVENT_SEQUENCE_DATA](state) : EventSequenceDataset | undefined | null {

@@ -4,6 +4,7 @@ import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 
 export interface RootState {
   eventData: EventDataset | undefined | null,
+  initialEventSequenceData: EventSequenceDataset | undefined | null,
   eventSequenceData: EventSequenceDataset | undefined | null,
   selectedElementId: string | null,
   comparisonVariable: string | null,

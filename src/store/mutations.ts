@@ -6,6 +6,7 @@ import { RootState } from './RootState';
 
 export enum Mutations {
   SET_EVENT_DATA = 'setEventData',
+  SET_INITIAL_EVENT_SEQUENCE_DATA = 'setInitialEventSequenceData',
   SET_EVENT_SEQUENCE_DATA = 'setEventSequenceData',
   SET_COMPARISON_VARIABLE = 'setComparisonVariable',
   SET_COMPARISON_VARIABLE_VALUES = 'setComparisonVariableValues',
@@ -20,6 +21,10 @@ export const mutations: MutationTree<RootState> = {
 
   [Mutations.SET_EVENT_SEQUENCE_DATA](state, payload: EventSequenceDataset) : void {
     state.eventSequenceData = payload;
+  },
+
+  [Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA](state, payload: EventSequenceDataset) : void {
+    state.initialEventSequenceData = payload;
   },
 
   [Mutations.SET_COMPARISON_VARIABLE](state, payload: string) : void {

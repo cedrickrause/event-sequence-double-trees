@@ -27,6 +27,12 @@
           v-model="query[queryElement]"
           :options="selectableEventTypes">
         </b-form-select>
+        <b-button variant="primary" v-on:click="handleQuery">
+          Search
+        </b-button>
+        <b-button variant="outline-primary" v-on:click="handleRemove">
+          Remove
+        </b-button>
       </b-form-group>
     </div>
 </template>
@@ -85,7 +91,19 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       selectComparisonVariable: Actions.SELECT_COMPARISON_VARIABLE,
+      filterEventSequencesWithQuery: Actions.FILTER_EVENT_SEQUENCE_WITH_QUERY,
+      resetEventSequenceData: Actions.RESET_EVENT_SEQUENCE_DATA,
     }),
+
+    handleQuery() {
+      this.resetEventSequenceData();
+      this.filterEventSequencesWithQuery(this.query);
+    },
+
+    handleRemove() {
+      this.query = [];
+      this.resetEventSequenceData();
+    },
   },
 });
 </script>
