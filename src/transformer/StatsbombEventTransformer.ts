@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
+import { CategoricalVariable } from '@/models/CategoricalVariable';
 import { EventDataset, EventDatasetEntry, EventDatasetImpl } from '@/models/EventDataset';
-import {
-  CategoricalVariable, NumericalVariable, Variable,
-} from '@/models/Variable';
+import { EventLocation } from '@/models/LocationVariable';
+import { NumericalVariable } from '@/models/NumericalVariable';
 import * as d3 from 'd3';
 import { BaseTransformer } from './BaseTransformer';
 
@@ -57,34 +57,13 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
             eventType: event.type.name,
             sequence: event.possession,
             variables: [
-              {
-                name: StatsbombVariableNames.HALF_TIME,
-                value: event.period,
-              } as CategoricalVariable,
-              {
-                name: StatsbombVariableNames.TEAM,
-                value: event.team.name,
-              } as CategoricalVariable,
-              {
-                name: StatsbombVariableNames.PLAYER,
-                value: event.player?.name,
-              } as CategoricalVariable,
-              {
-                name: StatsbombVariableNames.POSITION,
-                value: event.position?.name,
-              } as CategoricalVariable,
-              {
-                name: StatsbombVariableNames.MINUTE,
-                value: event.minute,
-              } as NumericalVariable,
-              {
-                name: StatsbombVariableNames.DURATION,
-                value: event.duration,
-              } as NumericalVariable,
-              {
-                name: StatsbombVariableNames.LOCATION,
-                value: event.location,
-              } as Variable,
+              new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
+              new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),
+              new CategoricalVariable(StatsbombVariableNames.PLAYER, event.player?.name),
+              new CategoricalVariable(StatsbombVariableNames.POSITION, event.position?.name),
+              new NumericalVariable(StatsbombVariableNames.MINUTE, event.minute),
+              new NumericalVariable(StatsbombVariableNames.DURATION, event.duration),
+              new EventLocation(StatsbombVariableNames.LOCATION, event.location),
             ],
           }),
         );
