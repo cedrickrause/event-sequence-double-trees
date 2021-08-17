@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { Variable } from '@/models/Variable';
 import { Getters } from '@/store/getters';
 import * as d3 from 'd3';
 import _ from 'lodash';
@@ -45,9 +46,11 @@ export default Vue.extend({
 
     comparisonValues(): {key: string, value: number}[] {
       const filteredVariables = this.node.variables.filter(
-        (variable) => variable.name === this.getComparisonVariable,
+        (variable: Variable) => variable.name === this.getComparisonVariable?.name,
       );
-      return Object.keys(_.countBy(filteredVariables, 'value')).map((key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }));
+      return Object.keys(_.countBy(filteredVariables, 'value')).map(
+        (key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }),
+      );
     },
 
     comparisonValueTotal(): number {

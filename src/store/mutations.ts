@@ -1,6 +1,7 @@
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
+import { Variable } from '@/models/Variable';
 import { MutationTree } from 'vuex';
 import { RootState } from './RootState';
 
@@ -27,7 +28,7 @@ export const mutations: MutationTree<RootState> = {
     state.initialEventSequenceData = payload;
   },
 
-  [Mutations.SET_COMPARISON_VARIABLE](state, payload: string) : void {
+  [Mutations.SET_COMPARISON_VARIABLE](state, payload: Variable) : void {
     state.comparisonVariable = payload;
   },
 

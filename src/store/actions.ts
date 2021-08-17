@@ -1,6 +1,7 @@
 import { compressEventSequences, removeEventsWithUnusedTypes } from '@/helpers/eventFiltering';
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
+import { Variable } from '@/models/Variable';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import _ from 'lodash';
@@ -40,11 +41,11 @@ export const actions: ActionTree<RootState, RootState> = {
     }
   },
 
-  [Actions.SELECT_COMPARISON_VARIABLE](context, payload): void {
+  [Actions.SELECT_COMPARISON_VARIABLE](context, payload: Variable): void {
     const eventDataset: EventDataset = context.getters[Getters.GET_EVENT_DATA];
     const comparisonVariableValues = _.uniq(eventDataset.data.map(
       (event: EventDatasetEntry) => event.variables.filter(
-        (variable) => variable.name === payload,
+        (variable) => variable.name === payload.name,
       ).map(
         (variable) => variable.value,
       ),

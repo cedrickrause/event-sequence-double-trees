@@ -1,6 +1,7 @@
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
+import { Variable } from '@/models/Variable';
 import { GetterTree } from 'vuex';
 import { RootState } from './RootState';
 
@@ -27,7 +28,7 @@ export const getters: GetterTree<RootState, RootState> = {
     return state.eventSequenceData;
   },
 
-  [Getters.GET_COMPARISON_VARIABLE](state) : string | null {
+  [Getters.GET_COMPARISON_VARIABLE](state) : Variable | null {
     return state.comparisonVariable;
   },
 
