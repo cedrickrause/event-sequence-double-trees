@@ -16,7 +16,8 @@
           </template>
         </b-form-select>
       </b-form-group>
-      <b-form-input type="range" v-if="comparisonVariableIsNumerical">
+      <b-form-input type="range" v-if="comparisonVariableIsNumerical"
+        v-model="numericalComparisonVariableThreshold" min="0" max="95">
       </b-form-input>
       <category-color-mapping-list />
       <query-builder />
@@ -28,8 +29,9 @@ import { NumericalVariable } from '@/models/NumericalVariable';
 import { Variable } from '@/models/Variable';
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import CategoryColorMappingList from './CategoryColorMappingList.vue';
 import QueryBuilder from './QueryBuilder.vue';
 
@@ -38,12 +40,17 @@ export default Vue.extend({
   data() {
     return {
       comparisonVariable: null,
+      numericalComparisonVariableThreshold: 45,
     };
   },
 
   watch: {
     comparisonVariable(): void {
       this.selectComparisonVariable(this.comparisonVariable);
+    },
+
+    numericalComparisonVariableThreshold(): void {
+      this.setNumericalComparisonVariableThreshold(this.numericalComparisonVariableThreshold);
     },
   },
 
@@ -74,6 +81,11 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       selectComparisonVariable: Actions.SELECT_COMPARISON_VARIABLE,
+    }),
+
+    ...mapMutations({
+      setNumericalComparisonVariableThreshold:
+      Mutations.SET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
     }),
   },
 });

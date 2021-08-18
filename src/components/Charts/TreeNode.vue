@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { NumericalVariable } from '@/models/NumericalVariable';
 import { Variable } from '@/models/Variable';
 import { Getters } from '@/store/getters';
 import * as d3 from 'd3';
@@ -42,12 +43,22 @@ export default Vue.extend({
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
       getComparisonVariableValues: Getters.GET_COMPARISON_VARIABLE_VALUES,
       getColorScheme: Getters.GET_COLOR_SCHEME,
+      getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
       const filteredVariables = this.node.variables.filter(
         (variable: Variable) => variable.name === this.getComparisonVariable?.name,
-      );
+      ).map((variable) => {
+        if (variable instanceof NumericalVariable) {
+          return {
+            name: variable.name,
+            value: variable.value > this.getNumericalComparisonVariableThreshold
+              ? 'Over' : 'Under',
+          };
+        }
+        return variable;
+      });
       return Object.keys(_.countBy(filteredVariables, 'value')).map(
         (key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }),
       );

@@ -8,6 +8,7 @@ const state: RootState = {
   comparisonVariable: null,
   comparisonVariableValues: null,
   colorScheme: null,
+  numericalComparisonVariableThreshold: 45,
 };
 
 export { state as default };

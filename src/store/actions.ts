@@ -1,6 +1,7 @@
 import { compressEventSequences, removeEventsWithUnusedTypes } from '@/helpers/eventFiltering';
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
+import { NumericalVariable } from '@/models/NumericalVariable';
 import { Variable } from '@/models/Variable';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -47,7 +48,16 @@ export const actions: ActionTree<RootState, RootState> = {
       (event: EventDatasetEntry) => event.variables.filter(
         (variable) => variable.name === payload.name,
       ).map(
-        (variable) => variable.value,
+        (variable) => {
+          if (variable instanceof NumericalVariable) {
+            if (variable.value > context.getters[
+              Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD]) {
+              return 'Over';
+            }
+            return 'Under';
+          }
+          return variable.value;
+        },
       ),
     ).flat());
     const basicColorScheme = schemeCategory10;
