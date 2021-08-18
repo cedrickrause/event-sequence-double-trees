@@ -33,7 +33,10 @@ function compressPassAndCarryForSequence(sequence: EventSequence) {
       return true;
     },
   );
-  return { events: filteredEventsForSequence };
+  return {
+    id: sequence.id,
+    events: filteredEventsForSequence,
+  };
 }
 
 export const compressEventSequences = (

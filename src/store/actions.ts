@@ -25,7 +25,10 @@ export const actions: ActionTree<RootState, RootState> = {
 
     const groupedEventArrays = Object.values(_.groupBy(filteredEventData?.data, 'sequence'));
     const eventSequenceData = new EventSequenceDatasetImpl(
-      groupedEventArrays.map((sequence) => ({ events: sequence })),
+      groupedEventArrays.map((sequence) => ({
+        id: sequence[0].sequence,
+        events: sequence,
+      })),
     );
     const compressedEventSequenceData = compressEventSequences(eventSequenceData);
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
