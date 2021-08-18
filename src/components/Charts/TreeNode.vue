@@ -47,7 +47,9 @@ export default Vue.extend({
       const filteredVariables = this.node.variables.filter(
         (variable) => variable.name === this.getComparisonVariable,
       );
-      return Object.keys(_.countBy(filteredVariables, 'value')).map((key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }));
+      return Object.keys(_.countBy(filteredVariables, 'value')).map(
+        (key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }),
+      );
     },
 
     comparisonValueTotal(): number {
