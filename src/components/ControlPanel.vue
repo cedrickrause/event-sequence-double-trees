@@ -17,7 +17,9 @@
         </b-form-select>
       </b-form-group>
       <b-form-input type="range" v-if="comparisonVariableIsNumerical"
-        v-model="numericalComparisonVariableThreshold" min="0" max="95">
+        v-model="numericalComparisonVariableThreshold"
+        min="0"
+        :max="getNumericalComparisonVariableMaximum">
       </b-form-input>
       <category-color-mapping-list />
       <query-builder />
@@ -40,12 +42,14 @@ export default Vue.extend({
   data() {
     return {
       comparisonVariable: null,
-      numericalComparisonVariableThreshold: 45,
+      numericalComparisonVariableThreshold: 0,
     };
   },
 
   watch: {
     comparisonVariable(): void {
+      this.numericalComparisonVariableThreshold = 0;
+      this.setNumericalComparisonVariableThreshold(this.numericalComparisonVariableThreshold);
       this.selectComparisonVariable(this.comparisonVariable);
     },
 
@@ -59,6 +63,7 @@ export default Vue.extend({
       getEventData: Getters.GET_EVENT_DATA,
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
+      getNumericalComparisonVariableMaximum: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM,
     }),
 
     selectableComparisonVariables(): string[] {

@@ -13,6 +13,7 @@ export enum Mutations {
   SET_COMPARISON_VARIABLE_VALUES = 'setComparisonVariableValues',
   SET_COLOR_SCHEME = 'setColorScheme',
   SET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD = 'setNumericalComparisonVariableThreshold',
+  SET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'setNumericalComparisonVariableMaximum',
   SET_SELECTED_ELEMENT_ID = 'setSelectedElementId',
 }
 
@@ -43,6 +44,10 @@ export const mutations: MutationTree<RootState> = {
 
   [Mutations.SET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD](state, payload: number) : void {
     state.numericalComparisonVariableThreshold = payload;
+  },
+
+  [Mutations.SET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM](state, payload: number) : void {
+    state.numericalComparisonVariableMaximum = payload;
   },
 
   [Mutations.SET_SELECTED_ELEMENT_ID](state, payload: string) : void {

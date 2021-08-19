@@ -13,6 +13,7 @@ export enum Getters {
   GET_COMPARISON_VARIABLE_VALUES = 'getComparisonVariableValues',
   GET_COLOR_SCHEME = 'getColorScheme',
   GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD = 'getNumericalComparisonVariableThreshold',
+  GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'getNumericalComparisonVariableMaximum',
   GET_SELECTED_ELEMENT_ID = 'getSelectedElementId',
 }
 
@@ -43,6 +44,10 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD](state) : number {
     return state.numericalComparisonVariableThreshold;
+  },
+
+  [Getters.GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM](state) : number {
+    return state.numericalComparisonVariableMaximum;
   },
 
   [Getters.GET_SELECTED_ELEMENT_ID](state) : string | null {

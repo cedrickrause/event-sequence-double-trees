@@ -12,4 +12,5 @@ export interface RootState {
   comparisonVariableValues: string[] | null,
   colorScheme: CategoryToColorMapping[] | null,
   numericalComparisonVariableThreshold: number,
+  numericalComparisonVariableMaximum: number,
 }
