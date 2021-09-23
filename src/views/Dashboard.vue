@@ -8,7 +8,7 @@
             <control-panel />
           </b-card>
         </b-col>
-        <b-col cols="6">
+        <b-col cols="8">
           <b-card
             title="Event Sequence DoubleTree">
             <double-tree-wrapper />
