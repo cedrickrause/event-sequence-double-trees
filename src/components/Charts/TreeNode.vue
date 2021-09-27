@@ -4,6 +4,7 @@
     <circle
       :class="{ highlight: node.highlight }"
       @click="handleClick()"
+      r="7.5"
     />
     <text dy="0.35em">
       {{ node.eventType.slice(0,1) }}
@@ -127,7 +128,6 @@ circle {
   fill: white;
   stroke: #555;
   stroke-linejoin: round;
-  r: 7.5;
 }
 
 text {
