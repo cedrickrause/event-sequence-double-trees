@@ -50,7 +50,7 @@ export const actions: ActionTree<RootState, RootState> = {
     const eventDataset: EventDataset = context.getters[Getters.GET_EVENT_DATA];
     const comparisonVariableValues = getUniqueComparisonVariableValues(
       eventDataset,
-      payload.name,
+      payload?.name,
       context.getters[Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD],
     );
     const basicColorScheme = schemeCategory10;
@@ -64,7 +64,7 @@ export const actions: ActionTree<RootState, RootState> = {
 
     const maxComparisonVariableValue = _.max(eventDataset.data
       .map((event: EventDatasetEntry) => event.variables
-        .filter((variable) => variable.name === payload.name)
+        .filter((variable) => variable.name === payload?.name)
         .map((variable) => variable.value))
       .flat());
     context.commit(Mutations.SET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM, maxComparisonVariableValue);
