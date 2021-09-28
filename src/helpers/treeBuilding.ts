@@ -40,9 +40,9 @@ export default (
     .domain([rootNode.leftMaximumWidth(), rootNode.rightMaximumWidth()])
     .range([0, width]);
 
-  const maxHeightIndex = rootNode.maximumHeight();
+  const maxHeight = rootNode.maximumHeight();
   const yScale = d3.scaleLinear()
-    .domain([0, maxHeightIndex])
+    .domain([0, maxHeight])
     .range([0, height]);
 
   rootNode.allNodes().map((node) => {
@@ -54,7 +54,7 @@ export default (
     const layerHeight = layerNodes.length - 1;
     const layerScale = d3.scaleLinear()
       .domain([0, layerHeight])
-      .range([(maxHeightIndex - layerHeight) / 2, (maxHeightIndex + layerHeight) / 2]);
+      .range([(maxHeight - layerHeight) / 2, (maxHeight + layerHeight) / 2]);
 
     const y = yScale(layerScale(positionInLayer));
 
