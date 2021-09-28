@@ -1,5 +1,5 @@
 <template>
-  <g :transform="`translate(${this.node.x},${this.node.y})`"
+  <g :transform="`translate(${this.node.x},${this.node.y}) scale(${this.node.count/10})`"
     >
     <circle
       :class="{ highlight: node.highlight }"
