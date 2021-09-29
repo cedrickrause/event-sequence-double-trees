@@ -1,12 +1,13 @@
 <template>
-  <g :transform="`translate(${this.node.x},${this.node.y}) scale(${this.node.count/10})`"
+  <g :transform="`translate(${this.node.x},${this.node.y})`"
     >
     <circle
       :class="{ highlight: node.highlight }"
       @click="handleClick()"
-      r="7.5"
+      :r="1.5 * this.node.count"
     />
-    <text dy="0.35em">
+    <text dy="0.35em"
+    :font-size="1.5 * this.node.count">
       {{ node.eventType.slice(0,1) }}
     </text>
     <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
@@ -111,8 +112,8 @@ export default Vue.extend({
       const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
       const start = sumBefore / total;
       return arc({
-        innerRadius: 8,
-        outerRadius: 8 + 4 * value,
+        innerRadius: 1.5 * this.node.count,
+        outerRadius: 1.5 * this.node.count + 4 * value,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
