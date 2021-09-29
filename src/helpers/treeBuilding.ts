@@ -36,9 +36,10 @@ export default (
 ): EventTreeNode => {
   const rootNode = buildTreeModel(eventSequenceDataset, centralEventType);
 
-  const xScale = d3.scaleLinear()
-    .domain([rootNode.leftMaximumWidth(), rootNode.rightMaximumWidth()])
-    .range([0, width]);
+  const xScale = d3.scaleSqrt()
+    .domain([rootNode.leftMaximumWidth(), rootNode.leftMaximumWidth() / 4,
+      rootNode.rightMaximumWidth() / 4, rootNode.rightMaximumWidth()])
+    .range([0, width / 4, width * 0.75, width]);
 
   const maxHeight = rootNode.maximumHeight();
   const yScale = d3.scaleLinear()
