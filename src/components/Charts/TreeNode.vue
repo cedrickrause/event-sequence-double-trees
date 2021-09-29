@@ -4,7 +4,7 @@
     <circle
       :class="{ highlight: node.highlight }"
       @click="handleClick()"
-      :r="1.5 * this.node.count"
+      :r="radius"
     />
     <text dy="0.35em"
     :font-size="1.5 * this.node.count">
@@ -69,6 +69,10 @@ export default Vue.extend({
     comparisonValueTotal(): number {
       return _.reduce(this.comparisonValues, (sum, n) => sum + n.value, 0);
     },
+
+    radius(): number {
+      return 1.5 * this.node.count;
+    },
   },
 
   methods: {
@@ -112,8 +116,8 @@ export default Vue.extend({
       const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
       const start = sumBefore / total;
       return arc({
-        innerRadius: 1.5 * this.node.count,
-        outerRadius: 1.5 * this.node.count + 4 * value,
+        innerRadius: this.radius,
+        outerRadius: this.radius + 4 * value,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
