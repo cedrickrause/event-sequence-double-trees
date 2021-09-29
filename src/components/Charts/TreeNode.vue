@@ -71,7 +71,7 @@ export default Vue.extend({
     },
 
     radius(): number {
-      return 1.5 * this.node.count;
+      return this.node.count > 1 ? 1.5 * this.node.count : 0;
     },
   },
 
