@@ -9,7 +9,7 @@ export interface RootState {
   eventSequenceData: EventSequenceDataset | undefined | null,
   selectedElementId: string | null,
   comparisonVariable: Variable | null,
-  comparisonVariableValues: string[] | null,
+  comparisonVariableValues: string[],
   colorScheme: CategoryToColorMapping[] | null,
   numericalComparisonVariableThreshold: number,
   numericalComparisonVariableMaximum: number,
