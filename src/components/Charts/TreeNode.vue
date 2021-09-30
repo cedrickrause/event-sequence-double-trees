@@ -5,13 +5,16 @@
       :class="{ highlight: node.highlight }"
       @click="handleClick()"
       r="7.5"
+      :stroke-opacity="node.highlight ? 1 : 0.25"
     />
-    <text dy="0.35em">
+    <text dy="0.35em"
+    :opacity="node.highlight ? 1 : 0.25">
       {{ node.eventType.slice(0,1) }}
     </text>
     <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
       :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
       :fill="getColorScheme[keyValuePair.key]"
+      :opacity="node.highlight ? 1 : 0.25"
       />
   </g>
 </template>
