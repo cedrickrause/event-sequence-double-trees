@@ -1,10 +1,11 @@
 <template>
   <g v-if="getComparisonVariableValues.length > 0">
-    <path v-for="value in getComparisonVariableValues" :key="value.name"
+    <path v-for="comparisonVariableValue in getComparisonVariableValues"
+    :key="comparisonVariableValue.name"
       :class="{ highlight: isHighlight() }"
       fill="none"
-      :stroke="getColorScheme[value]"
-      :stroke-width="linkWidth(value)"
+      :stroke="getColorScheme[comparisonVariableValue]"
+      :stroke-width="linkWidth(comparisonVariableValue)"
       :d="linkPath()"
       />
   </g>
