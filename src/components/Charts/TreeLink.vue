@@ -91,10 +91,10 @@ export default Vue.extend({
       ).reduce((a, b) => a + b, 0);
 
       const points = [
-        [this.link.source.x, this.link.source.y! - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y! - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y! - offset + valuesBeforeOffset + height],
-        [this.link.source.x, this.link.source.y! - offset + valuesBeforeOffset + height]] as
+        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset + height],
+        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset + height]] as
         [number, number][];
       return d3.line()
         .curve(d3.curveBumpX)(points);
@@ -105,11 +105,12 @@ export default Vue.extend({
       const height = this.count;
 
       const points = [
-        [this.link.source.x, this.link.source.y! - offset],
-        [this.link.target.x, this.link.target.y! - offset],
-        [this.link.target.x, this.link.target.y! - offset + height],
-        [this.link.source.x, this.link.source.y! - offset + height]] as [number, number][];
-      return d3.line()(points);
+        [this.link.source.x, this.link.source.y - offset],
+        [this.link.target.x, this.link.target.y - offset],
+        [this.link.target.x, this.link.target.y - offset + height],
+        [this.link.source.x, this.link.source.y - offset + height]] as [number, number][];
+      return d3.line()
+        .curve(d3.curveBumpX)(points);
     },
 
     isHighlight(): boolean {
