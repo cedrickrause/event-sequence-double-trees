@@ -12,8 +12,8 @@ export interface EventTreeNode {
   parents: EventTreeNode[],
   children: EventTreeNode[],
   variables: Variable[],
-  x?: number,
-  y?: number,
+  x: number,
+  y: number,
 
   descendants(): EventTreeNode[];
   ancestors(): EventTreeNode[];
@@ -60,9 +60,9 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   variables: Variable[];
 
-  x?: number;
+  x: number;
 
-  y?: number;
+  y: number;
 
   constructor(
     eventType: string,
@@ -80,6 +80,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
     this.parents = parents;
     this.children = children;
     this.variables = variables;
+    this.x = 0;
+    this.y = 0;
   }
 
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode {

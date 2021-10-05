@@ -7,12 +7,14 @@
       :r="radius"
     />
     <text dy="0.35em"
-    :font-size="1.5 * this.node.count">
+    :font-size="1.5 * this.node.count"
+    :opacity="node.highlight ? 1 : 0.25">
       {{ node.eventType.slice(0,1) }}
     </text>
     <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
       :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
       :fill="getColorScheme[keyValuePair.key]"
+      :opacity="node.highlight ? 1 : 0.25"
       />
   </g>
 </template>
@@ -140,7 +142,7 @@ text {
 }
 
 circle.highlight {
-  fill: $highlight;
+  // fill: $highlight;
   // stroke: $highlight;
 }
 

@@ -1,16 +1,34 @@
 <template>
-  <path
-    :class="{ highlight: isHighlight(link) }"
-    fill="none"
-    :stroke-width="linkWidth(link)"
-    :d="linkPath(link)"
-    />
+  <g v-if="comparisonValues.length > 0">
+    <path v-for="(comparisonVariableValue, index) in comparisonValues"
+    :key="comparisonVariableValue.key"
+      :class="{ highlight: isHighlight() }"
+      stroke="none"
+      :fill="getColorScheme[comparisonVariableValue.key]"
+      :stroke-width="linkWidth(comparisonVariableValue.key)"
+      :d="linkPath(comparisonVariableValue, comparisonValues.slice(0, index))"
+      />
+  </g>
+  <g v-else>
+    <path
+      :class="{ highlight: isHighlight() }"
+      stroke="none"
+      fill="#aaa"
+      :d="linkPathDefault()"
+      />
+  </g>
 </template>
 
 <script lang="ts">
 import * as d3 from 'd3';
 import Vue from 'vue';
 import { EventTreeLink } from '@/models/EventTreeLink';
+import { mapGetters } from 'vuex';
+import { Getters } from '@/store/getters';
+import { Variable } from '@/models/Variable';
+import { NumericalVariable } from '@/models/NumericalVariable';
+import _ from 'lodash';
+import { EventTreeNode } from '@/models/EventTreeNode';
 
 export default Vue.extend({
   props: {
@@ -25,33 +43,85 @@ export default Vue.extend({
     };
   },
 
+  computed: {
+    ...mapGetters({
+      getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
+      getComparisonVariableValues: Getters.GET_COMPARISON_VARIABLE_VALUES,
+      getColorScheme: Getters.GET_COLOR_SCHEME,
+      getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
+    }),
+
+    referenceNode(): EventTreeNode {
+      if (this.link.target.depth > 0) {
+        return this.link.target;
+      }
+      return this.link.source;
+    },
+
+    count(): number {
+      return this.referenceNode.count;
+    },
+
+    comparisonValues(): {key: string, value: number}[] {
+      const filteredVariables = this.referenceNode.variables.filter(
+        (variable: Variable) => variable.name === this.getComparisonVariable?.name,
+      ).map((variable) => {
+        if (variable instanceof NumericalVariable) {
+          return {
+            name: variable.name,
+            value: variable.value > this.getNumericalComparisonVariableThreshold
+              ? 'Over' : 'Under',
+          };
+        }
+        return variable;
+      });
+      return Object.keys(_.countBy(filteredVariables, 'value')).map(
+        (key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }),
+      );
+    },
+  },
+
   methods: {
-    linkPath(link: EventTreeLink) {
+    linkPath(comparisonVariableValue: {key: string, value: number},
+      valuesBefore: {key: string, value: number}[]) {
+      const offset = this.count / 2;
+      const height = comparisonVariableValue.value;
+      const valuesBeforeOffset = valuesBefore.map(
+        (variable) => variable.value,
+      ).reduce((a, b) => a + b, 0);
+
       const points = [
-        [link.source.x, link.source.y],
-        [link.target.x, link.target.y]] as [number, number][];
+        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset + height],
+        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset + height]] as
+        [number, number][];
       return d3.line()
         .curve(d3.curveBumpX)(points);
     },
 
-    isHighlight(link: EventTreeLink): boolean {
-      if (link.target.depth > 0) {
-        return !!link.target.highlight;
-      }
-      if (link.source.depth < 0) {
-        return !!link.source.highlight;
-      }
-      return false;
+    linkPathDefault() {
+      const offset = this.count / 2;
+      const height = this.count;
+
+      const points = [
+        [this.link.source.x, this.link.source.y - offset],
+        [this.link.target.x, this.link.target.y - offset],
+        [this.link.target.x, this.link.target.y - offset + height],
+        [this.link.source.x, this.link.source.y - offset + height]] as [number, number][];
+      return d3.line()
+        .curve(d3.curveBumpX)(points);
     },
 
-    linkWidth(link: EventTreeLink): number {
-      if (link.target.depth > 0) {
-        return link.target.count;
-      }
-      if (link.source.depth < 0) {
-        return link.source.count;
-      }
-      return 0;
+    isHighlight(): boolean {
+      return this.referenceNode.highlight;
+    },
+
+    linkWidth(comparisonVariableValue: string): number {
+      const comparisonVariable = this.comparisonValues.find(
+        (value) => value.key === comparisonVariableValue.toString(),
+      );
+      return comparisonVariable ? comparisonVariable.value : 0;
     },
   },
 });
@@ -61,12 +131,10 @@ export default Vue.extend({
 @import '@/style/custom.scss';
 
 path {
-  stroke: #aaa;
-  stroke-opacity: 0.5;
+  opacity: 0.25;
 }
 
 path.highlight {
-  stroke: $highlight;
-  stroke-opacity: 1;
+  opacity: 1;
 }
 </style>
