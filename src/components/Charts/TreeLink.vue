@@ -1,12 +1,12 @@
 <template>
-  <g v-if="getComparisonVariableValues.length > 0">
-    <path v-for="comparisonVariableValue in getComparisonVariableValues"
-    :key="comparisonVariableValue.name"
+  <g v-if="comparisonValues.length > 0">
+    <path v-for="(comparisonVariableValue, index) in comparisonValues"
+    :key="comparisonVariableValue.key"
       :class="{ highlight: isHighlight() }"
       fill="none"
-      :stroke="getColorScheme[comparisonVariableValue]"
-      :stroke-width="linkWidth(comparisonVariableValue)"
-      :d="linkPath()"
+      :stroke="getColorScheme[comparisonVariableValue.key]"
+      :stroke-width="linkWidth(comparisonVariableValue.key)"
+      :d="linkPath(comparisonVariableValue, comparisonValues.slice(0, index))"
       />
   </g>
   <g v-else>
@@ -15,7 +15,7 @@
       fill="none"
       stroke="#aaa"
       :stroke-width="count"
-      :d="linkPath()"
+      :d="linkPathDefault()"
       />
   </g>
 </template>
@@ -83,12 +83,27 @@ export default Vue.extend({
   },
 
   methods: {
-    linkPath() {
+    linkPath(comparisonVariableValue: {key: string, value: number},
+      valuesBefore: {key: string, value: number}[]) {
+      let yOffset = valuesBefore.map((variable) => variable.value).reduce((a, b) => a + b, 0);
+      yOffset += comparisonVariableValue.value / 2;
+      yOffset -= this.count / 2;
+      console.log(yOffset);
+      console.log(valuesBefore);
+
+      // Stimmt für geraden, für Schräge Linien aber nicht!
+
+      const points = [
+        [this.link.source.x, this.link.source.y! + yOffset],
+        [this.link.target.x, this.link.target.y! + yOffset]] as [number, number][];
+      return d3.line()(points);
+    },
+
+    linkPathDefault() {
       const points = [
         [this.link.source.x, this.link.source.y],
         [this.link.target.x, this.link.target.y]] as [number, number][];
-      return d3.line()
-        .curve(d3.curveBumpX)(points);
+      return d3.line()(points);
     },
 
     isHighlight(): boolean {
