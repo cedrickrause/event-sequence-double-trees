@@ -3,8 +3,8 @@
     <path v-for="(comparisonVariableValue, index) in comparisonValues"
     :key="comparisonVariableValue.key"
       :class="{ highlight: isHighlight() }"
-      fill="none"
-      :stroke="getColorScheme[comparisonVariableValue.key]"
+      stroke="none"
+      :fill="getColorScheme[comparisonVariableValue.key]"
       :stroke-width="linkWidth(comparisonVariableValue.key)"
       :d="linkPath(comparisonVariableValue, comparisonValues.slice(0, index))"
       />
@@ -12,9 +12,8 @@
   <g v-else>
     <path
       :class="{ highlight: isHighlight() }"
-      fill="none"
-      stroke="#aaa"
-      :stroke-width="count"
+      stroke="none"
+      fill="#aaa"
       :d="linkPathDefault()"
       />
   </g>
@@ -85,24 +84,31 @@ export default Vue.extend({
   methods: {
     linkPath(comparisonVariableValue: {key: string, value: number},
       valuesBefore: {key: string, value: number}[]) {
-      let yOffset = valuesBefore.map((variable) => variable.value).reduce((a, b) => a + b, 0);
-      yOffset += comparisonVariableValue.value / 2;
-      yOffset -= this.count / 2;
-      console.log(yOffset);
-      console.log(valuesBefore);
-
-      // Stimmt für geraden, für Schräge Linien aber nicht!
+      const offset = this.count / 2;
+      const height = comparisonVariableValue.value;
+      const valuesBeforeOffset = valuesBefore.map(
+        (variable) => variable.value,
+      ).reduce((a, b) => a + b, 0);
 
       const points = [
-        [this.link.source.x, this.link.source.y! + yOffset],
-        [this.link.target.x, this.link.target.y! + yOffset]] as [number, number][];
-      return d3.line()(points);
+        [this.link.source.x, this.link.source.y! - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y! - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y! - offset + valuesBeforeOffset + height],
+        [this.link.source.x, this.link.source.y! - offset + valuesBeforeOffset + height]] as
+        [number, number][];
+      return d3.line()
+        .curve(d3.curveBumpX)(points);
     },
 
     linkPathDefault() {
+      const offset = this.count / 2;
+      const height = this.count;
+
       const points = [
-        [this.link.source.x, this.link.source.y],
-        [this.link.target.x, this.link.target.y]] as [number, number][];
+        [this.link.source.x, this.link.source.y! - offset],
+        [this.link.target.x, this.link.target.y! - offset],
+        [this.link.target.x, this.link.target.y! - offset + height],
+        [this.link.source.x, this.link.source.y! - offset + height]] as [number, number][];
       return d3.line()(points);
     },
 
@@ -124,10 +130,10 @@ export default Vue.extend({
 @import '@/style/custom.scss';
 
 path {
-  stroke-opacity: 0.25;
+  opacity: 0.25;
 }
 
 path.highlight {
-  stroke-opacity: 1;
+  opacity: 1;
 }
 </style>
