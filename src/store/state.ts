@@ -6,7 +6,7 @@ const state: RootState = {
   eventSequenceData: null,
   selectedElementId: null,
   comparisonVariable: null,
-  comparisonVariableValues: null,
+  comparisonVariableValues: [],
   colorScheme: null,
   numericalComparisonVariableThreshold: 0,
   numericalComparisonVariableMaximum: 0,
