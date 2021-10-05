@@ -141,11 +141,6 @@ text {
   text-anchor: middle;
 }
 
-circle.highlight {
-  // fill: $highlight;
-  // stroke: $highlight;
-}
-
 circle:hover {
   cursor: pointer;
 }
