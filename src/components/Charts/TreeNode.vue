@@ -1,9 +1,9 @@
 <template>
   <g :transform="`translate(${this.node.x},${this.node.y})`"
+      @click="handleClick()"
     >
     <circle
       :class="{ highlight: node.highlight }"
-      @click="handleClick()"
       r="7.5"
       :stroke-opacity="node.highlight ? 1 : 0.25"
     />
@@ -147,6 +147,10 @@ circle:hover {
 }
 
 text:hover {
+  cursor: pointer;
+}
+
+path:hover {
   cursor: pointer;
 }
 
