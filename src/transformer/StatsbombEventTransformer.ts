@@ -1,9 +1,11 @@
 /* eslint-disable class-methods-use-this */
 import { CategoricalVariable } from '@/models/CategoricalVariable';
 import { EventDataset, EventDatasetEntry, EventDatasetImpl } from '@/models/EventDataset';
+import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
 import { EventLocation } from '@/models/LocationVariable';
 import { NumericalVariable } from '@/models/NumericalVariable';
 import * as d3 from 'd3';
+import _ from 'lodash';
 import { BaseTransformer } from './BaseTransformer';
 
 export interface StatsbombEventTransformer extends BaseTransformer {
@@ -75,5 +77,32 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
     });
 
     return eventDataset;
+  }
+
+  createEventSequenceDatasetFromEventDataset(
+    eventDataset: EventDataset | undefined,
+  ): EventSequenceDataset {
+    console.log(eventDataset);
+
+    const groupedEventArrays = Object.values(_.groupBy(eventDataset?.data, 'sequence'));
+    const eventSequenceData = new EventSequenceDatasetImpl(
+      groupedEventArrays.map((sequence) => ({
+        id: sequence[0].sequence,
+        events: sequence,
+        variables: [
+          sequence[0].variables.find(
+            (variable) => variable.name === StatsbombVariableNames.HALF_TIME,
+          ) ?? new CategoricalVariable(StatsbombVariableNames.HALF_TIME, '-1'),
+        ],
+      })),
+    );
+    return eventSequenceData;
+  }
+}
+
+function getVariableFromEvent(variableName: string, event: EventDatasetEntry) {
+  const variableToFind = event.variables.find((variable) => variable.name === variableName);
+  if (variableToFind) {
+    return variableToFind;
   }
 }

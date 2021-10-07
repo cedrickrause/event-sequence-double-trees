@@ -58,7 +58,6 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      getEventData: Getters.GET_EVENT_DATA,
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
       getNumericalComparisonVariableMaximum: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM,

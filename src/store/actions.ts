@@ -2,7 +2,7 @@ import { compressEventSequences, removeEventsWithUnusedTypes } from '@/helpers/e
 import getUniqueComparisonVariableValues from '@/helpers/comparisonValues';
 import applyQueryToEventSequenceDataset from '@/helpers/eventSequenceFiltering';
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
-import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
+import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -26,13 +26,9 @@ export const actions: ActionTree<RootState, RootState> = {
     const filteredEventData = removeEventsWithUnusedTypes(eventData);
     context.commit(Mutations.SET_EVENT_DATA, filteredEventData);
 
-    const groupedEventArrays = Object.values(_.groupBy(filteredEventData?.data, 'sequence'));
-    const eventSequenceData = new EventSequenceDatasetImpl(
-      groupedEventArrays.map((sequence) => ({
-        id: sequence[0].sequence,
-        events: sequence,
-      })),
-    );
+    const eventSequenceData = StatsbombEventTransformerImpl.instance
+      .createEventSequenceDatasetFromEventDataset(filteredEventData);
+
     const compressedEventSequenceData = compressEventSequences(eventSequenceData);
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
     context.commit(Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
