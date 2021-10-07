@@ -1,10 +1,11 @@
 <template>
   <g :transform="`translate(${this.node.x},${this.node.y})`"
+      @click="handleClick()"
     >
     <circle
       :class="{ highlight: node.highlight }"
-      @click="handleClick()"
       :r="radius"
+      :stroke-opacity="node.highlight ? 1 : 0.25"
     />
     <text dy="0.35em"
     :font-size="1.5 * this.node.count"
@@ -39,6 +40,7 @@ export default Vue.extend({
   data() {
     return {
       value: this.node,
+      maxArcWidth: 4,
     };
   },
 
@@ -146,6 +148,10 @@ circle:hover {
 }
 
 text:hover {
+  cursor: pointer;
+}
+
+path:hover {
   cursor: pointer;
 }
 
