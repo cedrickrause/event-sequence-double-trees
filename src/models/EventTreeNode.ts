@@ -14,6 +14,7 @@ export interface EventTreeNode {
   variables: Variable[],
   x: number,
   y: number,
+  mod?: number,
 
   descendants(): EventTreeNode[];
   ancestors(): EventTreeNode[];
@@ -63,6 +64,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
   x: number;
 
   y: number;
+
+  mod?: number;
 
   constructor(
     eventType: string,

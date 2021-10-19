@@ -28,6 +28,48 @@ const buildTreeModel = (
   return root;
 };
 
+function calculateFinalY(node: EventTreeNode, modSum: number) {
+  node.y += modSum;
+  if (node.mod) {
+    modSum += node.mod;
+  }
+
+  node.children.forEach((child) => {
+    calculateFinalY(child, modSum);
+  });
+}
+
+function getLeftContour(node: EventTreeNode): number[] {
+  let contour = [node.y];
+  if (node.children.length > 0) {
+    contour = [node.y, getLeftContour(node.children[0])].flat();
+  }
+  return contour;
+}
+
+function getRightContour(node: EventTreeNode): number[] {
+  let contour = [node.y];
+  if (node.children.length > 0) {
+    contour = [node.y, getRightContour(node.children[node.children.length - 1])].flat();
+  }
+  return contour;
+}
+
+function maximumContourOverlap(rightContour: number[], leftContour: number[]): number {
+  const overlap = -Math.min(...leftContour.map((layerLeftMin, index) => {
+    if (rightContour[index] !== undefined) {
+      return layerLeftMin - rightContour[index];
+    }
+    return 0;
+  }));
+
+  if (overlap > 0) {
+    return overlap + 1;
+  }
+
+  return 0;
+}
+
 export default (
   eventSequenceDataset: EventSequenceDataset,
   centralEventType: string,
@@ -46,23 +88,47 @@ export default (
     .domain([0, maxHeight])
     .range([0, height]);
 
-  rootNode.allNodes().map((node) => {
-    const x = xScale(node.depth);
-    const layerNodes = rootNode.allNodesInLayer(node.depth);
-    const positionInLayer = layerNodes
-      .findIndex((layerNode) => layerNode === node);
+  rootNode.descendants().reverse().forEach((node) => {
+    const nodeIndexInParentChildren = node.parents[0].children.findIndex(
+      (checkNode) => checkNode === node,
+    );
 
-    const layerHeight = layerNodes.length - 1;
-    const layerScale = d3.scaleLinear()
-      .domain([0, layerHeight])
-      .range([(maxHeight - layerHeight) / 2, (maxHeight + layerHeight) / 2]);
+    const y = nodeIndexInParentChildren;
 
-    const y = yScale(layerScale(positionInLayer));
-
-    node.x = x;
     node.y = y;
-    return node;
+
+    if (node.children.length > 0) {
+      let desiredY = node.children[0].y;
+      if (node.children.length > 1) {
+        desiredY += (node.children[node.children.length - 1].y - node.children[0].y) / 2;
+      }
+
+      if (node.parents[0].children[0] === node) {
+        node.y = desiredY;
+      } else {
+        node.mod = node.y - desiredY;
+      }
+    }
+
+    node.parents[0].children.slice(nodeIndexInParentChildren).forEach(
+      (sibling) => {
+        const overlap = maximumContourOverlap(getRightContour(sibling), getLeftContour(node));
+        console.log(overlap);
+        node.y += overlap;
+        if (node.mod) {
+          node.mod += overlap;
+        } else {
+          node.mod = overlap;
+        }
+      },
+    );
   });
 
+  calculateFinalY(rootNode, 0);
+
+  rootNode.descendants().forEach((node) => {
+    node.x = xScale(node.depth);
+    node.y = yScale(node.y);
+  });
   return rootNode;
 };
