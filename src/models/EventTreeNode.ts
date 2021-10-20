@@ -21,15 +21,14 @@ export interface EventTreeNode {
   allNodes(): EventTreeNode[];
   links(): EventTreeLink[];
 
-  postorder(): EventTreeNode[];
-
   leaves(): EventTreeNode[];
   founders(): EventTreeNode[];
 
   maximumWidth(): number;
   rightMaximumWidth(): number;
   leftMaximumWidth(): number;
-  maximumHeight(): number;
+  leftMaximumHeight(): number;
+  rightMaximumHeight(): number;
   layerHeight(): number;
   allNodesInLayer(depth: number): EventTreeNode[];
 
@@ -146,10 +145,11 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   descendants(): EventTreeNode[] {
-    if (this.children.length < 1) {
-      return [this];
+    // Postorder
+    if (this.children.length > 0) {
+      return [...this.children.map((node) => node.descendants()), this].flat();
     }
-    return [this, ...this.children.map((node) => node.descendants())].flat();
+    return [this];
   }
 
   leaves(): EventTreeNode[] {
@@ -160,10 +160,11 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   ancestors(): EventTreeNode[] {
-    if (this.parents.length < 1) {
-      return [this];
+    // Postorder
+    if (this.parents.length > 0) {
+      return [...this.parents.map((node) => node.ancestors()), this].flat();
     }
-    return [this, ...this.parents.map((node) => node.ancestors())].flat();
+    return [this];
   }
 
   founders(): EventTreeNode[] {
@@ -193,8 +194,15 @@ export class EventTreeNodeImpl implements EventTreeNode {
     return Math.min(...this.founders().map((founder) => founder.depth));
   }
 
-  maximumHeight(): number {
-    const groupedNodesByDepth = _.groupBy(this.allNodes(), 'depth');
+  leftMaximumHeight(): number {
+    const groupedNodesByDepth = _.groupBy(this.ancestors(), 'depth');
+    const depths: number[] = [];
+    _.forIn(groupedNodesByDepth, (value) => depths.push(value.length));
+    return Math.max(...depths);
+  }
+
+  rightMaximumHeight(): number {
+    const groupedNodesByDepth = _.groupBy(this.descendants(), 'depth');
     const depths: number[] = [];
     _.forIn(groupedNodesByDepth, (value) => depths.push(value.length));
     return Math.max(...depths);
@@ -259,12 +267,5 @@ export class EventTreeNodeImpl implements EventTreeNode {
         (child) => ({ source: node, target: child }),
       ),
     ).flat();
-  }
-
-  postorder(): EventTreeNode[] {
-    if (this.children.length > 0) {
-      return [...this.children.map((node) => node.postorder()), this].flat();
-    }
-    return [this];
   }
 }
