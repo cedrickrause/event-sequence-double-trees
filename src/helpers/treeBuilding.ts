@@ -39,32 +39,34 @@ function calculateFinalY(node: EventTreeNode, modSum: number) {
   });
 }
 
-function getLeftContour(node: EventTreeNode): number[] {
-  let contour = [node.y];
+function getLeftContour(node: EventTreeNode, modSum: number): number[] {
+  let contour = [node.y + modSum];
+  modSum += node.mod ?? 0;
   if (node.children.length > 0) {
-    contour = [node.y, getLeftContour(node.children[0])].flat();
+    contour = [contour, getLeftContour(node.children[0], modSum)].flat();
   }
   return contour;
 }
 
-function getRightContour(node: EventTreeNode): number[] {
-  let contour = [node.y];
+function getRightContour(node: EventTreeNode, modSum: number): number[] {
+  let contour = [node.y + modSum];
+  modSum += node.mod ?? 0;
   if (node.children.length > 0) {
-    contour = [node.y, getRightContour(node.children[node.children.length - 1])].flat();
+    contour = [contour, getRightContour(node.children[node.children.length - 1], modSum)].flat();
   }
   return contour;
 }
 
 function maximumContourOverlap(rightContour: number[], leftContour: number[]): number {
-  const overlap = -Math.min(...leftContour.map((layerLeftMin, index) => {
+  const overlap = -Math.min(...leftContour.map((leftContourAtIndex, index) => {
     if (rightContour[index] !== undefined) {
-      return layerLeftMin - rightContour[index];
+      return leftContourAtIndex - rightContour[index];
     }
     return 0;
   }));
 
   if (overlap > 0) {
-    return overlap + 1;
+    return overlap + 1.5;
   }
 
   return 0;
@@ -88,13 +90,12 @@ export default (
     .domain([0, maxHeight])
     .range([0, height]);
 
-  rootNode.descendants().reverse().forEach((node) => {
+  rootNode.postorder().forEach((node) => {
     const nodeIndexInParentChildren = node.parents[0].children.findIndex(
       (checkNode) => checkNode === node,
     );
 
     const y = nodeIndexInParentChildren;
-
     node.y = y;
 
     if (node.children.length > 0) {
@@ -107,26 +108,27 @@ export default (
         node.y = desiredY;
       } else {
         node.mod = node.y - desiredY;
+
+        node.parents[0].children.slice(0, nodeIndexInParentChildren).forEach(
+          (sibling) => {
+            const overlap = maximumContourOverlap(
+              getRightContour(sibling, 0), getLeftContour(node, 0),
+            );
+            node.y += overlap;
+            if (node.mod) {
+              node.mod += overlap;
+            } else {
+              node.mod = overlap;
+            }
+          },
+        );
       }
     }
-
-    node.parents[0].children.slice(nodeIndexInParentChildren).forEach(
-      (sibling) => {
-        const overlap = maximumContourOverlap(getRightContour(sibling), getLeftContour(node));
-        console.log(overlap);
-        node.y += overlap;
-        if (node.mod) {
-          node.mod += overlap;
-        } else {
-          node.mod = overlap;
-        }
-      },
-    );
   });
 
   calculateFinalY(rootNode, 0);
 
-  rootNode.descendants().forEach((node) => {
+  rootNode.postorder().forEach((node) => {
     node.x = xScale(node.depth);
     node.y = yScale(node.y);
   });
