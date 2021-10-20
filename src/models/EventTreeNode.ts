@@ -21,6 +21,8 @@ export interface EventTreeNode {
   allNodes(): EventTreeNode[];
   links(): EventTreeLink[];
 
+  postorder(): EventTreeNode[];
+
   leaves(): EventTreeNode[];
   founders(): EventTreeNode[];
 
@@ -257,5 +259,12 @@ export class EventTreeNodeImpl implements EventTreeNode {
         (child) => ({ source: node, target: child }),
       ),
     ).flat();
+  }
+
+  postorder(): EventTreeNode[] {
+    if (this.children.length > 0) {
+      return [...this.children.map((node) => node.postorder()), this].flat();
+    }
+    return [this];
   }
 }
