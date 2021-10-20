@@ -28,14 +28,14 @@ const buildTreeModel = (
   return root;
 };
 
-function calculateFinalY(node: EventTreeNode, modSum: number) {
+function calculateFinalYRight(node: EventTreeNode, modSum: number) {
   node.y += modSum;
   if (node.mod) {
     modSum += node.mod;
   }
 
   node.children.forEach((child) => {
-    calculateFinalY(child, modSum);
+    calculateFinalYRight(child, modSum);
   });
 }
 
@@ -176,12 +176,11 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
     }
   });
 
-  calculateFinalY(rootNode, 0);
+  calculateFinalYRight(rootNode, 0);
 
   scalePositions(width, height, rootNode, 'right');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
   rootNode.ancestors().forEach((node) => {
     const nodeIndexInChildrenParents = node.children[0].parents.findIndex(
