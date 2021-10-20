@@ -39,20 +39,61 @@ function calculateFinalY(node: EventTreeNode, modSum: number) {
   });
 }
 
-function getLeftContour(node: EventTreeNode, modSum: number): number[] {
+function calculateFinalYLeft(node: EventTreeNode, modSum: number) {
+  node.y += modSum;
+  if (node.mod) {
+    modSum += node.mod;
+  }
+
+  node.parents.forEach((parent) => {
+    calculateFinalYLeft(parent, modSum);
+  });
+}
+
+function getLeftContourRight(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
+
   if (node.children.length > 0) {
-    contour = [contour, getLeftContour(node.children[0], modSum)].flat();
+    contour = [contour, getLeftContourRight(
+      node.children[0], modSum,
+    )].flat();
   }
   return contour;
 }
 
-function getRightContour(node: EventTreeNode, modSum: number): number[] {
+function getRightContourRight(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
+
   if (node.children.length > 0) {
-    contour = [contour, getRightContour(node.children[node.children.length - 1], modSum)].flat();
+    contour = [contour, getRightContourRight(
+      node.children[node.children.length - 1], modSum,
+    )].flat();
+  }
+  return contour;
+}
+
+function getLeftContourLeft(node: EventTreeNode, modSum: number): number[] {
+  let contour = [node.y + modSum];
+  modSum += node.mod ?? 0;
+
+  if (node.parents.length > 0) {
+    contour = [contour, getLeftContourLeft(
+      node.parents[0], modSum,
+    )].flat();
+  }
+  return contour;
+}
+
+function getRightContourLeft(node: EventTreeNode, modSum: number): number[] {
+  let contour = [node.y + modSum];
+  modSum += node.mod ?? 0;
+
+  if (node.parents.length > 0) {
+    contour = [contour, getRightContourLeft(
+      node.parents[node.parents.length - 1], modSum,
+    )].flat();
   }
   return contour;
 }
@@ -72,25 +113,34 @@ function maximumContourOverlap(rightContour: number[], leftContour: number[]): n
   return 0;
 }
 
-export default (
-  eventSequenceDataset: EventSequenceDataset,
-  centralEventType: string,
-  width: number,
-  height: number,
-): EventTreeNode => {
-  const rootNode = buildTreeModel(eventSequenceDataset, centralEventType);
-
+function scalePositions(
+  width: number, height: number, rootNode: EventTreeNode, direction: string,
+): void {
   const xScale = d3.scaleSqrt()
     .domain([rootNode.leftMaximumWidth(), rootNode.leftMaximumWidth() / 4,
       rootNode.rightMaximumWidth() / 4, rootNode.rightMaximumWidth()])
     .range([0, width / 4, width * 0.75, width]);
 
-  const maxHeight = rootNode.maximumHeight();
+  const maxHeight = direction === 'right' ? rootNode.rightMaximumHeight() : rootNode.leftMaximumHeight();
   const yScale = d3.scaleLinear()
     .domain([0, maxHeight])
     .range([0, height]);
 
-  rootNode.postorder().forEach((node) => {
+  if (direction === 'right') {
+    rootNode.descendants().forEach((node) => {
+      node.x = xScale(node.depth);
+      node.y = yScale(node.y);
+    });
+  } else {
+    rootNode.ancestors().forEach((node) => {
+      node.x = xScale(node.depth);
+      node.y = yScale(node.y);
+    });
+  }
+}
+
+function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
+  rootNode.descendants().forEach((node) => {
     const nodeIndexInParentChildren = node.parents[0].children.findIndex(
       (checkNode) => checkNode === node,
     );
@@ -112,7 +162,7 @@ export default (
         node.parents[0].children.slice(0, nodeIndexInParentChildren).forEach(
           (sibling) => {
             const overlap = maximumContourOverlap(
-              getRightContour(sibling, 0), getLeftContour(node, 0),
+              getRightContourRight(sibling, 0), getLeftContourRight(node, 0),
             );
             node.y += overlap;
             if (node.mod) {
@@ -128,9 +178,62 @@ export default (
 
   calculateFinalY(rootNode, 0);
 
-  rootNode.postorder().forEach((node) => {
-    node.x = xScale(node.depth);
-    node.y = yScale(node.y);
+  scalePositions(width, height, rootNode, 'right');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
+  rootNode.ancestors().forEach((node) => {
+    const nodeIndexInChildrenParents = node.children[0].parents.findIndex(
+      (checkNode) => checkNode === node,
+    );
+
+    const y = nodeIndexInChildrenParents;
+    node.y = y;
+
+    if (node.parents.length > 0) {
+      let desiredY = node.parents[0].y;
+      if (node.parents.length > 1) {
+        desiredY += (node.parents[node.parents.length - 1].y - node.parents[0].y) / 2;
+      }
+
+      if (node.children[0].parents[0] === node) {
+        node.y = desiredY;
+      } else {
+        node.mod = node.y - desiredY;
+
+        node.children[0].parents.slice(0, nodeIndexInChildrenParents).forEach(
+          (sibling) => {
+            const overlap = maximumContourOverlap(
+              getRightContourLeft(sibling, 0), getLeftContourLeft(node, 0),
+            );
+            node.y += overlap;
+            if (node.mod) {
+              node.mod += overlap;
+            } else {
+              node.mod = overlap;
+            }
+          },
+        );
+      }
+    }
   });
+
+  calculateFinalYLeft(rootNode, 0);
+
+  scalePositions(width, height, rootNode, 'left');
+}
+
+export default (
+  eventSequenceDataset: EventSequenceDataset,
+  centralEventType: string,
+  width: number,
+  height: number,
+): EventTreeNode => {
+  const rootNode = buildTreeModel(eventSequenceDataset, centralEventType);
+
+  leftTreeLayout(width, height, rootNode);
+  rightTreeLayout(width, height, rootNode);
+
   return rootNode;
 };
