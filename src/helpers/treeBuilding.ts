@@ -99,15 +99,17 @@ function getParentsRightContour(node: EventTreeNode, modSum: number): number[] {
 }
 
 function maximumContourOverlap(rightContour: number[], leftContour: number[]): number {
-  const overlap = -Math.min(...leftContour.map((leftContourAtIndex, index) => {
-    if (rightContour[index] !== undefined) {
-      return leftContourAtIndex - rightContour[index];
-    }
-    return 0;
-  }));
+  const overlap = -Math.min(...leftContour.slice(0, rightContour.length).map(
+    (leftContourAtIndex, index) => {
+      if (rightContour[index] !== undefined) {
+        return leftContourAtIndex - rightContour[index];
+      }
+      return 0;
+    },
+  ));
 
-  if (overlap > 0) {
-    return overlap + 1.5;
+  if (overlap >= 0) {
+    return overlap + 1;
   }
 
   return 0;
@@ -170,22 +172,23 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
         node.y = desiredY;
       } else {
         node.mod = node.y - desiredY;
-
-        node.parents[0].children.slice(0, nodeIndexInParentChildren).forEach(
-          (sibling) => {
-            const overlap = maximumContourOverlap(
-              getChildrenRightContour(sibling, 0), getChildrenLeftContour(node, 0),
-            );
-            node.y += overlap;
-            if (node.mod) {
-              node.mod += overlap;
-            } else {
-              node.mod = overlap;
-            }
-          },
-        );
       }
     }
+
+    node.parents[0].children.slice(0, nodeIndexInParentChildren).forEach(
+      (sibling) => {
+        const overlap = maximumContourOverlap(
+          getChildrenRightContour(sibling, 0), getChildrenLeftContour(node, 0),
+        );
+
+        node.y += overlap;
+        if (node.mod) {
+          node.mod += overlap;
+        } else {
+          node.mod = overlap;
+        }
+      },
+    );
   });
 
   calculateFinalYRight(rootNode, 0);
@@ -212,22 +215,23 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
         node.y = desiredY;
       } else {
         node.mod = node.y - desiredY;
-
-        node.children[0].parents.slice(0, nodeIndexInChildrenParents).forEach(
-          (sibling) => {
-            const overlap = maximumContourOverlap(
-              getParentsRightContour(sibling, 0), getParentsLeftContour(node, 0),
-            );
-            node.y += overlap;
-            if (node.mod) {
-              node.mod += overlap;
-            } else {
-              node.mod = overlap;
-            }
-          },
-        );
       }
     }
+
+    node.children[0].parents.slice(0, nodeIndexInChildrenParents).forEach(
+      (sibling) => {
+        const overlap = maximumContourOverlap(
+          getParentsRightContour(sibling, 0), getParentsLeftContour(node, 0),
+        );
+
+        node.y += overlap;
+        if (node.mod) {
+          node.mod += overlap;
+        } else {
+          node.mod = overlap;
+        }
+      },
+    );
   });
 
   calculateFinalYLeft(rootNode, 0);
