@@ -50,48 +50,48 @@ function calculateFinalYLeft(node: EventTreeNode, modSum: number) {
   });
 }
 
-function getLeftContourRight(node: EventTreeNode, modSum: number): number[] {
+function getChildrenLeftContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
 
   if (node.children.length > 0) {
-    contour = [contour, getLeftContourRight(
+    contour = [contour, getChildrenLeftContour(
       node.children[0], modSum,
     )].flat();
   }
   return contour;
 }
 
-function getRightContourRight(node: EventTreeNode, modSum: number): number[] {
+function getChildrenRightContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
 
   if (node.children.length > 0) {
-    contour = [contour, getRightContourRight(
+    contour = [contour, getChildrenRightContour(
       node.children[node.children.length - 1], modSum,
     )].flat();
   }
   return contour;
 }
 
-function getLeftContourLeft(node: EventTreeNode, modSum: number): number[] {
+function getParentsLeftContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
 
   if (node.parents.length > 0) {
-    contour = [contour, getLeftContourLeft(
+    contour = [contour, getParentsLeftContour(
       node.parents[0], modSum,
     )].flat();
   }
   return contour;
 }
 
-function getRightContourLeft(node: EventTreeNode, modSum: number): number[] {
+function getParentsRightContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
 
   if (node.parents.length > 0) {
-    contour = [contour, getRightContourLeft(
+    contour = [contour, getParentsRightContour(
       node.parents[node.parents.length - 1], modSum,
     )].flat();
   }
@@ -174,7 +174,7 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
         node.parents[0].children.slice(0, nodeIndexInParentChildren).forEach(
           (sibling) => {
             const overlap = maximumContourOverlap(
-              getRightContourRight(sibling, 0), getLeftContourRight(node, 0),
+              getChildrenRightContour(sibling, 0), getChildrenLeftContour(node, 0),
             );
             node.y += overlap;
             if (node.mod) {
@@ -216,7 +216,7 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
         node.children[0].parents.slice(0, nodeIndexInChildrenParents).forEach(
           (sibling) => {
             const overlap = maximumContourOverlap(
-              getRightContourLeft(sibling, 0), getLeftContourLeft(node, 0),
+              getParentsRightContour(sibling, 0), getParentsLeftContour(node, 0),
             );
             node.y += overlap;
             if (node.mod) {
