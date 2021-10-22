@@ -113,6 +113,18 @@ function maximumContourOverlap(rightContour: number[], leftContour: number[]): n
   return 0;
 }
 
+function yExtentRight(rootNode: EventTreeNode): number[] {
+  const leftMax = Math.min(...rootNode.descendants().map((node) => node.y));
+  const rightMax = Math.max(...rootNode.descendants().map((node) => node.y));
+  return [leftMax, rightMax];
+}
+
+function yExtentLeft(rootNode: EventTreeNode): number[] {
+  const leftMax = Math.min(...rootNode.ancestors().map((node) => node.y));
+  const rightMax = Math.max(...rootNode.ancestors().map((node) => node.y));
+  return [leftMax, rightMax];
+}
+
 function scalePositions(
   width: number, height: number, rootNode: EventTreeNode, direction: string,
 ): void {
@@ -121,9 +133,9 @@ function scalePositions(
       rootNode.rightMaximumWidth() / 4, rootNode.rightMaximumWidth()])
     .range([0, width / 4, width * 0.75, width]);
 
-  const maxHeight = direction === 'right' ? rootNode.rightMaximumHeight() : rootNode.leftMaximumHeight();
+  const yExtent = direction === 'right' ? yExtentRight(rootNode) : yExtentLeft(rootNode);
   const yScale = d3.scaleLinear()
-    .domain([0, maxHeight])
+    .domain(yExtent)
     .range([0, height]);
 
   if (direction === 'right') {
