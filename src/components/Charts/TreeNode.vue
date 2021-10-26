@@ -4,10 +4,11 @@
     >
     <circle
       :class="{ highlight: node.highlight }"
-      r="7.5"
+      :r="radius"
       :stroke-opacity="node.highlight ? 1 : 0.25"
     />
     <text dy="0.35em"
+    :font-size="1.5 * this.node.count"
     :opacity="node.highlight ? 1 : 0.25">
       {{ node.eventType.slice(0,1) }}
     </text>
@@ -72,6 +73,10 @@ export default Vue.extend({
     comparisonValueTotal(): number {
       return _.reduce(this.comparisonValues, (sum, n) => sum + n.value, 0);
     },
+
+    radius(): number {
+      return this.node.count > 1 ? 1.5 * this.node.count : 0;
+    },
   },
 
   methods: {
@@ -115,8 +120,8 @@ export default Vue.extend({
       const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
       const start = sumBefore / total;
       return arc({
-        innerRadius: 8,
-        outerRadius: 8 + this.maxArcWidth * value,
+        innerRadius: this.radius,
+        outerRadius: this.radius + 4 * value,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
@@ -136,11 +141,6 @@ circle {
 
 text {
   text-anchor: middle;
-}
-
-circle.highlight {
-  fill: $highlight;
-  // stroke: $highlight;
 }
 
 circle:hover {
