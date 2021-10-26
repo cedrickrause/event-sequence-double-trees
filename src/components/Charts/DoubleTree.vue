@@ -9,15 +9,20 @@
         <path
           :d="centralLine"
           stroke="black" />
-        <g v-if="links">
-          <tree-link v-for="(link, index) in links"
+        <g v-if="nonEndLinks && endLinks">
+          <tree-link v-for="(link, index) in nonEndLinks"
             :key="'link' + link.source.eventType + index"
             :link="link" />
         </g>
-        <g v-if="nodes">
-          <tree-node v-for="(node, index) in nodes"
+        <g v-if="nonEndNodes && endNodes">
+          <tree-node v-for="(node, index) in nonEndNodes"
             :key="'node' + node.eventType + index"
-            :node="node" />
+            :node="node"
+            :maxArcWidth="4" />
+          <end-tree-node v-for="(node, index) in endNodes"
+            :key="'node' + node.eventType + index"
+            :node="node"
+            :maxArcWidth="4" />
         </g>
       </g>
     </svg>
@@ -33,9 +38,10 @@ import { EventTreeLink } from '@/models/EventTreeLink';
 import * as d3 from 'd3';
 import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
+import EndTreeNode from './EndTreeNode.vue';
 
 export default Vue.extend({
-  components: { TreeNode, TreeLink },
+  components: { TreeNode, TreeLink, EndTreeNode },
   props: {
     eventSequenceData: {
       type: Object as () => EventSequenceDataset,
@@ -72,8 +78,24 @@ export default Vue.extend({
       return this.doubletree?.allNodes();
     },
 
+    endNodes(): EventTreeNode[] | undefined {
+      return this.nodes?.filter((node) => node.eventType === 'End');
+    },
+
+    nonEndNodes(): EventTreeNode[] | undefined {
+      return this.nodes?.filter((node) => node.eventType !== 'End');
+    },
+
     links(): EventTreeLink[] | undefined {
       return this.doubletree?.links();
+    },
+
+    endLinks(): EventTreeLink[] | undefined {
+      return this.links?.filter((link) => link.target.eventType === 'End');
+    },
+
+    nonEndLinks(): EventTreeLink[] | undefined {
+      return this.links?.filter((link) => link.target.eventType !== 'End');
     },
 
     centralLine() {

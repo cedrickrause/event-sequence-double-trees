@@ -35,12 +35,12 @@ export default Vue.extend({
     node: {
       type: Object as () => EventTreeNode,
     },
+    maxArcWidth: Number,
   },
 
   data() {
     return {
       value: this.node,
-      maxArcWidth: 4,
     };
   },
 
@@ -121,7 +121,7 @@ export default Vue.extend({
       const start = sumBefore / total;
       return arc({
         innerRadius: this.radius,
-        outerRadius: this.radius + 4 * value,
+        outerRadius: this.radius + this.maxArcWidth * value,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
