@@ -12,11 +12,20 @@
     :opacity="node.highlight ? 1 : 0.25">
       {{ node.eventType.slice(0,1) }}
     </text>
-    <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
-      :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
-      :fill="getColorScheme[keyValuePair.key]"
-      :opacity="node.highlight ? 1 : 0.25"
-      />
+    <g v-if="comparisonValues.length > 1">
+      <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
+        :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
+        :fill="getColorScheme[keyValuePair.key]"
+        :opacity="node.highlight ? 1 : 0.25"
+        />
+    </g>
+    <g v-else>
+      <path
+        :d="fullArc(1)"
+        fill="grey"
+        :opacity="node.highlight ? 1 : 0.25"
+        />
+    </g>
   </g>
 </template>
 
@@ -124,6 +133,15 @@ export default Vue.extend({
         outerRadius: this.radius + 4 * value,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
+      });
+    },
+
+    fullArc(value: number) {
+      return d3.arc()({
+        innerRadius: this.radius,
+        outerRadius: this.radius + this.maxArcWidth * value,
+        startAngle: 0,
+        endAngle: 2 * Math.PI,
       });
     },
   },
