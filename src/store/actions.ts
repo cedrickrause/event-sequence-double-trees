@@ -33,6 +33,7 @@ export const actions: ActionTree<RootState, RootState> = {
         events: sequence,
       })),
     );
+    eventSequenceData.addEndOfSequenceEvents();
     const compressedEventSequenceData = compressEventSequences(eventSequenceData);
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
     context.commit(Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA, compressedEventSequenceData);

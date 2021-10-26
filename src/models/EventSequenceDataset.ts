@@ -16,4 +16,16 @@ export class EventSequenceDatasetImpl implements EventSequenceDataset {
   constructor(data: Array<EventSequence>) {
     this.data = data;
   }
+
+  addEndOfSequenceEvents(): EventSequenceDataset {
+    this.data.forEach((sequence) => {
+      sequence.events.push({
+        id: '0',
+        eventType: 'End',
+        sequence: sequence.id,
+        variables: [],
+      });
+    });
+    return this;
+  }
 }
