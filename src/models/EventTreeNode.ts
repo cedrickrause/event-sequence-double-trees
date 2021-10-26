@@ -1,4 +1,6 @@
 /* eslint-disable import/no-cycle */
+import store from '@/store/index';
+import { StatsbombVariableNames } from '@/transformer/StatsbombEventTransformer';
 import _ from 'lodash';
 import { EventDatasetEntry } from './EventDataset';
 import { EventTreeLink } from './EventTreeLink';
@@ -95,11 +97,16 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode {
     const child = this.children.find((node) => node.eventType === childEvent.eventType);
+    if (this.variables.filter((variable) => variable.name === StatsbombVariableNames.POSITION
+    && variable.value === 'Right Back') && this.eventType === 'Dribble' && this.count === 25) {
+      console.log(this.count);
+      console.log(child);
+    }
     if (child) {
       child.count += 1;
       child.variables.push(...childEvent.variables);
       child.parentVariables.push(
-        ...this.variables.slice(this.variables.length - childEvent.variables.length - 1,
+        ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
           this.variables.length - 1),
       );
       return child;
@@ -112,7 +119,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [this],
       [],
       [...childEvent.variables],
-      [...this.variables.slice(this.variables.length - childEvent.variables.length,
+      [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
         this.variables.length - 1)],
     );
     this.children.push(newChildNode);

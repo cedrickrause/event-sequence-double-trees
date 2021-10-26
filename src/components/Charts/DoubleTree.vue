@@ -13,6 +13,10 @@
           <tree-link v-for="(link, index) in nonEndLinks"
             :key="'link' + link.source.eventType + index"
             :link="link" />
+          <end-tree-link v-for="(link, index) in endLinks"
+            :key="'endLink' + link.source.eventType + index"
+            :link="link"
+            :maxArcWidth="4" />
         </g>
         <g v-if="nonEndNodes && endNodes">
           <tree-node v-for="(node, index) in nonEndNodes"
@@ -20,7 +24,7 @@
             :node="node"
             :maxArcWidth="4" />
           <end-tree-node v-for="(node, index) in endNodes"
-            :key="'node' + node.eventType + index"
+            :key="'endNode' + node.eventType + index"
             :node="node"
             :maxArcWidth="4" />
         </g>
@@ -39,9 +43,12 @@ import * as d3 from 'd3';
 import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
 import EndTreeNode from './EndTreeNode.vue';
+import EndTreeLink from './EndTreeLink.vue';
 
 export default Vue.extend({
-  components: { TreeNode, TreeLink, EndTreeNode },
+  components: {
+    TreeNode, TreeLink, EndTreeNode, EndTreeLink,
+  },
   props: {
     eventSequenceData: {
       type: Object as () => EventSequenceDataset,

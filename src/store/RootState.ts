@@ -13,4 +13,5 @@ export interface RootState {
   colorScheme: CategoryToColorMapping[] | null,
   numericalComparisonVariableThreshold: number,
   numericalComparisonVariableMaximum: number,
+  variableCount: number,
 }

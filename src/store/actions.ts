@@ -25,6 +25,7 @@ export const actions: ActionTree<RootState, RootState> = {
     const eventData = await StatsbombEventTransformerImpl.instance.transform(payload);
     const filteredEventData = removeEventsWithUnusedTypes(eventData);
     context.commit(Mutations.SET_EVENT_DATA, filteredEventData);
+    context.commit(Mutations.SET_VARIABLE_COUNT, filteredEventData?.data[0].variables.length);
 
     const groupedEventArrays = Object.values(_.groupBy(filteredEventData?.data, 'sequence'));
     const eventSequenceData = new EventSequenceDatasetImpl(

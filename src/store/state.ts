@@ -10,6 +10,7 @@ const state: RootState = {
   colorScheme: null,
   numericalComparisonVariableThreshold: 0,
   numericalComparisonVariableMaximum: 0,
+  variableCount: 0,
 };
 
 export { state as default };

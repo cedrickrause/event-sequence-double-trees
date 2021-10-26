@@ -2,10 +2,10 @@
   <g :transform="`translate(${newX},${newY})`">
     <rect
       :x="-radius/2"
-      :y="-radius/2"
+      :y="-1"
       :width="radius"
       :height="1"
-      :opacity="node.highlight ? 1 : 0.25"
+      :opacity="node.parents[0].highlight ? 1 : 0.25"
       />
   </g>
 </template>

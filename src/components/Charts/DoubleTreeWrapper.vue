@@ -27,7 +27,7 @@ export default Vue.extend({
 
   data() {
     return {
-      centralEventType: 'Foul Won',
+      centralEventType: 'Dribble',
     };
   },
 
