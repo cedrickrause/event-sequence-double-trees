@@ -6,6 +6,11 @@
         font-size="14"
         font-family="sans-serif"
         >
+        <doube-tree-background
+          :rootNode="doubletree"
+          :width="width"
+          :height="height"
+          />
         <path
           :d="centralLine"
           stroke="black" />
@@ -34,9 +39,10 @@ import { EventTreeLink } from '@/models/EventTreeLink';
 import * as d3 from 'd3';
 import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
+import DoubeTreeBackground from './DoubeTreeBackground.vue';
 
 export default Vue.extend({
-  components: { TreeNode, TreeLink },
+  components: { TreeNode, TreeLink, DoubeTreeBackground },
   props: {
     eventSequenceData: {
       type: Object as () => EventSequenceDataset,
