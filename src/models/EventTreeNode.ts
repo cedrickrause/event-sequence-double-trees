@@ -12,6 +12,7 @@ export interface EventTreeNode {
   parents: EventTreeNode[],
   children: EventTreeNode[],
   variables: Variable[],
+  parentVariables: Variable[],
   x: number,
   y: number,
   mod?: number,
@@ -62,6 +63,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   variables: Variable[];
 
+  parentVariables: Variable[];
+
   x: number;
 
   y: number;
@@ -76,6 +79,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     parents: EventTreeNode[],
     children: EventTreeNode[],
     variables: Variable[],
+    parentVariables: Variable[],
   ) {
     this.eventType = eventType;
     this.count = count;
@@ -84,6 +88,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     this.parents = parents;
     this.children = children;
     this.variables = variables;
+    this.parentVariables = parentVariables;
     this.x = 0;
     this.y = 0;
   }
@@ -93,6 +98,10 @@ export class EventTreeNodeImpl implements EventTreeNode {
     if (child) {
       child.count += 1;
       child.variables.push(...childEvent.variables);
+      child.parentVariables.push(
+        ...this.variables.slice(this.variables.length - childEvent.variables.length - 1,
+          this.variables.length - 1),
+      );
       return child;
     }
     const newChildNode = new EventTreeNodeImpl(
@@ -103,6 +112,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [this],
       [],
       [...childEvent.variables],
+      [...this.variables.slice(this.variables.length - childEvent.variables.length,
+        this.variables.length - 1)],
     );
     this.children.push(newChildNode);
     return newChildNode;
@@ -113,6 +124,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     if (parent) {
       parent.count += 1;
       parent.variables.push(...parentEvent.variables);
+      parent.parentVariables.push(...parentEvent.variables);
       return parent;
     }
     const newParentNode = new EventTreeNodeImpl(
@@ -122,6 +134,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       false,
       [],
       [this],
+      [...parentEvent.variables],
       [...parentEvent.variables],
     );
     this.parents.push(newParentNode);

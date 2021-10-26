@@ -63,7 +63,7 @@ export default Vue.extend({
     },
 
     comparisonValues(): {key: string, value: number}[] {
-      const filteredVariables = this.referenceNode.variables.filter(
+      const filteredVariables = this.referenceNode.parentVariables.filter(
         (variable: Variable) => variable.name === this.getComparisonVariable?.name,
       ).map((variable) => {
         if (variable instanceof NumericalVariable) {
