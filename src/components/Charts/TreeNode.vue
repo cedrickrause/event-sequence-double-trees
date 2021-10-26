@@ -12,7 +12,7 @@
     :opacity="node.highlight ? 1 : 0.25">
       {{ node.eventType.slice(0,1) }}
     </text>
-    <g v-if="comparisonValues.length > 1">
+    <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
         :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
