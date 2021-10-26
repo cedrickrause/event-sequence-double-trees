@@ -17,7 +17,8 @@
         <g v-if="nodes">
           <tree-node v-for="(node, index) in nodes"
             :key="'node' + node.eventType + index"
-            :node="node" />
+            :node="node"
+            :maxArcValue="4" />
         </g>
       </g>
     </svg>
