@@ -56,7 +56,6 @@ export default Vue.extend({
   computed: {
     ...mapGetters({
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
-      getComparisonVariableValues: Getters.GET_COMPARISON_VARIABLE_VALUES,
       getColorScheme: Getters.GET_COLOR_SCHEME,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
     }),
