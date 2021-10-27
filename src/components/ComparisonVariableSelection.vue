@@ -2,7 +2,7 @@
   <div>
     <b-form-group
       id="input-group-1"
-      label="Comparison Variable"
+      label="Define categories by"
       label-for="comparisonVariableInput"
     >
       <b-form-select

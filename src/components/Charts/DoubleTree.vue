@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
-import treeBuildingMethod from '@/helpers/treeBuilding';
+import { buildTreeLayout } from '@/helpers/treeBuilding';
 import Vue from 'vue';
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
@@ -79,7 +79,7 @@ export default Vue.extend({
       if (!this.eventSequenceData) {
         return undefined;
       }
-      return treeBuildingMethod(
+      return buildTreeLayout(
         this.eventSequenceData,
         this.centralEventType,
         this.width - this.margin.left - this.margin.right,

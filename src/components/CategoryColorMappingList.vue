@@ -37,3 +37,11 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss" scoped>
+.list-group{
+    max-height: 300px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+</style>
