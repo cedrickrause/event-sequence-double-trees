@@ -1,7 +1,9 @@
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequence, EventSequenceDataset } from '@/models/EventSequenceDataset';
 
-const removedEventTypes = ['Pressure', 'Ball Receipt*', 'Camera On', 'Camera off', 'Starting XI', 'Half Start', 'Half End'];
+const removedEventTypes = ['Pressure', 'Ball Receipt*', 'Camera On', 'Camera off', 'Starting XI', 'Half Start', 'Half End',
+  'Injury Stoppage', 'Foul Committed', 'Carry', 'Shield', 'Player On', 'Player Off', 'Dribbled Past', 'Error', 'Tactical Shift',
+  'Referee Ball-Drop', 'Own Goal For', 'Substitution'];
 
 const EVENT_TYPE_PASS = 'Pass';
 const EVENT_TYPE_CARRY = 'Carry';
