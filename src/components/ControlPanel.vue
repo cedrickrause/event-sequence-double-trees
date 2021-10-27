@@ -15,8 +15,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scope
-    ComparisonVariableSelectiond>
+<style lang="scss" scoped>
 #control-panel {
   text-align: left;
 }
