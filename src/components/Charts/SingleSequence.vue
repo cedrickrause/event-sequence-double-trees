@@ -9,7 +9,7 @@
           <tree-node v-for="(node, index) in nodes"
             :key="'node' + node.eventType + index"
             :node="node"
-            :maxArcValue="4" />
+            :maxArcWidth="4" />
         </g>
     </svg>
 </template>
@@ -47,13 +47,21 @@ export default Vue.extend({
   computed: {
     xScale(): d3.ScaleLinear<number, number, never> {
       return d3.scaleLinear()
-        .domain([0, this.sequence.events.length - 1])
+        .domain([0, this.sequenceWithoutEndEvent.events.length - 1])
         .range([0 + this.margin.left, this.width - this.margin.right]);
+    },
+
+    sequenceWithoutEndEvent(): EventSequence {
+      const sequenceWithoutEndEvent = {} as EventSequence;
+      Object.assign(sequenceWithoutEndEvent, this.sequence);
+      sequenceWithoutEndEvent.events = sequenceWithoutEndEvent.events
+        .slice(0, sequenceWithoutEndEvent.events.length - 1);
+      return sequenceWithoutEndEvent;
     },
 
     layoutRootNode(): EventTreeNode {
       return buildTreeModel(
-        new EventSequenceDatasetImpl([this.sequence]),
+        new EventSequenceDatasetImpl([this.sequenceWithoutEndEvent]),
         this.sequence.events[0].eventType,
       );
     },
