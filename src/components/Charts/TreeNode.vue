@@ -8,7 +8,7 @@
       :stroke-opacity="node.highlight ? 1 : 0.5"
     />
     <text dy="0.35em"
-    :font-size="1.5 * this.node.count"
+    :font-size="this.node.count > 1 ? 1.5 * this.node.count : 0"
     :opacity="node.highlight ? 1 : 0.5">
       {{ node.eventType.slice(0,1) }}
     </text>
