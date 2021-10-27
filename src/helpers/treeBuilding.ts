@@ -7,7 +7,7 @@ const createEmptyRoot = (centralEventType: string): EventTreeNode => new EventTr
   centralEventType, 0, 0, false, [], [], [], [],
 );
 
-const buildTreeModel = (
+export const buildTreeModel = (
   eventSequenceDataset: EventSequenceDataset,
   centralEventType: string,
 ): EventTreeNode => {
@@ -155,7 +155,7 @@ function scalePositions(
 
 function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
   rootNode.descendants().forEach((node) => {
-    const nodeIndexInParentChildren = node.parents[0].children.findIndex(
+    const nodeIndexInParentChildren = node.parents[0]?.children.findIndex(
       (checkNode) => checkNode === node,
     );
 
@@ -168,14 +168,14 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
         desiredY += (node.children[node.children.length - 1].y - node.children[0].y) / 2;
       }
 
-      if (node.parents[0].children[0] === node) {
+      if (node.parents[0]?.children[0] === node) {
         node.y = desiredY;
       } else {
         node.mod = node.y - desiredY;
       }
     }
 
-    node.parents[0].children.slice(0, nodeIndexInParentChildren).forEach(
+    node.parents[0]?.children.slice(0, nodeIndexInParentChildren).forEach(
       (sibling) => {
         const overlap = maximumContourOverlap(
           getChildrenRightContour(sibling, 0), getChildrenLeftContour(node, 0),
@@ -198,7 +198,7 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
 
 function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
   rootNode.ancestors().forEach((node) => {
-    const nodeIndexInChildrenParents = node.children[0].parents.findIndex(
+    const nodeIndexInChildrenParents = node.children[0]?.parents.findIndex(
       (checkNode) => checkNode === node,
     );
 
@@ -211,14 +211,14 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
         desiredY += (node.parents[node.parents.length - 1].y - node.parents[0].y) / 2;
       }
 
-      if (node.children[0].parents[0] === node) {
+      if (node.children[0]?.parents[0] === node) {
         node.y = desiredY;
       } else {
         node.mod = node.y - desiredY;
       }
     }
 
-    node.children[0].parents.slice(0, nodeIndexInChildrenParents).forEach(
+    node.children[0]?.parents.slice(0, nodeIndexInChildrenParents).forEach(
       (sibling) => {
         const overlap = maximumContourOverlap(
           getParentsRightContour(sibling, 0), getParentsLeftContour(node, 0),
@@ -239,7 +239,7 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
   scalePositions(width, height, rootNode, 'left');
 }
 
-export default (
+export const buildTreeLayout = (
   eventSequenceDataset: EventSequenceDataset,
   centralEventType: string,
   width: number,
