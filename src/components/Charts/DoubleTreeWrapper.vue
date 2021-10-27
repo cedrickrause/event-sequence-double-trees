@@ -23,9 +23,11 @@
 
 <script lang="ts">
 import { EventDatasetEntry } from '@/models/EventDataset';
+import { EventSequence } from '@/models/EventSequenceDataset';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import DoubleTree from './DoubleTree.vue';
 
 export default Vue.extend({
@@ -33,13 +35,14 @@ export default Vue.extend({
 
   data() {
     return {
-      centralEventType: 'Dribble',
+      centralEventType: '',
     };
   },
 
   computed: {
     ...mapGetters({
       getEventData: Getters.GET_EVENT_DATA,
+      getInitialEventSequenceData: Getters.GET_INITIAL_EVENT_SEQUENCE_DATA,
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
     }),
 
@@ -51,6 +54,29 @@ export default Vue.extend({
       }
       return [];
     },
+  },
+
+  watch: {
+    centralEventType(): void {
+      const filteredSequence = this.getInitialEventSequenceData.data.filter(
+        (sequence: EventSequence) => sequence.events.findIndex(
+          (event) => event.eventType === this.centralEventType,
+        ) > -1,
+      );
+      this.setEventSequenceData({
+        data: filteredSequence,
+      });
+    },
+
+    selectableEventTypes(): void {
+      this.centralEventType = this.getEventData.data[0].eventType;
+    },
+  },
+
+  methods: {
+    ...mapMutations({
+      setEventSequenceData: Mutations.SET_EVENT_SEQUENCE_DATA,
+    }),
   },
 
 });
