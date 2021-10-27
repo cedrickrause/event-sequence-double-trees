@@ -8,8 +8,8 @@
         >
         <doube-tree-background
           :rootNode="doubletree"
-          :width="width"
-          :height="height"
+          :width="width - margin.left - margin.right"
+          :height="height - margin.top - margin.bottom"
           />
         <path
           :d="centralLine"
