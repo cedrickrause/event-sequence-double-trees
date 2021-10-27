@@ -44,12 +44,12 @@ export default Vue.extend({
     node: {
       type: Object as () => EventTreeNode,
     },
+    maxArcWidth: Number,
   },
 
   data() {
     return {
       value: this.node,
-      maxArcWidth: 4,
     };
   },
 
