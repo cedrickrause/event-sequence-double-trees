@@ -6,6 +6,11 @@
         font-size="14"
         font-family="sans-serif"
         >
+        <doube-tree-background
+          :rootNode="doubletree"
+          :width="width - margin.left - margin.right"
+          :height="height - margin.top - margin.bottom"
+          />
         <path
           :d="centralLine"
           stroke="black" />
@@ -44,10 +49,11 @@ import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
 import EndTreeNode from './EndTreeNode.vue';
 import EndTreeLink from './EndTreeLink.vue';
+import DoubeTreeBackground from './DoubeTreeBackground.vue';
 
 export default Vue.extend({
   components: {
-    TreeNode, TreeLink, EndTreeNode, EndTreeLink,
+    TreeNode, TreeLink, EndTreeNode, EndTreeLink, DoubeTreeBackground,
   },
   props: {
     eventSequenceData: {

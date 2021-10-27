@@ -5,25 +5,25 @@
     <circle
       :class="{ highlight: node.highlight }"
       :r="radius"
-      :stroke-opacity="node.highlight ? 1 : 0.25"
+      :stroke-opacity="node.highlight ? 1 : 0.5"
     />
     <text dy="0.35em"
     :font-size="1.5 * this.node.count"
-    :opacity="node.highlight ? 1 : 0.25">
+    :opacity="node.highlight ? 1 : 0.5">
       {{ node.eventType.slice(0,1) }}
     </text>
     <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
         :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
-        :opacity="node.highlight ? 1 : 0.25"
+        :opacity="node.highlight ? 1 : 0.5"
         />
     </g>
     <g v-else>
       <path
         :d="fullArc(1)"
         fill="grey"
-        :opacity="node.highlight ? 1 : 0.25"
+        :opacity="node.highlight ? 1 : 0.5"
         />
     </g>
   </g>
