@@ -1,11 +1,17 @@
 <template>
-  <div>
+  <div id="double-tree-component">
     <div>
-      <b-form-select
-        id="centralEventTypeInput"
-        v-model="centralEventType"
-        :options="selectableEventTypes">
-      </b-form-select>
+      <b-form-group
+      id="input-group-central-event-type"
+      label="Central Event Type"
+      label-for="centralEventTypeInput"
+      >
+        <b-form-select
+          id="centralEventTypeInput"
+          v-model="centralEventType"
+          :options="selectableEventTypes">
+        </b-form-select>
+      </b-form-group>
     </div>
     <div>
       <double-tree
@@ -49,3 +55,8 @@ export default Vue.extend({
 
 });
 </script>
+<style lang="scss" scoped>
+#double-tree-component {
+  text-align: left;
+}
+</style>
