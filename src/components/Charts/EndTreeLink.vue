@@ -76,9 +76,12 @@ export default Vue.extend({
         }
         return variable;
       });
+      const colorScheme = this.getColorScheme;
       return Object.keys(_.countBy(filteredVariables, 'value')).map(
         (key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }),
-      );
+      ).sort((a, b) => (
+        (Object.keys(colorScheme).indexOf(a.key) > Object.keys(colorScheme).indexOf(b.key))
+          ? 1 : -1));
     },
 
     newX(): number {
