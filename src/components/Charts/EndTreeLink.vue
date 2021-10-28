@@ -35,6 +35,7 @@ export default Vue.extend({
     link: {
       type: Object as () => EventTreeLink,
     },
+    maxArcWidth: Number,
   },
 
   data() {
@@ -82,6 +83,16 @@ export default Vue.extend({
         (Object.keys(colorScheme).indexOf(a.key) > Object.keys(colorScheme).indexOf(b.key))
           ? 1 : -1));
     },
+
+    newX(): number {
+      const parent = this.link.source;
+      return parent.x + this.maxArcWidth + parent.count;
+    },
+
+    newY(): number {
+      const parent = this.link.source;
+      return parent.y - this.maxArcWidth - parent.count * 2;
+    },
   },
 
   methods: {
@@ -94,13 +105,13 @@ export default Vue.extend({
       ).reduce((a, b) => a + b, 0);
 
       const points = [
-        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset + height],
-        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset + height]] as
+        [this.link.source.x - offset + valuesBeforeOffset, this.link.source.y],
+        [this.newX - offset + valuesBeforeOffset, this.newY],
+        [this.newX - offset + valuesBeforeOffset + height, this.newY],
+        [this.link.source.x - offset + valuesBeforeOffset + height, this.link.source.y]] as
         [number, number][];
       return d3.line()
-        .curve(d3.curveBumpX)(points);
+        .curve(d3.curveBumpY)(points);
     },
 
     linkPathDefault() {
@@ -108,16 +119,16 @@ export default Vue.extend({
       const height = this.count;
 
       const points = [
-        [this.link.source.x, this.link.source.y - offset],
-        [this.link.target.x, this.link.target.y - offset],
-        [this.link.target.x, this.link.target.y - offset + height],
-        [this.link.source.x, this.link.source.y - offset + height]] as [number, number][];
+        [this.link.source.x - offset, this.link.source.y],
+        [this.newX - offset, this.newY],
+        [this.newX - offset + height, this.newY],
+        [this.link.source.x - offset + height, this.link.source.y]] as [number, number][];
       return d3.line()
-        .curve(d3.curveBumpX)(points);
+        .curve(d3.curveBumpY)(points);
     },
 
     isHighlight(): boolean {
-      return this.referenceNode.highlight;
+      return this.link.source.highlight;
     },
 
     linkWidth(comparisonVariableValue: string): number {
