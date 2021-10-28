@@ -6,7 +6,7 @@
       :y="-20"
       :width="rectWidth(depth < 0 ? depth : depth - 1)"
       :height="height + 40"
-      :fill="colorScale(Math.abs(depth)/(rootNode.maximumWidth()*2))"
+      :fill="colorScale(Math.abs(depth)/(rootNode.maximumWidth()))"
     />
 
   </g>

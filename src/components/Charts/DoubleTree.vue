@@ -13,7 +13,7 @@
           />
         <path
           :d="centralLine"
-          stroke="black" />
+          stroke="lightgrey" />
         <g v-if="links">
           <tree-link v-for="(link, index) in links"
             :key="'link' + link.source.eventType + index"
