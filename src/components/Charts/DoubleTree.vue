@@ -13,7 +13,7 @@
           />
         <path
           :d="centralLine"
-          stroke="black" />
+          stroke="lightgrey" />
         <g v-if="nonEndLinks && endLinks">
           <tree-link v-for="(link, index) in nonEndLinks"
             :key="'link' + link.source.eventType + index"
