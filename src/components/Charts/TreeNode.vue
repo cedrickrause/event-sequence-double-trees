@@ -75,7 +75,7 @@ export default Vue.extend({
       });
       return Object.keys(_.countBy(filteredVariables, 'value')).map(
         (key) => ({ key, value: _.countBy(filteredVariables, 'value')[key] }),
-      );
+      ).sort((a, b) => ((a.key > b.key) ? 1 : -1));
     },
 
     comparisonValueTotal(): number {
