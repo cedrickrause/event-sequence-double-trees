@@ -14,18 +14,26 @@
         <path
           :d="centralLine"
           stroke="lightgrey" />
-        <g v-if="nonEndLinks && endLinks">
-          <tree-link v-for="(link, index) in nonEndLinks"
+        <g v-if="startLinks && middleLinks && endLinks">
+          <tree-link v-for="(link, index) in middleLinks"
             :key="'link' + link.source.eventType + index"
             :link="link" />
+          <start-tree-link v-for="(link, index) in startLinks"
+            :key="'startLink' + link.source.eventType + index"
+            :link="link"
+            :maxArcWidth="4" />
           <end-tree-link v-for="(link, index) in endLinks"
             :key="'endLink' + link.source.eventType + index"
             :link="link"
             :maxArcWidth="4" />
         </g>
-        <g v-if="nonEndNodes && endNodes">
-          <tree-node v-for="(node, index) in nonEndNodes"
+        <g v-if="startNodes && middleNodes && endNodes">
+          <tree-node v-for="(node, index) in middleNodes"
             :key="'node' + node.eventType + index"
+            :node="node"
+            :maxArcWidth="4" />
+          <start-tree-node v-for="(node, index) in startNodes"
+            :key="'startNode' + node.eventType + index"
             :node="node"
             :maxArcWidth="4" />
           <end-tree-node v-for="(node, index) in endNodes"
@@ -50,10 +58,18 @@ import TreeLink from './TreeLink.vue';
 import EndTreeNode from './EndTreeNode.vue';
 import EndTreeLink from './EndTreeLink.vue';
 import DoubeTreeBackground from './DoubeTreeBackground.vue';
+import StartTreeLink from './StartTreeLink.vue';
+import StartTreeNode from './StartTreeNode.vue';
 
 export default Vue.extend({
   components: {
-    TreeNode, TreeLink, EndTreeNode, EndTreeLink, DoubeTreeBackground,
+    TreeNode,
+    TreeLink,
+    EndTreeNode,
+    EndTreeLink,
+    DoubeTreeBackground,
+    StartTreeLink,
+    StartTreeNode,
   },
   props: {
     eventSequenceData: {
@@ -95,8 +111,12 @@ export default Vue.extend({
       return this.nodes?.filter((node) => node.eventType === 'End');
     },
 
-    nonEndNodes(): EventTreeNode[] | undefined {
-      return this.nodes?.filter((node) => node.eventType !== 'End');
+    middleNodes(): EventTreeNode[] | undefined {
+      return this.nodes?.filter((node) => node.eventType !== 'End' && node.eventType !== 'Start');
+    },
+
+    startNodes(): EventTreeNode[] | undefined {
+      return this.nodes?.filter((node) => node.eventType === 'Start');
     },
 
     links(): EventTreeLink[] | undefined {
@@ -107,8 +127,12 @@ export default Vue.extend({
       return this.links?.filter((link) => link.target.eventType === 'End');
     },
 
-    nonEndLinks(): EventTreeLink[] | undefined {
-      return this.links?.filter((link) => link.target.eventType !== 'End');
+    middleLinks(): EventTreeLink[] | undefined {
+      return this.links?.filter((link) => link.target.eventType !== 'End' && link.source.eventType !== 'Start');
+    },
+
+    startLinks(): EventTreeLink[] | undefined {
+      return this.links?.filter((link) => link.source.eventType === 'Start');
     },
 
     centralLine() {

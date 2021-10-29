@@ -28,4 +28,16 @@ export class EventSequenceDatasetImpl implements EventSequenceDataset {
     });
     return this;
   }
+
+  addStartOfSequenceEvents(): EventSequenceDataset {
+    this.data.forEach((sequence) => {
+      sequence.events.unshift({
+        id: '-1',
+        eventType: 'Start',
+        sequence: sequence.id,
+        variables: [],
+      });
+    });
+    return this;
+  }
 }

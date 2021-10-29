@@ -85,13 +85,13 @@ export default Vue.extend({
     },
 
     newX(): number {
-      const parent = this.link.source;
-      return parent.x + this.maxArcWidth + parent.count;
+      const child = this.link.target;
+      return child.x - this.maxArcWidth - child.count;
     },
 
     newY(): number {
-      const parent = this.link.source;
-      return parent.y - this.maxArcWidth - parent.count * 2;
+      const child = this.link.target;
+      return child.y - this.maxArcWidth - child.count * 2;
     },
   },
 
@@ -105,10 +105,10 @@ export default Vue.extend({
       ).reduce((a, b) => a + b, 0);
 
       const points = [
-        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset],
-        [this.newX - offset + valuesBeforeOffset, this.newY],
         [this.newX - offset + valuesBeforeOffset + height, this.newY],
-        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset + height]] as
+        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset + height],
+        [this.newX - offset + valuesBeforeOffset, this.newY]] as
         [number, number][];
       return d3.line()
         .curve(d3.curveBumpY)(points);
@@ -119,16 +119,17 @@ export default Vue.extend({
       const height = this.count;
 
       const points = [
-        [this.link.source.x - offset, this.link.source.y],
-        [this.newX - offset, this.newY],
         [this.newX - offset + height, this.newY],
-        [this.link.source.x - offset + height, this.link.source.y]] as [number, number][];
+        [this.link.target.x, this.link.target.y - offset],
+        [this.link.target.x, this.link.target.y - offset + height],
+        [this.newX - offset, this.newY]] as
+        [number, number][];
       return d3.line()
         .curve(d3.curveBumpY)(points);
     },
 
     isHighlight(): boolean {
-      return this.link.source.highlight;
+      return this.link.target.highlight;
     },
 
     linkWidth(comparisonVariableValue: string): number {
