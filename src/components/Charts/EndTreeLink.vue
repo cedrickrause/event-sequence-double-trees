@@ -119,10 +119,10 @@ export default Vue.extend({
       const height = this.count;
 
       const points = [
-        [this.link.source.x - offset, this.link.source.y],
+        [this.link.source.x, this.link.source.y - offset],
         [this.newX - offset, this.newY],
         [this.newX - offset + height, this.newY],
-        [this.link.source.x - offset + height, this.link.source.y]] as [number, number][];
+        [this.link.source.x, this.link.source.y - offset + height]] as [number, number][];
       return d3.line()
         .curve(d3.curveBumpY)(points);
     },

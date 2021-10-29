@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 import store from '@/store/index';
-import { StatsbombVariableNames } from '@/transformer/StatsbombEventTransformer';
 import _ from 'lodash';
 import { EventDatasetEntry } from './EventDataset';
 import { EventTreeLink } from './EventTreeLink';
@@ -15,6 +14,7 @@ export interface EventTreeNode {
   children: EventTreeNode[],
   variables: Variable[],
   parentVariables: Variable[],
+  childVariables: Variable[],
   x: number,
   y: number,
   mod?: number,
@@ -67,6 +67,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   parentVariables: Variable[];
 
+  childVariables: Variable[];
+
   x: number;
 
   y: number;
@@ -82,6 +84,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     children: EventTreeNode[],
     variables: Variable[],
     parentVariables: Variable[],
+    childVariables: Variable[],
   ) {
     this.eventType = eventType;
     this.count = count;
@@ -91,17 +94,13 @@ export class EventTreeNodeImpl implements EventTreeNode {
     this.children = children;
     this.variables = variables;
     this.parentVariables = parentVariables;
+    this.childVariables = childVariables;
     this.x = 0;
     this.y = 0;
   }
 
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode {
     const child = this.children.find((node) => node.eventType === childEvent.eventType);
-    if (this.variables.filter((variable) => variable.name === StatsbombVariableNames.POSITION
-    && variable.value === 'Right Back') && this.eventType === 'Dribble' && this.count === 25) {
-      console.log(this.count);
-      console.log(child);
-    }
     if (child) {
       child.count += 1;
       child.variables.push(...childEvent.variables);
@@ -109,6 +108,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
         ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
           this.variables.length - 1),
       );
+      child.childVariables.push(...childEvent.variables);
       return child;
     }
     const newChildNode = new EventTreeNodeImpl(
@@ -121,6 +121,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [...childEvent.variables],
       [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
         this.variables.length - 1)],
+      [...childEvent.variables],
     );
     this.children.push(newChildNode);
     return newChildNode;
@@ -132,6 +133,10 @@ export class EventTreeNodeImpl implements EventTreeNode {
       parent.count += 1;
       parent.variables.push(...parentEvent.variables);
       parent.parentVariables.push(...parentEvent.variables);
+      parent.childVariables.push(
+        ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
+          this.variables.length - 1),
+      );
       return parent;
     }
     const newParentNode = new EventTreeNodeImpl(
@@ -143,6 +148,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [this],
       [...parentEvent.variables],
       [...parentEvent.variables],
+      [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
+        this.variables.length - 1)],
     );
     this.parents.push(newParentNode);
     return newParentNode;

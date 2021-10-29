@@ -64,7 +64,7 @@ export default Vue.extend({
     },
 
     comparisonValues(): {key: string, value: number}[] {
-      const filteredVariables = this.referenceNode.parentVariables.filter(
+      const filteredVariables = this.referenceNode.childVariables.filter(
         (variable: Variable) => variable.name === this.getComparisonVariable?.name,
       ).map((variable) => {
         if (variable instanceof NumericalVariable) {
@@ -105,10 +105,10 @@ export default Vue.extend({
       ).reduce((a, b) => a + b, 0);
 
       const points = [
-        [this.newX - offset + valuesBeforeOffset + height, this.newY],
-        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset + height],
-        [this.newX - offset + valuesBeforeOffset, this.newY]] as
+        [this.newX - offset + valuesBeforeOffset, this.newY],
+        [this.link.target.x, this.link.target.y + offset - valuesBeforeOffset],
+        [this.link.target.x, this.link.target.y + offset - valuesBeforeOffset - height],
+        [this.newX - offset + valuesBeforeOffset + height, this.newY]] as
         [number, number][];
       return d3.line()
         .curve(d3.curveBumpY)(points);
