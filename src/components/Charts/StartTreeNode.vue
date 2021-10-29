@@ -35,7 +35,7 @@ export default Vue.extend({
 
     newX(): number {
       const child = this.node.children[0];
-      return child.x - this.maxArcWidth - child.count;
+      return child.x - this.maxArcWidth - this.node.count;
     },
 
     newY(): number {

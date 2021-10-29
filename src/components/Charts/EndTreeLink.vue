@@ -86,7 +86,7 @@ export default Vue.extend({
 
     newX(): number {
       const parent = this.link.source;
-      return parent.x + this.maxArcWidth + parent.count;
+      return parent.x + this.maxArcWidth + this.referenceNode.count;
     },
 
     newY(): number {
