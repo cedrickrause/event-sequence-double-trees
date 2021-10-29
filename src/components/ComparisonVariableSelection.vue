@@ -66,7 +66,7 @@ export default Vue.extend({
 
     selectableComparisonVariables(): string[] {
       if (this.getEventSequenceData) {
-        return this.getEventSequenceData.data[0].events[0].variables.map(
+        return this.getEventSequenceData.data[0].events[1].variables.map(
           (variable: Variable | null) => ({
             value: variable,
             text: variable?.name,
