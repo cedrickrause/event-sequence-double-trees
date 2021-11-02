@@ -14,8 +14,8 @@
         </b-col>
         <b-col cols="9">
           <b-card
-            body-class="px-0 mx-0"
-            title="Event Sequence DoubleTree">
+            title="Event Sequence DoubleTree"
+          >
             <double-tree
               :eventSequenceData="getEventSequenceData"
               :centralEventType="getCentralEventType"
