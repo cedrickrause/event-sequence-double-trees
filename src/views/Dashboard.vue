@@ -72,8 +72,4 @@ export default Vue.extend({
 .col-3 {
   height: 100%;
 }
-
-.card-body {
-  height: 100%;
-}
 </style>
