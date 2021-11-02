@@ -15,7 +15,10 @@
         <b-col cols="8">
           <b-card
             title="Event Sequence DoubleTree">
-            <double-tree-wrapper />
+            <double-tree
+              :eventSequenceData="getEventSequenceData"
+              :centralEventType="getCentralEventType"
+            />
           </b-card>
         </b-col>
       </b-row>
@@ -24,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import DoubleTreeWrapper from '@/components/Charts/DoubleTreeWrapper.vue';
+import DoubleTree from '@/components/Charts/DoubleTree.vue';
 import ControlPanel from '@/components/ControlPanel.vue';
 import SequenceList from '@/components/SequenceList.vue';
 import { Actions } from '@/store/actions';
@@ -34,14 +37,17 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default Vue.extend({
   name: 'Dashboard',
-  components: { DoubleTreeWrapper, ControlPanel, SequenceList },
+  components: { ControlPanel, SequenceList, DoubleTree },
 
   mounted() {
     this.loadData('./data/events.json');
   },
 
   computed: {
-    ...mapGetters({ getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA }),
+    ...mapGetters({
+      getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
+      getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
+    }),
   },
 
   methods: {

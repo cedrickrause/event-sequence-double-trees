@@ -4,7 +4,7 @@ const state: RootState = {
   eventData: null,
   initialEventSequenceData: null,
   eventSequenceData: null,
-  selectedElementId: null,
+  centralEventType: '',
   comparisonVariable: null,
   comparisonVariableValues: [],
   colorScheme: null,

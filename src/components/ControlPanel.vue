@@ -1,5 +1,6 @@
 <template>
     <div id="control-panel">
+      <central-event-type-selection />
       <comparison-variable-selection />
       <query-builder />
     </div>
@@ -7,11 +8,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import CentralEventTypeSelection from './CentralEventTypeSelection.vue';
 import ComparisonVariableSelection from './ComparisonVariableSelection.vue';
 import QueryBuilder from './QueryBuilder.vue';
 
 export default Vue.extend({
-  components: { QueryBuilder, ComparisonVariableSelection },
+  components: { QueryBuilder, ComparisonVariableSelection, CentralEventTypeSelection },
 });
 </script>
 

@@ -1,23 +1,16 @@
 <template>
-  <div id="double-tree-component">
-    <div>
-      <b-form-group
-      id="input-group-central-event-type"
-      label="Central Event Type"
-      label-for="centralEventTypeInput"
-      >
-        <b-form-select
-          id="centralEventTypeInput"
-          v-model="centralEventType"
-          :options="selectableEventTypes">
-        </b-form-select>
-      </b-form-group>
-    </div>
-    <div>
-      <double-tree
-      :eventSequenceData="getEventSequenceData"
-      :centralEventType="centralEventType" />
-    </div>
+  <div>
+    <b-form-group
+    id="input-group-central-event-type"
+    label="Central Event Type"
+    label-for="centralEventTypeInput"
+    >
+      <b-form-select
+        id="centralEventTypeInput"
+        v-model="centralEventType"
+        :options="selectableEventTypes">
+      </b-form-select>
+    </b-form-group>
   </div>
 </template>
 
@@ -28,23 +21,24 @@ import { Getters } from '@/store/getters';
 import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
-import DoubleTree from './DoubleTree.vue';
 
 export default Vue.extend({
-  components: { DoubleTree },
-
-  data() {
-    return {
-      centralEventType: '',
-    };
-  },
 
   computed: {
     ...mapGetters({
       getEventData: Getters.GET_EVENT_DATA,
       getInitialEventSequenceData: Getters.GET_INITIAL_EVENT_SEQUENCE_DATA,
-      getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
+      getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
     }),
+
+    centralEventType: {
+      get(): string {
+        return this.getCentralEventType;
+      },
+      set(eventType: string): void {
+        this.setCentralEventType(eventType);
+      },
+    },
 
     selectableEventTypes(): string[] {
       if (this.getEventData) {
@@ -76,13 +70,8 @@ export default Vue.extend({
   methods: {
     ...mapMutations({
       setEventSequenceData: Mutations.SET_EVENT_SEQUENCE_DATA,
+      setCentralEventType: Mutations.SET_CENTRAL_EVENT_TYPE,
     }),
   },
-
 });
 </script>
-<style lang="scss" scoped>
-#double-tree-component {
-  text-align: left;
-}
-</style>

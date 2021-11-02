@@ -7,7 +7,7 @@ export interface RootState {
   eventData: EventDataset | undefined | null,
   initialEventSequenceData: EventSequenceDataset | undefined | null,
   eventSequenceData: EventSequenceDataset | undefined | null,
-  selectedElementId: string | null,
+  centralEventType: string,
   comparisonVariable: Variable | null,
   comparisonVariableValues: string[],
   colorScheme: CategoryToColorMapping[] | null,

@@ -9,13 +9,13 @@ export enum Getters {
   GET_EVENT_DATA = 'getEventData',
   GET_INITIAL_EVENT_SEQUENCE_DATA = 'getInitialEventSequenceData',
   GET_EVENT_SEQUENCE_DATA = 'getEventSequenceData',
+  GET_CENTRAL_EVENT_TYPE = 'getCentralEventType',
   GET_COMPARISON_VARIABLE = 'getComparisonVariable',
   GET_COMPARISON_VARIABLE_VALUES = 'getComparisonVariableValues',
   GET_COLOR_SCHEME = 'getColorScheme',
   GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD = 'getNumericalComparisonVariableThreshold',
   GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'getNumericalComparisonVariableMaximum',
   GET_VARIABLE_COUNT = 'getVariableCount',
-  GET_SELECTED_ELEMENT_ID = 'getSelectedElementId',
 }
 
 export const getters: GetterTree<RootState, RootState> = {
@@ -29,6 +29,10 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_EVENT_SEQUENCE_DATA](state) : EventSequenceDataset | undefined | null {
     return state.eventSequenceData;
+  },
+
+  [Getters.GET_CENTRAL_EVENT_TYPE](state) : string {
+    return state.centralEventType;
   },
 
   [Getters.GET_COMPARISON_VARIABLE](state) : Variable | null {
@@ -53,9 +57,5 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_VARIABLE_COUNT](state) : number {
     return state.variableCount;
-  },
-
-  [Getters.GET_SELECTED_ELEMENT_ID](state) : string | null {
-    return state.selectedElementId;
   },
 };
