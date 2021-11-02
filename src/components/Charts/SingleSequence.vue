@@ -47,22 +47,22 @@ export default Vue.extend({
   computed: {
     xScale(): d3.ScaleLinear<number, number, never> {
       return d3.scaleLinear()
-        .domain([0, this.sequenceWithoutEndEvent.events.length - 1])
+        .domain([0, this.sequenceWithoutStartAndEndEvents.events.length - 1])
         .range([0 + this.margin.left, this.width - this.margin.right]);
     },
 
-    sequenceWithoutEndEvent(): EventSequence {
+    sequenceWithoutStartAndEndEvents(): EventSequence {
       const sequenceWithoutEndEvent = {} as EventSequence;
       Object.assign(sequenceWithoutEndEvent, this.sequence);
       sequenceWithoutEndEvent.events = sequenceWithoutEndEvent.events
-        .slice(0, sequenceWithoutEndEvent.events.length - 1);
+        .slice(1, sequenceWithoutEndEvent.events.length - 1);
       return sequenceWithoutEndEvent;
     },
 
     layoutRootNode(): EventTreeNode {
       return buildTreeModel(
-        new EventSequenceDatasetImpl([this.sequenceWithoutEndEvent]),
-        this.sequence.events[0].eventType,
+        new EventSequenceDatasetImpl([this.sequenceWithoutStartAndEndEvents]),
+        this.sequenceWithoutStartAndEndEvents.events[0].eventType,
       );
     },
 
