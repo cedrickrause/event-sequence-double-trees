@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="comparison-variable-selection">
     <b-form-group
       id="input-group-1"
       label="Define categories by"
@@ -93,3 +93,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+#comparison-variable-selection {
+  height: 60%;
+}
+</style>

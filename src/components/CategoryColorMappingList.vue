@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="category-color-mapping-list">
     <b-list-group>
       <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key">
         {{ key }}
@@ -39,7 +39,11 @@ export default Vue.extend({
 </script>
 <style lang="scss" scoped>
 .list-group{
-    max-height: 250px;
+    max-height: 70%;
     overflow-y:scroll;
+}
+
+#category-color-mapping-list {
+  height: 100%;
 }
 </style>

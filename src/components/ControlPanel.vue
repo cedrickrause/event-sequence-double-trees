@@ -20,5 +20,6 @@ export default Vue.extend({
 <style lang="scss" scoped>
 #control-panel {
   text-align: left;
+  height: 100%;
 }
 </style>
