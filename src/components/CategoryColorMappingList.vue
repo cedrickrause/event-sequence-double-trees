@@ -41,6 +41,5 @@ export default Vue.extend({
 .list-group{
     max-height: 250px;
     overflow-y:scroll;
-    -webkit-overflow-scrolling: touch;
 }
 </style>

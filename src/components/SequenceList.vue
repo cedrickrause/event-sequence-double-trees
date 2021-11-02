@@ -40,7 +40,6 @@ export default Vue.extend({
 .list-group{
     max-height: 95%;
     overflow-y:scroll;
-    -webkit-overflow-scrolling: touch;
 }
 
 #sequence-list {
