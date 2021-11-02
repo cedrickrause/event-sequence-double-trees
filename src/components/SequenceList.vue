@@ -38,14 +38,14 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .list-group{
-    max-height: 400px;
-    margin-bottom: 10px;
+    max-height: 95%;
     overflow-y:scroll;
     -webkit-overflow-scrolling: touch;
 }
 
 #sequence-list {
   text-align: left;
+  height: 100%;
 }
 
 span {

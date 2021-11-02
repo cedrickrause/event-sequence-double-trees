@@ -4,16 +4,19 @@
       <b-row align-h="center" no-gutters>
         <b-col cols="3">
           <b-card
+            class="h-50"
             title="Control Panel">
             <control-panel />
           </b-card>
           <b-card
+            class="h-50"
             title="Sequence List">
             <sequence-list />
           </b-card>
         </b-col>
         <b-col cols="9">
           <b-card
+            class="h-100"
             title="Event Sequence DoubleTree"
           >
             <double-tree
@@ -56,3 +59,21 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.container-fluid {
+  height: 100vh;
+}
+
+.row {
+  height: 100%;
+}
+
+.col-3 {
+  height: 100%;
+}
+
+.card-body {
+  height: 100%;
+}
+</style>
