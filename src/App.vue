@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- <ProjectTitle msg="Soccer Event Graph" /> -->
-    <navigation-bar />
+    <!-- <navigation-bar /> -->
     <router-view/>
   </div>
 </template>
@@ -9,12 +9,12 @@
 <script lang="ts">
 import Vue from 'vue';
 // import ProjectTitle from '@/components/ProjectTitle.vue';
-import NavigationBar from './components/NavigationBar.vue';
+// import NavigationBar from './components/NavigationBar.vue';
 
 export default Vue.extend({
   components: {
     // ProjectTitle,
-    NavigationBar,
+    // NavigationBar,
   },
 });
 </script>
