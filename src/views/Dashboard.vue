@@ -63,6 +63,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .container-fluid {
   height: 100vh;
+  overflow: hidden;
 }
 
 .row {
