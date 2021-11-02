@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <b-container fluid>
-      <b-row align-h="center">
+      <b-row align-h="center" no-gutters>
         <b-col cols="3">
           <b-card
             title="Control Panel">
@@ -12,8 +12,9 @@
             <sequence-list />
           </b-card>
         </b-col>
-        <b-col cols="8">
+        <b-col cols="9">
           <b-card
+            body-class="px-0 mx-0"
             title="Event Sequence DoubleTree">
             <double-tree
               :eventSequenceData="getEventSequenceData"

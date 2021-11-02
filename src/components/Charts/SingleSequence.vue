@@ -35,7 +35,7 @@ export default Vue.extend({
 
   data() {
     return {
-      height: 40,
+      height: 10,
       width: 200,
       margin: {
         top: 10, right: 10, bottom: 10, left: 10,
@@ -68,7 +68,7 @@ export default Vue.extend({
 
     nodes(): EventTreeNode[] | undefined {
       return this.layoutRootNode?.allNodes().map((node) => {
-        node.y = 20;
+        node.y = this.height / 2;
         node.x = this.xScale(node.depth);
         return node;
       });
