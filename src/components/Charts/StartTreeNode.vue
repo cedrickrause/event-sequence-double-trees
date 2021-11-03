@@ -12,7 +12,9 @@
 
 <script lang="ts">
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { Getters } from '@/store/getters';
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 export default Vue.extend({
   props: {
@@ -29,18 +31,22 @@ export default Vue.extend({
   },
 
   computed: {
+    ...mapGetters({
+      getNodeScale: Getters.GET_NODE_SCALE,
+    }),
+
     radius(): number {
       return this.node.count * 1.5;
     },
 
     newX(): number {
       const child = this.node.children[0];
-      return child.x - this.maxArcWidth - this.node.count;
+      return child.x - this.maxArcWidth - this.getNodeScale(this.node.count) * 1.5;
     },
 
     newY(): number {
       const child = this.node.children[0];
-      return child.y - this.maxArcWidth - child.count * 2;
+      return child.y - this.maxArcWidth - this.getNodeScale(child.count) * 1.5;
     },
   },
 });

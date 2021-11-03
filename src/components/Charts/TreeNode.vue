@@ -4,11 +4,11 @@
     >
     <circle
       :class="{ highlight: node.highlight }"
-      :r="radius"
+      :r="nodeSize"
       :stroke-opacity="node.highlight ? 1 : 0.5"
     />
     <text dy="0.35em"
-    :font-size="this.node.count > 1 ? 1.5 * this.node.count : 0"
+    :font-size="nodeSize"
     :opacity="node.highlight ? 1 : 0.5">
       {{ node.eventType.slice(0,1) }}
     </text>
@@ -58,6 +58,7 @@ export default Vue.extend({
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
       getColorScheme: Getters.GET_COLOR_SCHEME,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
+      getNodeScale: Getters.GET_NODE_SCALE,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
@@ -85,8 +86,8 @@ export default Vue.extend({
       return _.reduce(this.comparisonValues, (sum, n) => sum + n.value, 0);
     },
 
-    radius(): number {
-      return this.node.count > 1 ? 1.5 * this.node.count : 0;
+    nodeSize(): number {
+      return this.getNodeScale(this.node.count);
     },
   },
 
@@ -131,8 +132,8 @@ export default Vue.extend({
       const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
       const start = sumBefore / total;
       return arc({
-        innerRadius: this.radius,
-        outerRadius: this.radius + this.maxArcWidth * value,
+        innerRadius: this.nodeSize,
+        outerRadius: this.nodeSize + this.maxArcWidth * value,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
@@ -140,8 +141,8 @@ export default Vue.extend({
 
     fullArc(value: number) {
       return d3.arc()({
-        innerRadius: this.radius,
-        outerRadius: this.radius + this.maxArcWidth * value,
+        innerRadius: this.nodeSize,
+        outerRadius: this.nodeSize + this.maxArcWidth * value,
         startAngle: 0,
         endAngle: 2 * Math.PI,
       });

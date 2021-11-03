@@ -50,6 +50,7 @@ export default Vue.extend({
       getComparisonVariableValues: Getters.GET_COMPARISON_VARIABLE_VALUES,
       getColorScheme: Getters.GET_COLOR_SCHEME,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
+      getNodeScale: Getters.GET_NODE_SCALE,
     }),
 
     referenceNode(): EventTreeNode {
@@ -86,12 +87,12 @@ export default Vue.extend({
 
     newX(): number {
       const child = this.link.target;
-      return child.x - this.maxArcWidth - this.referenceNode.count;
+      return child.x - this.maxArcWidth - this.getNodeScale(this.referenceNode.count) * 1.5;
     },
 
     newY(): number {
       const child = this.link.target;
-      return child.y - this.maxArcWidth - child.count * 2;
+      return child.y - this.maxArcWidth - this.getNodeScale(child.count) * 1.5;
     },
   },
 
