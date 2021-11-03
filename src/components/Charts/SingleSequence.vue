@@ -40,7 +40,6 @@ export default Vue.extend({
       margin: {
         top: 10, right: 10, bottom: 10, left: 10,
       },
-      radius: 5,
     };
   },
 
