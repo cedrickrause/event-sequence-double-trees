@@ -1,6 +1,7 @@
 import { compressEventSequences, removeEventsWithUnusedTypes } from '@/helpers/eventFiltering';
 import getUniqueComparisonVariableValues from '@/helpers/comparisonValues';
 import applyQueryToEventSequenceDataset from '@/helpers/eventSequenceFiltering';
+import { nodeMinimumSize, nodeMaximumSize } from '@/helpers/config';
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
@@ -8,6 +9,7 @@ import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTrans
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import _ from 'lodash';
 import { ActionTree } from 'vuex';
+import { scaleSqrt } from 'd3-scale';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
 import { RootState } from './RootState';
@@ -33,6 +35,19 @@ export const actions: ActionTree<RootState, RootState> = {
         events: sequence,
       })),
     );
+    const maximumNumberOfSequencesWithSameEventType = Math.max(
+      ..._.uniq(filteredEventData?.data.map((event) => event.eventType)).map(
+        (eventType) => eventSequenceData.data.filter(
+          (sequence) => sequence.events.map((event) => event.eventType).indexOf(eventType) !== -1,
+        ),
+      ).map((sequencesWithEventType) => sequencesWithEventType.length),
+    );
+    const nodeScale = scaleSqrt()
+      .domain([1, maximumNumberOfSequencesWithSameEventType])
+      .range([nodeMinimumSize, nodeMaximumSize]);
+
+    context.commit(Mutations.SET_NODE_SCALE,
+      nodeScale);
     eventSequenceData.addEndOfSequenceEvents();
     eventSequenceData.addStartOfSequenceEvents();
     const compressedEventSequenceData = compressEventSequences(eventSequenceData);

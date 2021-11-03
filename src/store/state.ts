@@ -5,6 +5,7 @@ const state: RootState = {
   initialEventSequenceData: null,
   eventSequenceData: null,
   centralEventType: '',
+  nodeScale: null,
   comparisonVariable: null,
   comparisonVariableValues: [],
   colorScheme: null,

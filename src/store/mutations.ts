@@ -2,6 +2,7 @@ import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
+import { ScalePower } from 'd3-scale';
 import { MutationTree } from 'vuex';
 import { RootState } from './RootState';
 
@@ -10,6 +11,7 @@ export enum Mutations {
   SET_INITIAL_EVENT_SEQUENCE_DATA = 'setInitialEventSequenceData',
   SET_EVENT_SEQUENCE_DATA = 'setEventSequenceData',
   SET_CENTRAL_EVENT_TYPE = 'setCentralEventType',
+  SET_NODE_SCALE = 'setNodeScale',
   SET_COMPARISON_VARIABLE = 'setComparisonVariable',
   SET_COMPARISON_VARIABLE_VALUES = 'setComparisonVariableValues',
   SET_COLOR_SCHEME = 'setColorScheme',
@@ -33,6 +35,10 @@ export const mutations: MutationTree<RootState> = {
 
   [Mutations.SET_CENTRAL_EVENT_TYPE](state, payload: string) : void {
     state.centralEventType = payload;
+  },
+
+  [Mutations.SET_NODE_SCALE](state, payload: ScalePower<number, number, never>) : void {
+    state.nodeScale = payload;
   },
 
   [Mutations.SET_COMPARISON_VARIABLE](state, payload: Variable) : void {
