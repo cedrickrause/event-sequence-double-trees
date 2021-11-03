@@ -40,7 +40,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .list-group{
     max-height: 70%;
-    overflow-y:scroll;
+    overflow-y: auto;
 }
 
 #category-color-mapping-list {
