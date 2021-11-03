@@ -4,7 +4,7 @@ import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTreeNode';
 import * as d3 from 'd3';
 
 const createEmptyRoot = (centralEventType: string): EventTreeNode => new EventTreeNodeImpl(
-  centralEventType, 0, 0, false, [], [], [], [],
+  centralEventType, 0, 0, false, [], [], [], [], [],
 );
 
 export const buildTreeModel = (
