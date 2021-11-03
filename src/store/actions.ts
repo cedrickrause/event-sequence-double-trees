@@ -14,7 +14,6 @@ import { RootState } from './RootState';
 
 export enum Actions {
   LOAD_EVENT_DATA = 'loadEventData',
-  SELECT_ELEMENT = 'selectElement',
   SELECT_COMPARISON_VARIABLE = 'selectComparisonVariable',
   FILTER_EVENT_SEQUENCE_WITH_QUERY = 'filterEventSequenceWithQuery',
   RESET_EVENT_SEQUENCE_DATA = 'resetEventSequenceData',
@@ -39,14 +38,6 @@ export const actions: ActionTree<RootState, RootState> = {
     const compressedEventSequenceData = compressEventSequences(eventSequenceData);
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
     context.commit(Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA, compressedEventSequenceData);
-  },
-
-  [Actions.SELECT_ELEMENT](context, payload): void {
-    if (context.getters[Getters.GET_SELECTED_ELEMENT_ID] !== payload) {
-      context.commit(Mutations.SET_SELECTED_ELEMENT_ID, payload);
-    } else {
-      context.commit(Mutations.SET_SELECTED_ELEMENT_ID, null);
-    }
   },
 
   [Actions.SELECT_COMPARISON_VARIABLE](context, payload: Variable): void {
