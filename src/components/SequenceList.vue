@@ -36,7 +36,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .list-group{
     max-height: 95%;
-    overflow-y:scroll;
+    overflow-y: auto;
 }
 
 #sequence-list {
