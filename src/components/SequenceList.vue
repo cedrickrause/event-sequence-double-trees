@@ -2,9 +2,6 @@
   <div id="sequence-list">
     <b-list-group>
       <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id">
-        <span>
-          Sequence #{{value.id}}
-        </span>
         <single-sequence
           :sequence="value"
           />
@@ -48,6 +45,11 @@ export default Vue.extend({
 }
 
 span {
-  font-size: 12px
+  font-size: 12px;
+  padding: 1px;
+}
+
+.list-group-item {
+  padding: 1px;
 }
 </style>
