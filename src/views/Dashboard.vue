@@ -44,7 +44,8 @@ export default Vue.extend({
   components: { ControlPanel, SequenceList, DoubleTree },
 
   mounted() {
-    this.loadData('./data/events.json');
+    // this.loadData('./data/events.json');
+    this.loadNobelData('./data/nobel.csv');
   },
 
   computed: {
@@ -55,7 +56,10 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions({ loadData: Actions.LOAD_EVENT_DATA }),
+    ...mapActions({
+      loadData: Actions.LOAD_EVENT_DATA,
+      loadNobelData: Actions.LOAD_NOBEL_EVENT_DATA,
+    }),
   },
 });
 </script>

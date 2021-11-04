@@ -4,7 +4,7 @@ import { Variable } from './Variable';
 export type EventDatasetEntry = {
   id: string,
   eventType: string,
-  sequence: number,
+  sequence: string,
   variables: Variable[],
 };
 

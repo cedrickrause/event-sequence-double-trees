@@ -2,7 +2,7 @@ import { BaseDataset } from './BaseDataset';
 import { EventDatasetEntry } from './EventDataset';
 
 export type EventSequence = {
-  id: number,
+  id: string,
   events: Array<EventDatasetEntry>
 };
 

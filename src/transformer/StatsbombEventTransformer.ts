@@ -55,7 +55,7 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
           (event) => ({
             id: event.id,
             eventType: event.type.name,
-            sequence: event.possession,
+            sequence: event.possession.toString(),
             variables: [
               new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
               new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),
