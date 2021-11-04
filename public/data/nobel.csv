@@ -2,7 +2,7 @@ lastname,firstname,eventtype,age,nationality
 Röntgen,Wilhelm,Birth,0,German
 Röntgen,Wilhelm,Abroad,3,German
 Röntgen,Wilhelm,Abroad,20,German
-Röntgen,Wilhelm,Doctore,24,German
+Röntgen,Wilhelm,Doctorate,24,German
 Röntgen,Wilhelm,Marriage,27,German
 Röntgen,Wilhelm,Abroad,29,German
 Röntgen,Wilhelm,Professorship,30,German
@@ -10,13 +10,13 @@ Röntgen,Wilhelm,Nobel Prize,56,German
 Röntgen,Wilhelm,Death,77,German
 Lorentz,Hendrik,Birth,0,Dutch
 Lorentz,Hendrik,Undergraduate,18,Dutch
-Lorentz,Hendrik,Doctore,22,Dutch
+Lorentz,Hendrik,Doctorate,22,Dutch
 Lorentz,Hendrik,Professorship,24,Dutch
 Lorentz,Hendrik,Marriage,28,Dutch
 Lorentz,Hendrik,Nobel Prize,49,Dutch
 Lorentz,Hendrik,Death,74,Dutch
 Zeeman,Pieter,Birth,0,Dutch
-Zeeman,Pieter,Doctore,28,Dutch
+Zeeman,Pieter,Doctorate,28,Dutch
 Zeeman,Pieter,Abroad,28,Dutch
 Zeeman,Pieter,Abroad,29,Dutch
 Zeeman,Pieter,Marriage,29,Dutch
@@ -26,7 +26,7 @@ Zeeman,Pieter,Death,78,Dutch
 Becquerel,Henri,Birth,0,French
 Becquerel,Henri,Undergraduate,21,French
 Becquerel,Henri,Marriage,21,French
-Becquerel,Henri,Doctore,24,French
+Becquerel,Henri,Doctorate,24,French
 Becquerel,Henri,Marriage,37,French
 Becquerel,Henri,Professorship,39,French
 Becquerel,Henri,Nobel Prize,49,French
@@ -34,7 +34,7 @@ Becquerel,Henri,Death,55,French
 Curie,Pierre,Birth,0,French
 Curie,Pierre,Undergraduate,16,French
 Curie,Pierre,Postgraduate,18,French
-Curie,Pierre,Doctore,36,French
+Curie,Pierre,Doctorate,36,French
 Curie,Pierre,Marriage,36,French
 Curie,Pierre,Professorship,41,French
 Curie,Pierre,Nobel Prize,44,French
@@ -44,7 +44,7 @@ Curie,Marie,Abroad,24,Polish
 Curie,Marie,Undergraduate,25,Polish
 Curie,Marie,Postgraduate,26,Polish
 Curie,Marie,Marriage,27,French
-Curie,Marie,Doctore,35,French
+Curie,Marie,Doctorate,35,French
 Curie,Marie,Nobel Prize,35,French
 Curie,Marie,Professorship,38,French
 Curie,Marie,Nobel Prize,43,French
