@@ -6,7 +6,7 @@
       :y="-20"
       :width="rectWidth(depth < 0 ? depth : depth - 1)"
       :height="height + 40"
-      :fill="colorScale(Math.abs(depth)/(rootNode.maximumWidth()))"
+      :fill="color(depth)"
     />
 
   </g>
@@ -47,6 +47,11 @@ export default Vue.extend({
   methods: {
     rectWidth(depth: number): number {
       return this.xScale(depth + 1) - this.xScale(depth);
+    },
+
+    color(depth: number) {
+      return this.colorScale(Math.abs(depth)
+      / (2 * Math.max(this.rootNode.leftMaximumWidth(), this.rootNode.rightMaximumWidth())));
     },
   },
 
