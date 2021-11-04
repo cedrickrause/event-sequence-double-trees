@@ -106,7 +106,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       child.variables.push(...childEvent.variables);
       child.parentVariables.push(
         ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-          this.variables.length - 1),
+          this.variables.length),
       );
       child.childVariables.push(...childEvent.variables);
       return child;
@@ -120,7 +120,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [],
       [...childEvent.variables],
       [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-        this.variables.length - 1)],
+        this.variables.length)],
       [...childEvent.variables],
     );
     this.children.push(newChildNode);
@@ -135,7 +135,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       parent.parentVariables.push(...parentEvent.variables);
       parent.childVariables.push(
         ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-          this.variables.length - 1),
+          this.variables.length),
       );
       return parent;
     }
@@ -149,7 +149,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [...parentEvent.variables],
       [...parentEvent.variables],
       [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-        this.variables.length - 1)],
+        this.variables.length)],
     );
     this.parents.push(newParentNode);
     return newParentNode;
