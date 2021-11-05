@@ -53,10 +53,11 @@ function calculateFinalYLeft(node: EventTreeNode, modSum: number) {
 function getChildrenLeftContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
+  const nonEndChildren = node.children.filter((child) => child.eventType !== 'End');
 
-  if (node.children.length > 0) {
+  if (nonEndChildren.length > 0) {
     contour = [contour, getChildrenLeftContour(
-      node.children[0], modSum,
+      nonEndChildren[0], modSum,
     )].flat();
   }
   return contour;
@@ -65,10 +66,11 @@ function getChildrenLeftContour(node: EventTreeNode, modSum: number): number[] {
 function getChildrenRightContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
+  const nonEndChildren = node.children.filter((child) => child.eventType !== 'End');
 
-  if (node.children.length > 0) {
+  if (nonEndChildren.length > 0) {
     contour = [contour, getChildrenRightContour(
-      node.children[node.children.length - 1], modSum,
+      nonEndChildren[nonEndChildren.length - 1], modSum,
     )].flat();
   }
   return contour;
@@ -77,10 +79,11 @@ function getChildrenRightContour(node: EventTreeNode, modSum: number): number[] 
 function getParentsLeftContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
+  const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'End');
 
-  if (node.parents.length > 0) {
+  if (nonStartParents.length > 0) {
     contour = [contour, getParentsLeftContour(
-      node.parents[0], modSum,
+      nonStartParents[0], modSum,
     )].flat();
   }
   return contour;
@@ -89,10 +92,11 @@ function getParentsLeftContour(node: EventTreeNode, modSum: number): number[] {
 function getParentsRightContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
+  const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'End');
 
-  if (node.parents.length > 0) {
+  if (nonStartParents.length > 0) {
     contour = [contour, getParentsRightContour(
-      node.parents[node.parents.length - 1], modSum,
+      nonStartParents[nonStartParents.length - 1], modSum,
     )].flat();
   }
   return contour;
