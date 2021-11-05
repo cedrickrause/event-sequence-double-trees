@@ -27,14 +27,14 @@
     </text>
     <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
-        :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
+        :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
         />
     </g>
     <g v-else>
       <path
-        :d="fullArc(1)"
+        :d="fullArc(node.count)"
         fill="grey"
         :opacity="node.highlight ? 1 : 0.5"
         />
@@ -154,7 +154,7 @@ export default Vue.extend({
       const start = sumBefore / total;
       return arc({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + this.maxArcWidth * value,
+        outerRadius: this.nodeSize + 1 + Math.sqrt(value),
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
@@ -163,7 +163,7 @@ export default Vue.extend({
     fullArc(value: number) {
       return d3.arc()({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + this.maxArcWidth * value,
+        outerRadius: this.nodeSize + 1 + Math.sqrt(value),
         startAngle: 0,
         endAngle: 2 * Math.PI,
       });
