@@ -19,10 +19,7 @@
             class="h-100"
             title="Event Sequence DoubleTree"
           >
-            <double-tree
-              :eventSequenceData="getEventSequenceData"
-              :centralEventType="getCentralEventType"
-            />
+            <double-tree-wrapper />
           </b-card>
         </b-col>
       </b-row>
@@ -31,27 +28,19 @@
 </template>
 
 <script lang="ts">
-import DoubleTree from '@/components/Charts/DoubleTree.vue';
+import DoubleTreeWrapper from '@/components/Charts/DoubleTreeWrapper.vue';
 import ControlPanel from '@/components/ControlPanel.vue';
 import SequenceList from '@/components/SequenceList.vue';
 import { Actions } from '@/store/actions';
-import { Getters } from '@/store/getters';
 import Vue from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default Vue.extend({
   name: 'Dashboard',
-  components: { ControlPanel, SequenceList, DoubleTree },
+  components: { ControlPanel, SequenceList, DoubleTreeWrapper },
 
   mounted() {
     this.loadData('./data/events.json');
-  },
-
-  computed: {
-    ...mapGetters({
-      getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
-      getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
-    }),
   },
 
   methods: {
