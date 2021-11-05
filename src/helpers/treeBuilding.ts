@@ -79,7 +79,7 @@ function getChildrenRightContour(node: EventTreeNode, modSum: number): number[] 
 function getParentsLeftContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
-  const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'End');
+  const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'Start');
 
   if (nonStartParents.length > 0) {
     contour = [contour, getParentsLeftContour(
@@ -92,7 +92,7 @@ function getParentsLeftContour(node: EventTreeNode, modSum: number): number[] {
 function getParentsRightContour(node: EventTreeNode, modSum: number): number[] {
   let contour = [node.y + modSum];
   modSum += node.mod ?? 0;
-  const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'End');
+  const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'Start');
 
   if (nonStartParents.length > 0) {
     contour = [contour, getParentsRightContour(
@@ -166,10 +166,12 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
     const y = nodeIndexInParentChildren;
     node.y = y;
 
-    if (node.children.length > 0) {
-      let desiredY = node.children[0].y;
-      if (node.children.length > 1) {
-        desiredY += (node.children[node.children.length - 1].y - node.children[0].y) / 2;
+    const nonEndChildren = node.children.filter((child) => child.eventType !== 'End');
+
+    if (nonEndChildren.length > 0) {
+      let desiredY = nonEndChildren[0].y;
+      if (nonEndChildren.length > 1) {
+        desiredY += (nonEndChildren[nonEndChildren.length - 1].y - nonEndChildren[0].y) / 2;
       }
 
       if (node.parents[0]?.children[0] === node) {
@@ -179,7 +181,8 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
       }
     }
 
-    node.parents[0]?.children.filter((sibling) => sibling.eventType !== 'End').slice(0, nodeIndexInParentChildren).forEach(
+    const nonEndSiblings = node.parents[0]?.children.filter((sibling) => sibling.eventType !== 'End');
+    nonEndSiblings.slice(0, nodeIndexInParentChildren).forEach(
       (sibling) => {
         const overlap = maximumContourOverlap(
           getChildrenRightContour(sibling, 0), getChildrenLeftContour(node, 0),
@@ -209,10 +212,12 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
     const y = nodeIndexInChildrenParents;
     node.y = y;
 
-    if (node.parents.length > 0) {
-      let desiredY = node.parents[0].y;
-      if (node.parents.length > 1) {
-        desiredY += (node.parents[node.parents.length - 1].y - node.parents[0].y) / 2;
+    const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'Start');
+
+    if (nonStartParents.length > 0) {
+      let desiredY = nonStartParents[0].y;
+      if (nonStartParents.length > 1) {
+        desiredY += (nonStartParents[nonStartParents.length - 1].y - nonStartParents[0].y) / 2;
       }
 
       if (node.children[0]?.parents[0] === node) {
@@ -222,7 +227,8 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
       }
     }
 
-    node.children[0]?.parents.filter((sibling) => sibling.eventType !== 'Start').slice(0, nodeIndexInChildrenParents).forEach(
+    const nonStartSiblings = node.children[0]?.parents.filter((sibling) => sibling.eventType !== 'Start');
+    nonStartSiblings.slice(0, nodeIndexInChildrenParents).forEach(
       (sibling) => {
         const overlap = maximumContourOverlap(
           getParentsRightContour(sibling, 0), getParentsLeftContour(node, 0),
