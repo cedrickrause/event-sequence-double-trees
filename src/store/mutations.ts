@@ -1,4 +1,5 @@
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
+import { EventTypeToIconMapping } from '@/helpers/iconMapping';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
@@ -8,6 +9,7 @@ import { RootState } from './RootState';
 
 export enum Mutations {
   SET_EVENT_DATA = 'setEventData',
+  SET_EVENT_TYPE_ICON_MAPPING = 'setEventTypeIconMapping',
   SET_INITIAL_EVENT_SEQUENCE_DATA = 'setInitialEventSequenceData',
   SET_EVENT_SEQUENCE_DATA = 'setEventSequenceData',
   SET_CENTRAL_EVENT_TYPE = 'setCentralEventType',
@@ -23,6 +25,10 @@ export enum Mutations {
 export const mutations: MutationTree<RootState> = {
   [Mutations.SET_EVENT_DATA](state, payload: EventDataset) : void {
     state.eventData = payload;
+  },
+
+  [Mutations.SET_EVENT_TYPE_ICON_MAPPING](state, payload: EventTypeToIconMapping[]) : void {
+    state.eventTypeIconMapping = payload;
   },
 
   [Mutations.SET_EVENT_SEQUENCE_DATA](state, payload: EventSequenceDataset) : void {

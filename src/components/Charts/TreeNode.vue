@@ -23,7 +23,7 @@
     <text dy="0.35em"
     :font-size="nodeSize"
     :opacity="node.highlight ? 1 : 0.5">
-      {{ node.eventType.slice(0,1) }}
+      {{ nodeIcon }}
     </text>
     <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
@@ -73,6 +73,7 @@ export default Vue.extend({
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
       getNodeScale: Getters.GET_NODE_SCALE,
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
+      getEventTypeToIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
@@ -109,6 +110,10 @@ export default Vue.extend({
         return 'url(#diagonalHatch)';
       }
       return 'white';
+    },
+
+    nodeIcon(): string {
+      return this.getEventTypeToIconMapping[this.node.eventType];
     },
   },
 
