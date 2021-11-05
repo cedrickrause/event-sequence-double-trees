@@ -85,7 +85,7 @@ export default Vue.extend({
       width: 800,
       height: 400,
       margin: {
-        top: 10, right: 10, bottom: 10, left: 10,
+        top: 35, right: 10, bottom: 35, left: 10,
       },
     };
   },
