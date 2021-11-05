@@ -3,9 +3,9 @@
     <rect v-for="(depth) in range"
       :key="'backgroundrect' + depth"
       :x="xScale(depth < 0 ? depth : depth - 1)"
-      :y="-20"
+      :y="-40"
       :width="rectWidth(depth < 0 ? depth : depth - 1)"
-      :height="height + 40"
+      :height="height + 80"
       :fill="color(depth)"
     />
 
