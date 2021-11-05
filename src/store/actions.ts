@@ -58,27 +58,19 @@ export const actions: ActionTree<RootState, RootState> = {
     const eventData = await NobelCsvTransformerImpl.instance.transform(payload);
     context.commit(Mutations.SET_EVENT_DATA, eventData);
     context.commit(Mutations.SET_VARIABLE_COUNT, eventData?.data[0].variables.length);
+    context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, Object.fromEntries(
+      _.uniq(eventData?.data
+        .map((event) => event.eventType))
+        .map((eventType) => [eventType, eventType.slice(0, 2)]),
+    ));
 
-    const groupedEventArrays = Object.values(_.groupBy(eventData?.data, 'sequence'));
-    const eventSequenceData = new EventSequenceDatasetImpl(
-      groupedEventArrays.map((sequence) => ({
-        id: sequence[0].sequence,
-        events: sequence,
-      })),
-    );
-    const maximumNumberOfSequencesWithSameEventType = Math.max(
-      ..._.uniq(eventData?.data.map((event) => event.eventType)).map(
-        (eventType) => eventSequenceData.data.filter(
-          (sequence) => sequence.events.map((event) => event.eventType).indexOf(eventType) !== -1,
-        ),
-      ).map((sequencesWithEventType) => sequencesWithEventType.length),
-    );
+    const eventSequenceData = getEventSequenceDataFromEventData(eventData, 'sequence');
+
     const nodeScale = scaleSqrt()
-      .domain([1, maximumNumberOfSequencesWithSameEventType])
+      .domain([1, getMaxNumberOfSequencesWithOneEventType(eventData, eventSequenceData)])
       .range([nodeMinimumSize, nodeMaximumSize]);
+    context.commit(Mutations.SET_NODE_SCALE, nodeScale);
 
-    context.commit(Mutations.SET_NODE_SCALE,
-      nodeScale);
     eventSequenceData.addEndOfSequenceEvents();
     eventSequenceData.addStartOfSequenceEvents();
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, eventSequenceData);
