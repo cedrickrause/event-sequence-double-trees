@@ -154,8 +154,8 @@ function scalePositions(
 }
 
 function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
-  rootNode.descendants().forEach((node) => {
-    const nodeIndexInParentChildren = node.parents[0]?.children.findIndex(
+  rootNode.descendants().filter((node) => node.eventType !== 'End').forEach((node) => {
+    const nodeIndexInParentChildren = node.parents[0]?.children.filter((child) => child.eventType !== 'End').findIndex(
       (checkNode) => checkNode === node,
     );
 
@@ -175,7 +175,7 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
       }
     }
 
-    node.parents[0]?.children.slice(0, nodeIndexInParentChildren).forEach(
+    node.parents[0]?.children.filter((sibling) => sibling.eventType !== 'End').slice(0, nodeIndexInParentChildren).forEach(
       (sibling) => {
         const overlap = maximumContourOverlap(
           getChildrenRightContour(sibling, 0), getChildrenLeftContour(node, 0),
@@ -197,8 +197,8 @@ function rightTreeLayout(width: number, height: number, rootNode: EventTreeNode)
 }
 
 function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) {
-  rootNode.ancestors().forEach((node) => {
-    const nodeIndexInChildrenParents = node.children[0]?.parents.findIndex(
+  rootNode.ancestors().filter((node) => node.eventType !== 'Start').forEach((node) => {
+    const nodeIndexInChildrenParents = node.children[0]?.parents.filter((parent) => parent.eventType !== 'Start').findIndex(
       (checkNode) => checkNode === node,
     );
 
@@ -218,7 +218,7 @@ function leftTreeLayout(width: number, height: number, rootNode: EventTreeNode) 
       }
     }
 
-    node.children[0]?.parents.slice(0, nodeIndexInChildrenParents).forEach(
+    node.children[0]?.parents.filter((sibling) => sibling.eventType !== 'Start').slice(0, nodeIndexInChildrenParents).forEach(
       (sibling) => {
         const overlap = maximumContourOverlap(
           getParentsRightContour(sibling, 0), getParentsLeftContour(node, 0),
