@@ -1,4 +1,4 @@
-import { EventSequenceDataset } from '@/models/EventSequenceDataset';
+import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
 
 export default (
   eventSequenceDataset: EventSequenceDataset,
@@ -24,7 +24,5 @@ export default (
     },
   );
 
-  return {
-    data: filteredEventSequences,
-  };
+  return new EventSequenceDatasetImpl(filteredEventSequences);
 };

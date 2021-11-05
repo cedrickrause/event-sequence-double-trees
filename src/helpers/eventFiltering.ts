@@ -1,5 +1,6 @@
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
-import { EventSequence, EventSequenceDataset } from '@/models/EventSequenceDataset';
+import { EventSequence, EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
+import _ from 'lodash';
 
 const removedEventTypes = ['Pressure', 'Ball Receipt*', 'Camera On', 'Camera off', 'Starting XI', 'Half Start', 'Half End',
   'Injury Stoppage', 'Foul Committed', 'Carry', 'Shield', 'Player On', 'Player Off', 'Dribbled Past', 'Error', 'Tactical Shift',
@@ -47,7 +48,31 @@ export const compressEventSequences = (
   if (!eventSequenceDataset) {
     return undefined;
   }
-  return {
-    data: eventSequenceDataset.data.map((sequence) => compressPassAndCarryForSequence(sequence)),
-  };
+  return new EventSequenceDatasetImpl(
+    eventSequenceDataset.data.map((sequence) => compressPassAndCarryForSequence(sequence)),
+  );
+};
+
+export const getMaxNumberOfSequencesWithOneEventType = (
+  eventData: EventDataset | undefined,
+  eventSequenceData: EventSequenceDataset,
+): number => Math.max(
+  ..._.uniq(eventData?.data.map((event) => event.eventType)).map(
+    (eventType) => eventSequenceData.data.filter(
+      (sequence) => sequence.events.map((event) => event.eventType).indexOf(eventType) !== -1,
+    ),
+  ).map((sequencesWithEventType) => sequencesWithEventType.length),
+);
+
+export const getEventSequenceDataFromEventData = (
+  eventData: EventDataset | undefined,
+  sequenceId: string,
+): EventSequenceDataset => {
+  const groupedEventArrays = Object.values(_.groupBy(eventData?.data, sequenceId));
+  return new EventSequenceDatasetImpl(
+    groupedEventArrays.map((sequence) => ({
+      id: sequence[0].sequence,
+      events: sequence,
+    })),
+  );
 };

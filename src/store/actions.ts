@@ -1,9 +1,14 @@
-import { compressEventSequences, removeEventsWithUnusedTypes } from '@/helpers/eventFiltering';
+import {
+  compressEventSequences,
+  removeEventsWithUnusedTypes,
+  getMaxNumberOfSequencesWithOneEventType,
+  getEventSequenceDataFromEventData,
+} from '@/helpers/eventFiltering';
 import getUniqueComparisonVariableValues from '@/helpers/comparisonValues';
 import applyQueryToEventSequenceDataset from '@/helpers/eventSequenceFiltering';
 import { nodeMinimumSize, nodeMaximumSize } from '@/helpers/config';
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
-import { EventSequenceDataset, EventSequenceDatasetImpl } from '@/models/EventSequenceDataset';
+import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -29,27 +34,19 @@ export const actions: ActionTree<RootState, RootState> = {
     const filteredEventData = removeEventsWithUnusedTypes(eventData);
     context.commit(Mutations.SET_EVENT_DATA, filteredEventData);
     context.commit(Mutations.SET_VARIABLE_COUNT, filteredEventData?.data[0].variables.length);
+    context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, Object.fromEntries(
+      _.uniq(filteredEventData?.data
+        .map((event) => event.eventType))
+        .map((eventType) => [eventType, eventType.slice(0, 2)]),
+    ));
 
-    const groupedEventArrays = Object.values(_.groupBy(filteredEventData?.data, 'sequence'));
-    const eventSequenceData = new EventSequenceDatasetImpl(
-      groupedEventArrays.map((sequence) => ({
-        id: sequence[0].sequence,
-        events: sequence,
-      })),
-    );
-    const maximumNumberOfSequencesWithSameEventType = Math.max(
-      ..._.uniq(filteredEventData?.data.map((event) => event.eventType)).map(
-        (eventType) => eventSequenceData.data.filter(
-          (sequence) => sequence.events.map((event) => event.eventType).indexOf(eventType) !== -1,
-        ),
-      ).map((sequencesWithEventType) => sequencesWithEventType.length),
-    );
+    const eventSequenceData = getEventSequenceDataFromEventData(filteredEventData, 'sequence');
+
     const nodeScale = scaleSqrt()
-      .domain([1, maximumNumberOfSequencesWithSameEventType])
+      .domain([1, getMaxNumberOfSequencesWithOneEventType(filteredEventData, eventSequenceData)])
       .range([nodeMinimumSize, nodeMaximumSize]);
+    context.commit(Mutations.SET_NODE_SCALE, nodeScale);
 
-    context.commit(Mutations.SET_NODE_SCALE,
-      nodeScale);
     eventSequenceData.addEndOfSequenceEvents();
     eventSequenceData.addStartOfSequenceEvents();
     const compressedEventSequenceData = compressEventSequences(eventSequenceData);

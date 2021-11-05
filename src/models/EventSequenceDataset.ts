@@ -8,6 +8,10 @@ export type EventSequence = {
 
 export interface EventSequenceDataset extends BaseDataset {
   data: Array<EventSequence>,
+
+  addEndOfSequenceEvents(): EventSequenceDataset,
+
+  addStartOfSequenceEvents(): EventSequenceDataset,
 }
 
 export class EventSequenceDatasetImpl implements EventSequenceDataset {
