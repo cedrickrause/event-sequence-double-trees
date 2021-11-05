@@ -2,9 +2,22 @@
   <g :transform="`translate(${this.node.x},${this.node.y})`"
       @click="handleClick()"
     >
+    <defs>
+           <pattern
+                id="diagonalHatch"
+                patternUnits="userSpaceOnUse"
+                width="4"
+                height="2"
+                patternTransform="rotate(-45 2 2)"
+            >
+                <rect fill="white" width="10" height="10" />
+                <path d="M -1,2 l 6,0" stroke="#000000" stroke-width=".5"/>
+          </pattern>
+    </defs>
     <circle
       :class="{ highlight: node.highlight }"
       :r="nodeSize"
+      :fill="nodeColor"
       :stroke-opacity="node.highlight ? 1 : 0.5"
     />
     <text dy="0.35em"
@@ -14,14 +27,14 @@
     </text>
     <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
-        :d="arc(1, keyValuePair.value, comparisonValues.slice(0, index))"
+        :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
         />
     </g>
     <g v-else>
       <path
-        :d="fullArc(1)"
+        :d="fullArc(node.count)"
         fill="grey"
         :opacity="node.highlight ? 1 : 0.5"
         />
@@ -59,6 +72,7 @@ export default Vue.extend({
       getColorScheme: Getters.GET_COLOR_SCHEME,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
       getNodeScale: Getters.GET_NODE_SCALE,
+      getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
@@ -88,6 +102,13 @@ export default Vue.extend({
 
     nodeSize(): number {
       return this.getNodeScale(this.node.count);
+    },
+
+    nodeColor(): string {
+      if (this.getCentralEventType === this.node.eventType) {
+        return 'url(#diagonalHatch)';
+      }
+      return 'white';
     },
   },
 
@@ -133,7 +154,7 @@ export default Vue.extend({
       const start = sumBefore / total;
       return arc({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + this.maxArcWidth * value,
+        outerRadius: this.nodeSize + 1 + Math.sqrt(value),
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
@@ -142,7 +163,7 @@ export default Vue.extend({
     fullArc(value: number) {
       return d3.arc()({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + this.maxArcWidth * value,
+        outerRadius: this.nodeSize + 1 + Math.sqrt(value),
         startAngle: 0,
         endAngle: 2 * Math.PI,
       });
@@ -155,7 +176,6 @@ export default Vue.extend({
 @import '@/style/custom.scss';
 
 circle {
-  fill: white;
   stroke: #555;
   stroke-linejoin: round;
 }
