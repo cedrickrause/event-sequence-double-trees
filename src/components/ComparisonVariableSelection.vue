@@ -96,6 +96,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 #comparison-variable-selection {
-  height: 60%;
+  height: 70%;
 }
 </style>
