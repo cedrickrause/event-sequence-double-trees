@@ -43,6 +43,10 @@ export default Vue.extend({
     overflow-y: auto;
 }
 
+.list-group-item {
+  padding: 5px;
+}
+
 #category-color-mapping-list {
   height: 100%;
 }
