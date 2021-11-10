@@ -3,11 +3,7 @@
     <b-container fluid>
       <b-row align-h="center" no-gutters>
         <b-col cols="3">
-          <b-card
-            class="h-50"
-            title="Control Panel">
-            <control-panel />
-          </b-card>
+          <control-panel-card />
           <b-card
             class="h-50"
             title="Sequence List">
@@ -32,7 +28,7 @@
 
 <script lang="ts">
 import DoubleTree from '@/components/Charts/DoubleTree.vue';
-import ControlPanel from '@/components/ControlPanel.vue';
+import ControlPanelCard from '@/components/ControlPanelCard.vue';
 import SequenceList from '@/components/SequenceList.vue';
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
@@ -41,7 +37,7 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default Vue.extend({
   name: 'Dashboard',
-  components: { ControlPanel, SequenceList, DoubleTree },
+  components: { SequenceList, DoubleTree, ControlPanelCard },
 
   mounted() {
     // this.loadData('./data/events.json');
