@@ -21,15 +21,16 @@ import { Mutations } from './mutations';
 import { RootState } from './RootState';
 
 export enum Actions {
-  LOAD_EVENT_DATA = 'loadEventData',
+  LOAD_SOCCER_EVENT_DATA = 'loadEventData',
   LOAD_NOBEL_EVENT_DATA = 'loadNobelEventData',
+  LOAD_DATASET = 'loadDataset',
   SELECT_COMPARISON_VARIABLE = 'selectComparisonVariable',
   FILTER_EVENT_SEQUENCE_WITH_QUERY = 'filterEventSequenceWithQuery',
   RESET_EVENT_SEQUENCE_DATA = 'resetEventSequenceData',
 }
 
 export const actions: ActionTree<RootState, RootState> = {
-  async [Actions.LOAD_EVENT_DATA](context, payload) : Promise<void> {
+  async [Actions.LOAD_SOCCER_EVENT_DATA](context, payload) : Promise<void> {
     const eventData = await StatsbombEventTransformerImpl.instance.transform(payload);
     const filteredEventData = removeEventsWithUnusedTypes(eventData);
     context.commit(Mutations.SET_EVENT_DATA, filteredEventData);
@@ -75,6 +76,18 @@ export const actions: ActionTree<RootState, RootState> = {
     eventSequenceData.addStartOfSequenceEvents();
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, eventSequenceData);
     context.commit(Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA, eventSequenceData);
+  },
+
+  async [Actions.LOAD_DATASET](context, payload) : Promise<void> {
+    context.commit(Mutations.SET_COMPARISON_VARIABLE, null);
+    context.commit(Mutations.SET_COMPARISON_VARIABLE_VALUES, []);
+    context.commit(Mutations.SET_COLOR_SCHEME, null);
+    if (payload === 'soccer') {
+      context.dispatch(Actions.LOAD_SOCCER_EVENT_DATA, ('./data/events.json'));
+    }
+    if (payload === 'nobel') {
+      context.dispatch(Actions.LOAD_NOBEL_EVENT_DATA, ('./data/nobel.csv'));
+    }
   },
 
   [Actions.SELECT_COMPARISON_VARIABLE](context, payload: Variable): void {

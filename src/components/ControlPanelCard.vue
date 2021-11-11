@@ -9,8 +9,8 @@
           <b-tab title="Query">
             <query-builder />
           </b-tab>
-          <b-tab title="Disabled" disabled>
-            <p>I'm a disabled tab!</p>
+          <b-tab title="Dataset">
+            <dataset-selector />
           </b-tab>
         </b-tabs>
       </b-card-header>
@@ -20,10 +20,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import ControlPanel from './ControlPanel.vue';
+import DatasetSelector from './DatasetSelector.vue';
 import QueryBuilder from './QueryBuilder.vue';
 
 export default Vue.extend({
-  components: { ControlPanel, QueryBuilder },
+  components: { ControlPanel, QueryBuilder, DatasetSelector },
 
 });
 </script>

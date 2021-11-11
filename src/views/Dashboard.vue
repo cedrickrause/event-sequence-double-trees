@@ -40,8 +40,7 @@ export default Vue.extend({
   components: { SequenceList, DoubleTree, ControlPanelCard },
 
   mounted() {
-    // this.loadData('./data/events.json');
-    this.loadNobelData('./data/nobel.csv');
+    this.loadDataset('nobel');
   },
 
   computed: {
@@ -53,8 +52,7 @@ export default Vue.extend({
 
   methods: {
     ...mapActions({
-      loadData: Actions.LOAD_EVENT_DATA,
-      loadNobelData: Actions.LOAD_NOBEL_EVENT_DATA,
+      loadDataset: Actions.LOAD_DATASET,
     }),
   },
 });
