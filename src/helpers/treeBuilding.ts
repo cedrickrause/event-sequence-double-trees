@@ -4,7 +4,7 @@ import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTreeNode';
 import * as d3 from 'd3';
 
 const createEmptyRoot = (centralEventType: string): EventTreeNode => new EventTreeNodeImpl(
-  centralEventType, 0, 0, false, [], [], [], [], [],
+  centralEventType, 0, 0, false, [], [], [], [], [], [],
 );
 
 export const buildTreeModel = (
@@ -19,6 +19,7 @@ export const buildTreeModel = (
     );
     if (indexOfFirstOccurrence >= 0) {
       root.count += 1;
+      root.events.push(sequence.events[indexOfFirstOccurrence]);
       root.variables.push(...sequence.events[indexOfFirstOccurrence].variables);
       root.addEventSequenceToParents(sequence.events.slice(0, indexOfFirstOccurrence));
       root.addEventSequenceToChildren(sequence.events.slice(indexOfFirstOccurrence + 1));
