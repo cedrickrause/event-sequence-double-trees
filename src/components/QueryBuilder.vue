@@ -1,7 +1,7 @@
 <template>
   <b-form-group
     id="input-group-2"
-    label="Query"
+    label="Filter for sequences (incl. wildcards)"
     label-for="queryInput"
   >
     <b-form-select v-for="queryElement in queryBuilderLengthRange"

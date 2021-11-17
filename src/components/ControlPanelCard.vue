@@ -6,7 +6,7 @@
           <b-tab title="Settings" active>
             <control-panel />
           </b-tab>
-          <b-tab title="Query">
+          <b-tab title="Filter">
             <query-builder />
           </b-tab>
           <b-tab title="Dataset">
