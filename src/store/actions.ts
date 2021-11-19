@@ -161,11 +161,9 @@ export const actions: ActionTree<RootState, RootState> = {
         (event) => event.eventType === payload,
       ) > -1,
     );
-    console.log(filteredSequence);
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, {
       data: filteredSequence,
     });
-    console.log(context.getters.getEventSequenceData);
   },
 
   [Actions.RESET_EVENT_SEQUENCE_DATA](context): void {
