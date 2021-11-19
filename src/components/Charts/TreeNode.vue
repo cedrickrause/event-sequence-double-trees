@@ -11,7 +11,7 @@
                 patternTransform="rotate(-45 2 2)"
             >
                 <rect fill="white" width="10" height="10" />
-                <path d="M -1,2 l 6,0" stroke="#000000" stroke-width=".5"/>
+                <path d="M -1,2 l 6,0" stroke="#888888" stroke-width=".5"/>
           </pattern>
     </defs>
     <circle
