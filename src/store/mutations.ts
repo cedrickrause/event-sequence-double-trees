@@ -27,7 +27,7 @@ export const mutations: MutationTree<RootState> = {
     state.eventData = payload;
   },
 
-  [Mutations.SET_EVENT_TYPE_ICON_MAPPING](state, payload: EventTypeToIconMapping[]) : void {
+  [Mutations.SET_EVENT_TYPE_ICON_MAPPING](state, payload: EventTypeToIconMapping) : void {
     state.eventTypeIconMapping = payload;
   },
 
