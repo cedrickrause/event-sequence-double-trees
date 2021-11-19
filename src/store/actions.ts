@@ -17,6 +17,7 @@ import { ActionTree } from 'vuex';
 import { scaleSqrt } from 'd3-scale';
 import { NobelCsvTransformerImpl } from '@/transformer/NobelCsvTransformer';
 import { FlatlandsEventTransformerImpl } from '@/transformer/FlatlandsTransformer';
+import { nobelEventTypeIconMapping } from '@/helpers/iconMapping';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
 import { RootState } from './RootState';
@@ -64,7 +65,7 @@ export const actions: ActionTree<RootState, RootState> = {
     context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, Object.fromEntries(
       _.uniq(eventData?.data
         .map((event) => event.eventType))
-        .map((eventType) => [eventType, eventType.slice(0, 2)]),
+        .map((eventType) => [eventType, nobelEventTypeIconMapping[eventType]]),
     ));
 
     const eventSequenceData = getEventSequenceDataFromEventData(eventData, 'sequence');
