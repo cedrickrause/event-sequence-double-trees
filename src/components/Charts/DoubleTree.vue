@@ -83,7 +83,7 @@ export default Vue.extend({
   data() {
     return {
       width: 800,
-      height: 400,
+      height: 390,
       margin: {
         top: 35, right: 10, bottom: 35, left: 10,
       },
