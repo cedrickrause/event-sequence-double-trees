@@ -13,3 +13,18 @@ export const nobelEventTypeIconMapping: EventTypeToIconMapping = {
   Abroad: '✈️',
   Death: '⚰️',
 };
+
+export const soccerEventTypeIconMapping: EventTypeToIconMapping = {
+  Duel: '⚔️',
+  Miscontrol: '🤦‍♂️',
+  Clearance: '🧹',
+  Block: '🛡️',
+  'Ball Recovery': '◀️',
+  Dispossessed: '🤷‍♂️',
+  'Foul Won': '📣',
+  Interception: '🤚',
+  Dribble: '🔀',
+  'Own Goal Against': '❗',
+  Shot: '⚽',
+  'Goal Keeper': '🧤',
+};
