@@ -16,11 +16,10 @@
 
 <script lang="ts">
 import { EventDatasetEntry } from '@/models/EventDataset';
-import { EventSequence } from '@/models/EventSequenceDataset';
+import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
-import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default Vue.extend({
 
@@ -36,7 +35,7 @@ export default Vue.extend({
         return this.getCentralEventType;
       },
       set(eventType: string): void {
-        this.setCentralEventType(eventType);
+        this.updateCentralEventType(eventType);
       },
     },
 
@@ -51,26 +50,14 @@ export default Vue.extend({
   },
 
   watch: {
-    centralEventType(): void {
-      const filteredSequence = this.getInitialEventSequenceData.data.filter(
-        (sequence: EventSequence) => sequence.events.findIndex(
-          (event) => event.eventType === this.centralEventType,
-        ) > -1,
-      );
-      this.setEventSequenceData({
-        data: filteredSequence,
-      });
-    },
-
     selectableEventTypes(): void {
       this.centralEventType = this.getEventData.data[0].eventType;
     },
   },
 
   methods: {
-    ...mapMutations({
-      setEventSequenceData: Mutations.SET_EVENT_SEQUENCE_DATA,
-      setCentralEventType: Mutations.SET_CENTRAL_EVENT_TYPE,
+    ...mapActions({
+      updateCentralEventType: Actions.UPDATE_CENTRAL_EVENT_TYPE,
     }),
   },
 });

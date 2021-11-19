@@ -8,7 +8,7 @@ import getUniqueComparisonVariableValues from '@/helpers/comparisonValues';
 import applyQueryToEventSequenceDataset from '@/helpers/eventSequenceFiltering';
 import { nodeMinimumSize, nodeMaximumSize } from '@/helpers/config';
 import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
-import { EventSequenceDataset } from '@/models/EventSequenceDataset';
+import { EventSequence, EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -29,6 +29,7 @@ export enum Actions {
   LOAD_DATASET = 'loadDataset',
   SELECT_COMPARISON_VARIABLE = 'selectComparisonVariable',
   FILTER_EVENT_SEQUENCE_WITH_QUERY = 'filterEventSequenceWithQuery',
+  UPDATE_CENTRAL_EVENT_TYPE = 'updateCentralEventType',
   RESET_EVENT_SEQUENCE_DATA = 'resetEventSequenceData',
 }
 
@@ -151,6 +152,20 @@ export const actions: ActionTree<RootState, RootState> = {
       Mutations.SET_EVENT_SEQUENCE_DATA,
       applyQueryToEventSequenceDataset(originalEventSequenceData, payload),
     );
+  },
+
+  [Actions.UPDATE_CENTRAL_EVENT_TYPE](context, payload): void {
+    context.commit(Mutations.SET_CENTRAL_EVENT_TYPE, payload);
+    const filteredSequence = context.getters.getInitialEventSequenceData.data.filter(
+      (sequence: EventSequence) => sequence.events.findIndex(
+        (event) => event.eventType === payload,
+      ) > -1,
+    );
+    console.log(filteredSequence);
+    context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, {
+      data: filteredSequence,
+    });
+    console.log(context.getters.getEventSequenceData);
   },
 
   [Actions.RESET_EVENT_SEQUENCE_DATA](context): void {
