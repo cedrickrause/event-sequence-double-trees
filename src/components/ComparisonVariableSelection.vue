@@ -36,7 +36,6 @@ export default Vue.extend({
   components: { CategoryColorMappingList },
   data() {
     return {
-      comparisonVariable: null,
       numericalComparisonVariableThreshold: 0,
     };
   },
@@ -60,6 +59,15 @@ export default Vue.extend({
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
       getNumericalComparisonVariableMaximum: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM,
     }),
+
+    comparisonVariable: {
+      get(): string {
+        return this.getComparisonVariable;
+      },
+      set(value: string): void {
+        this.setComparisonVariable(value);
+      },
+    },
 
     selectableComparisonVariables(): string[] {
       if (this.getEventSequenceData) {
@@ -86,6 +94,7 @@ export default Vue.extend({
     ...mapMutations({
       setNumericalComparisonVariableThreshold:
       Mutations.SET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
+      setComparisonVariable: Mutations.SET_COMPARISON_VARIABLE,
     }),
   },
 });
