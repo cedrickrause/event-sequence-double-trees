@@ -27,7 +27,7 @@ export const getters: GetterTree<RootState, RootState> = {
     return state.eventData;
   },
 
-  [Getters.GET_EVENT_TYPE_ICON_MAPPING](state) : readonly EventTypeToIconMapping[] | null {
+  [Getters.GET_EVENT_TYPE_ICON_MAPPING](state) : EventTypeToIconMapping | null {
     return state.eventTypeIconMapping;
   },
 

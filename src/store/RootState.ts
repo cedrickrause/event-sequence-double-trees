@@ -7,7 +7,7 @@ import { ScalePower } from 'd3-scale';
 
 export interface RootState {
   eventData: EventDataset | undefined | null,
-  eventTypeIconMapping: EventTypeToIconMapping[],
+  eventTypeIconMapping: EventTypeToIconMapping | null,
   initialEventSequenceData: EventSequenceDataset | undefined | null,
   eventSequenceData: EventSequenceDataset | undefined | null,
   centralEventType: string,
