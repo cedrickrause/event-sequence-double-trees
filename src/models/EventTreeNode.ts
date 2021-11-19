@@ -12,6 +12,7 @@ export interface EventTreeNode {
   depth: number,
   parents: EventTreeNode[],
   children: EventTreeNode[],
+  events: EventDatasetEntry[],
   variables: Variable[],
   parentVariables: Variable[],
   childVariables: Variable[],
@@ -63,6 +64,8 @@ export class EventTreeNodeImpl implements EventTreeNode {
 
   children: EventTreeNode[];
 
+  events: EventDatasetEntry[];
+
   variables: Variable[];
 
   parentVariables: Variable[];
@@ -82,6 +85,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     highlight: boolean,
     parents: EventTreeNode[],
     children: EventTreeNode[],
+    events: EventDatasetEntry[],
     variables: Variable[],
     parentVariables: Variable[],
     childVariables: Variable[],
@@ -92,6 +96,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
     this.highlight = highlight;
     this.parents = parents;
     this.children = children;
+    this.events = events;
     this.variables = variables;
     this.parentVariables = parentVariables;
     this.childVariables = childVariables;
@@ -100,16 +105,17 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   addChildEvent(childEvent: EventDatasetEntry): EventTreeNode {
-    const child = this.children.find((node) => node.eventType === childEvent.eventType);
-    if (child) {
-      child.count += 1;
-      child.variables.push(...childEvent.variables);
-      child.parentVariables.push(
+    const childNode = this.children.find((node) => node.eventType === childEvent.eventType);
+    if (childNode) {
+      childNode.count += 1;
+      childNode.events.push(childEvent);
+      childNode.variables.push(...childEvent.variables);
+      childNode.parentVariables.push(
         ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-          this.variables.length - 1),
+          this.variables.length),
       );
-      child.childVariables.push(...childEvent.variables);
-      return child;
+      childNode.childVariables.push(...childEvent.variables);
+      return childNode;
     }
     const newChildNode = new EventTreeNodeImpl(
       childEvent.eventType,
@@ -118,9 +124,10 @@ export class EventTreeNodeImpl implements EventTreeNode {
       false,
       [this],
       [],
+      [childEvent],
       [...childEvent.variables],
       [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-        this.variables.length - 1)],
+        this.variables.length)],
       [...childEvent.variables],
     );
     this.children.push(newChildNode);
@@ -128,16 +135,17 @@ export class EventTreeNodeImpl implements EventTreeNode {
   }
 
   addParentEvent(parentEvent: EventDatasetEntry): EventTreeNode {
-    const parent = this.parents.find((node) => node.eventType === parentEvent.eventType);
-    if (parent) {
-      parent.count += 1;
-      parent.variables.push(...parentEvent.variables);
-      parent.parentVariables.push(...parentEvent.variables);
-      parent.childVariables.push(
+    const parentNode = this.parents.find((node) => node.eventType === parentEvent.eventType);
+    if (parentNode) {
+      parentNode.count += 1;
+      parentNode.events.push(parentEvent);
+      parentNode.variables.push(...parentEvent.variables);
+      parentNode.parentVariables.push(...parentEvent.variables);
+      parentNode.childVariables.push(
         ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-          this.variables.length - 1),
+          this.variables.length),
       );
-      return parent;
+      return parentNode;
     }
     const newParentNode = new EventTreeNodeImpl(
       parentEvent.eventType,
@@ -146,10 +154,11 @@ export class EventTreeNodeImpl implements EventTreeNode {
       false,
       [],
       [this],
+      [parentEvent],
       [...parentEvent.variables],
       [...parentEvent.variables],
       [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
-        this.variables.length - 1)],
+        this.variables.length)],
     );
     this.parents.push(newParentNode);
     return newParentNode;

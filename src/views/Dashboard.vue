@@ -3,11 +3,7 @@
     <b-container fluid>
       <b-row align-h="center" no-gutters>
         <b-col cols="3">
-          <b-card
-            class="h-50"
-            title="Control Panel">
-            <control-panel />
-          </b-card>
+          <control-panel-card />
           <b-card
             class="h-50"
             title="Sequence List">
@@ -29,7 +25,7 @@
 
 <script lang="ts">
 import DoubleTreeWrapper from '@/components/Charts/DoubleTreeWrapper.vue';
-import ControlPanel from '@/components/ControlPanel.vue';
+import ControlPanelCard from '@/components/ControlPanelCard.vue';
 import SequenceList from '@/components/SequenceList.vue';
 import { Actions } from '@/store/actions';
 import Vue from 'vue';
@@ -37,14 +33,16 @@ import { mapActions } from 'vuex';
 
 export default Vue.extend({
   name: 'Dashboard',
-  components: { ControlPanel, SequenceList, DoubleTreeWrapper },
+  components: { ControlPanelCard, SequenceList, DoubleTreeWrapper },
 
   mounted() {
-    this.loadData('./data/events.json');
+    this.loadDataset('nobel');
   },
 
   methods: {
-    ...mapActions({ loadData: Actions.LOAD_EVENT_DATA }),
+    ...mapActions({
+      loadDataset: Actions.LOAD_DATASET,
+    }),
   },
 });
 </script>

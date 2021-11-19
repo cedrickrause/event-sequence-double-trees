@@ -7,9 +7,9 @@
           {{ getNumericalComparisonVariableThreshold }}
         </span>
         <b-badge pill
-          :style="'background-color: ' + value"
+          :style="'background-color: ' + (value ? value : '#000000')"
         >
-          {{ value }}
+          {{ value? value : '#000000' }}
         </b-badge>
       </b-list-group-item>
     </b-list-group>
@@ -41,6 +41,10 @@ export default Vue.extend({
 .list-group{
     max-height: 70%;
     overflow-y: auto;
+}
+
+.list-group-item {
+  padding: 5px;
 }
 
 #category-color-mapping-list {

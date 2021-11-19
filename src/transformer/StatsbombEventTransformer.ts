@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { CategoricalVariable } from '@/models/CategoricalVariable';
 import { EventDataset, EventDatasetEntry, EventDatasetImpl } from '@/models/EventDataset';
-import { EventLocation } from '@/models/LocationVariable';
 import { NumericalVariable } from '@/models/NumericalVariable';
 import * as d3 from 'd3';
 import { BaseTransformer } from './BaseTransformer';
@@ -42,7 +41,6 @@ export enum StatsbombVariableNames {
   POSITION = 'Position',
   MINUTE = 'Minute',
   DURATION = 'Duration',
-  LOCATION = 'Location',
 }
 
 export class StatsbombEventTransformerImpl implements StatsbombEventTransformer {
@@ -55,7 +53,7 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
           (event) => ({
             id: event.id,
             eventType: event.type.name,
-            sequence: event.possession,
+            sequence: event.possession.toString(),
             variables: [
               new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
               new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),
@@ -63,7 +61,6 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
               new CategoricalVariable(StatsbombVariableNames.POSITION, event.position?.name),
               new NumericalVariable(StatsbombVariableNames.MINUTE, event.minute),
               new NumericalVariable(StatsbombVariableNames.DURATION, event.duration),
-              new EventLocation(StatsbombVariableNames.LOCATION, event.location),
             ],
           }),
         );
