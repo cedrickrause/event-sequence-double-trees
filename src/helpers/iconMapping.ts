@@ -4,12 +4,12 @@ export type EventTypeToIconMapping = {
 
 export const nobelEventTypeIconMapping: EventTypeToIconMapping = {
   Birth: '👶',
-  Abroad: '✈️',
-  Doctorate: '🎓',
-  Marriage: '💍',
-  Professorship: '👨‍🏫',
-  'Nobel Prize': '🎖️',
-  Death: '⚰️',
   Undergraduate: '🥈',
   Postgraduate: '🥇',
+  Doctorate: '🎓',
+  Professorship: '👨‍🏫',
+  Marriage: '💍',
+  'Nobel Prize': '🎖️',
+  Abroad: '✈️',
+  Death: '⚰️',
 };

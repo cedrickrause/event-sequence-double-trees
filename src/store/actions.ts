@@ -62,11 +62,7 @@ export const actions: ActionTree<RootState, RootState> = {
     const eventData = await NobelCsvTransformerImpl.instance.transform(payload);
     context.commit(Mutations.SET_EVENT_DATA, eventData);
     context.commit(Mutations.SET_VARIABLE_COUNT, eventData?.data[0].variables.length);
-    context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, Object.fromEntries(
-      _.uniq(eventData?.data
-        .map((event) => event.eventType))
-        .map((eventType) => [eventType, nobelEventTypeIconMapping[eventType]]),
-    ));
+    context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, nobelEventTypeIconMapping);
 
     const eventSequenceData = getEventSequenceDataFromEventData(eventData, 'sequence');
 
