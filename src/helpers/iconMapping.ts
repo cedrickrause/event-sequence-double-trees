@@ -4,12 +4,27 @@ export type EventTypeToIconMapping = {
 
 export const nobelEventTypeIconMapping: EventTypeToIconMapping = {
   Birth: '👶',
-  Abroad: '✈️',
-  Doctorate: '🎓',
-  Marriage: '💍',
-  Professorship: '👨‍🏫',
-  'Nobel Prize': '🎖️',
-  Death: '⚰️',
   Undergraduate: '🥈',
   Postgraduate: '🥇',
+  Doctorate: '🎓',
+  Professorship: '👨‍🏫',
+  Marriage: '💍',
+  'Nobel Prize': '🎖️',
+  Abroad: '✈️',
+  Death: '⚰️',
+};
+
+export const soccerEventTypeIconMapping: EventTypeToIconMapping = {
+  Duel: '⚔️',
+  Miscontrol: '🤦‍♂️',
+  Clearance: '🧹',
+  Block: '🛡️',
+  'Ball Recovery': '◀️',
+  Dispossessed: '🤷‍♂️',
+  'Foul Won': '📣',
+  Interception: '🤚',
+  Dribble: '🔀',
+  'Own Goal Against': '❗',
+  Shot: '⚽',
+  'Goal Keeper': '🧤',
 };
