@@ -1,11 +1,14 @@
 <template>
-  <b-form-select
-    id="comparisonVariableInput"
-    v-model="selectedDataset"
-    :options="datasetDescriptions">
-    <template #first>
-    </template>
-  </b-form-select>
+  <b-form inline>
+    <label class="mr-sm-2" for="datasetInput">Dataset</label>
+    <b-form-select
+      id="datasetInput"
+      v-model="selectedDataset"
+      :options="datasetDescriptions">
+      <template #first>
+      </template>
+    </b-form-select>
+  </b-form>
 </template>
 
 <script lang="ts">

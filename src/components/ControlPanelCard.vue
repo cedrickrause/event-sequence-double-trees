@@ -9,9 +9,6 @@
           <b-tab title="Filter">
             <query-builder />
           </b-tab>
-          <b-tab title="Dataset">
-            <dataset-selector />
-          </b-tab>
         </b-tabs>
       </b-card-header>
     </b-card>
@@ -20,11 +17,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import ControlPanel from './ControlPanel.vue';
-import DatasetSelector from './DatasetSelector.vue';
 import QueryBuilder from './QueryBuilder.vue';
 
 export default Vue.extend({
-  components: { ControlPanel, QueryBuilder, DatasetSelector },
+  components: { ControlPanel, QueryBuilder },
 
 });
 </script>

@@ -1,16 +1,13 @@
 <template>
   <div>
-    <b-form-group
-    id="input-group-central-event-type"
-    label="Central Event Type"
-    label-for="centralEventTypeInput"
-    >
-      <b-form-select
-        id="centralEventTypeInput"
-        v-model="centralEventType"
-        :options="selectableEventTypes">
-      </b-form-select>
-    </b-form-group>
+    <b-form inline >
+      <label class="mr-sm-2" for="centralEventTypeInput">Central Event Type</label>
+        <b-form-select
+          id="centralEventTypeInput"
+          v-model="centralEventType"
+          :options="selectableEventTypes">
+        </b-form-select>
+    </b-form>
   </div>
 </template>
 

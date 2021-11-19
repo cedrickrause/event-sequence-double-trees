@@ -1,26 +1,23 @@
 <template>
   <div id="comparison-variable-selection">
-    <b-form-group
-      id="input-group-1"
-      label="Define categories by"
-      label-for="comparisonVariableInput"
-    >
-      <b-form-select
-        id="comparisonVariableInput"
-        v-model="comparisonVariable"
-        :options="selectableComparisonVariables">
-        <template #first>
-          <b-form-select-option :value="null">
-            -- None --
-          </b-form-select-option>
-        </template>
-      </b-form-select>
-    </b-form-group>
-    <b-form-input type="range" v-if="comparisonVariableIsNumerical"
-      v-model="numericalComparisonVariableThreshold"
-      min="0"
-      :max="getNumericalComparisonVariableMaximum">
-    </b-form-input>
+    <b-form inline>
+      <label class="mr-sm-2" for="centralEventTypeInput">Define categories by</label>
+        <b-form-select
+          id="comparisonVariableInput"
+          v-model="comparisonVariable"
+          :options="selectableComparisonVariables">
+          <template #first>
+            <b-form-select-option :value="null">
+              -- None --
+            </b-form-select-option>
+          </template>
+        </b-form-select>
+      <b-form-input type="range" v-if="comparisonVariableIsNumerical"
+        v-model="numericalComparisonVariableThreshold"
+        min="0"
+        :max="getNumericalComparisonVariableMaximum">
+      </b-form-input>
+    </b-form>
     <category-color-mapping-list />
   </div>
 </template>
