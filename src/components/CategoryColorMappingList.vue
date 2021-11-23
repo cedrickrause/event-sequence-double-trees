@@ -2,15 +2,20 @@
   <div id="category-color-mapping-list">
     <b-list-group>
       <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key">
-        {{ key }}
         <span v-if="comparisonVariableIsNumerical">
           {{ getNumericalComparisonVariableThreshold }}
         </span>
-        <b-badge pill
-          :style="'background-color: ' + (value ? value : '#000000')"
-        >
-          {{ value? value : '#000000' }}
-        </b-badge>
+        <svg width="30" height="30">
+          <circle
+            cx="15"
+            cy="15"
+            r="10"
+            fill="none"
+            stroke-width="5"
+            :stroke="value ? value : 'black'"
+          />
+        </svg>
+        {{ key }}
       </b-list-group-item>
     </b-list-group>
   </div>
