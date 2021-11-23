@@ -3,7 +3,7 @@
     <b-button-group>
       <b-button v-for="(eventTypeIcon, eventType) in getEventTypeIconMapping"
         :key="'legend' + eventType"
-        :variant="eventType === getCentralEventType ? 'primary' : 'outline-primary'"
+        :variant="eventType === getCentralEventType ? 'secondary' : 'outline-secondary'"
         @click="updateCentralEventType(eventType)">
         {{ eventType + ': ' + eventTypeIcon }}
       </b-button>
