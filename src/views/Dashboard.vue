@@ -6,7 +6,7 @@
           <control-panel-card />
           <b-card
             class="h-50"
-            title="Sequence List">
+            title="Event Sequences">
             <sequence-list />
           </b-card>
         </b-col>
