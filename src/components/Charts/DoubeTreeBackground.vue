@@ -50,8 +50,8 @@ export default Vue.extend({
     },
 
     color(depth: number) {
-      return this.colorScale(Math.abs(depth)
-      / (2 * Math.max(-this.rootNode.leftMaximumWidth(), this.rootNode.rightMaximumWidth())));
+      return this.colorScale((Math.abs(depth) - 1)
+      / (4 * Math.max(-this.rootNode.leftMaximumWidth(), this.rootNode.rightMaximumWidth())));
     },
   },
 
