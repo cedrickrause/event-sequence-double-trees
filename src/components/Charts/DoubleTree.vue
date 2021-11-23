@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="tree">
     <svg :viewBox="`0 0 ${this.width} ${this.height}`">
       <g class="container"
         :transform="`translate(${this.margin.left},${this.margin.top})`"
@@ -147,3 +147,8 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss" scoped>
+#tree {
+  border: 1px solid lightgrey;
+}
+</style>
