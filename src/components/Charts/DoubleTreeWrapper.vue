@@ -1,10 +1,10 @@
 <template>
   <div>
+    <event-type-legend />
     <double-tree
       :eventSequenceData="getEventSequenceData"
       :centralEventType="getCentralEventType"
     />
-    <event-type-legend />
   </div>
 </template>
 
