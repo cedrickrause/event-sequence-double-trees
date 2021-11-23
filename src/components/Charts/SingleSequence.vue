@@ -9,7 +9,7 @@
             :link="link" />
       </g>
       <g v-if="nodes">
-        <tree-node v-for="(node, index) in nodes"
+        <single-sequence-tree-node v-for="(node, index) in nodes"
           :key="'node' + node.eventType + index"
           :node="node"
           :maxArcWidth="4" />
@@ -28,10 +28,10 @@ import { EventTreeLink } from '@/models/EventTreeLink';
 import { mapGetters } from 'vuex';
 import { Getters } from '@/store/getters';
 import TreeLink from './TreeLink.vue';
-import TreeNode from './TreeNode.vue';
+import SingleSequenceTreeNode from './SingleSequenceTreeNode.vue';
 
 export default Vue.extend({
-  components: { TreeLink, TreeNode },
+  components: { TreeLink, SingleSequenceTreeNode },
   props: {
     sequence: {
       type: Object as () => EventSequence,
