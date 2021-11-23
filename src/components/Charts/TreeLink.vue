@@ -58,6 +58,20 @@ export default Vue.extend({
       return this.link.source;
     },
 
+    referenceSiblings(): EventTreeNode[] {
+      if (this.link.target.depth > 0) {
+        return this.link.source.children.filter((sibling) => sibling.eventType !== 'End');
+      }
+      return this.link.target.parents.filter((sibling) => sibling.eventType !== 'Start');
+    },
+
+    otherNode(): EventTreeNode {
+      if (this.link.target.depth > 0) {
+        return this.link.source;
+      }
+      return this.link.target;
+    },
+
     count(): number {
       return this.referenceNode.count;
     },
@@ -87,31 +101,68 @@ export default Vue.extend({
   methods: {
     linkPath(comparisonVariableValue: {key: string, value: number},
       valuesBefore: {key: string, value: number}[]) {
-      const offset = this.count / 2;
-      const height = comparisonVariableValue.value;
+      const nodeOffset = this.count / 2;
+      const otherOffset = this.referenceSiblings
+        .reduce((a, b) => a + b.count, 0) / 2;
+      const width = comparisonVariableValue.value;
       const valuesBeforeOffset = valuesBefore.map(
         (variable) => variable.value,
       ).reduce((a, b) => a + b, 0);
+      const childIndexInParent = this.referenceSiblings
+        .findIndex((sibling) => sibling === this.referenceNode);
+      const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
+        .reduce((a, b) => a + b.count, 0);
 
-      const points = [
-        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset],
-        [this.link.target.x, this.link.target.y - offset + valuesBeforeOffset + height],
-        [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset + height]] as
+      let points = [];
+      if (this.referenceNode.depth > 0) {
+        points = [
+          [this.link.source.x, this.link.source.y - otherOffset + linksBefore + valuesBeforeOffset],
+          [this.link.target.x, this.link.target.y - nodeOffset + valuesBeforeOffset],
+          [this.link.target.x, this.link.target.y - nodeOffset + valuesBeforeOffset + width],
+          [this.link.source.x, this.link.source.y - otherOffset + linksBefore
+          + valuesBeforeOffset + width]] as
         [number, number][];
+      } else {
+        points = [
+          [this.link.source.x, this.link.source.y - nodeOffset + valuesBeforeOffset],
+          [this.link.target.x, this.link.target.y - otherOffset + linksBefore + valuesBeforeOffset],
+          [this.link.target.x, this.link.target.y - otherOffset + linksBefore
+          + valuesBeforeOffset + width],
+          [this.link.source.x, this.link.source.y - nodeOffset + valuesBeforeOffset + width]] as
+        [number, number][];
+      }
+
       return d3.line()
         .curve(d3.curveBumpX)(points);
     },
 
     linkPathDefault() {
-      const offset = this.count / 2;
-      const height = this.count;
+      const nodeOffset = this.count / 2;
+      const otherOffset = this.referenceSiblings
+        .reduce((a, b) => a + b.count, 0) / 2;
+      const width = this.count;
+      const childIndexInParent = this.referenceSiblings
+        .findIndex((sibling) => sibling === this.referenceNode);
+      const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
+        .reduce((a, b) => a + b.count, 0);
 
-      const points = [
-        [this.link.source.x, this.link.source.y - offset],
-        [this.link.target.x, this.link.target.y - offset],
-        [this.link.target.x, this.link.target.y - offset + height],
-        [this.link.source.x, this.link.source.y - offset + height]] as [number, number][];
+      let points = [];
+      if (this.referenceNode.depth > 0) {
+        points = [
+          [this.link.source.x, this.link.source.y - otherOffset + linksBefore],
+          [this.link.target.x, this.link.target.y - nodeOffset],
+          [this.link.target.x, this.link.target.y - nodeOffset + width],
+          [this.link.source.x, this.link.source.y - otherOffset + linksBefore + width]] as
+          [number, number][];
+      } else {
+        points = [
+          [this.link.source.x, this.link.source.y - nodeOffset],
+          [this.link.target.x, this.link.target.y - otherOffset + linksBefore],
+          [this.link.target.x, this.link.target.y - otherOffset + linksBefore + width],
+          [this.link.source.x, this.link.source.y - nodeOffset + width]] as
+          [number, number][];
+      }
+
       return d3.line()
         .curve(d3.curveBumpX)(points);
     },
