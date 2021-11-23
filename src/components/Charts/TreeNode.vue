@@ -141,14 +141,10 @@ export default Vue.extend({
     },
 
     handleClickRoot(): void {
-      const isTurnOn = this.node.atLeastOneChildIsHighlighted()
-        || this.node.atLeastOneParentIsHighlighted()
-        || !this.node.highlight;
-
       this.node.allNodes().forEach((node) => {
         node.highlightNode(false);
       });
-      this.node.highlightNode(isTurnOn);
+      this.node.highlightNode(true);
     },
 
     arc(value: number, count: number, valuesBefore: {key: string, value: number}[]) {
