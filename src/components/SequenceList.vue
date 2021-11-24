@@ -34,7 +34,6 @@ export default Vue.extend({
       if (!sequences) {
         return sequences;
       }
-      console.log(this.getDoubleTreeSelection);
       const c = sequences.sort((a: EventSequence, b: EventSequence) => {
         let aCount = 0;
         let bCount = 0;
