@@ -5,14 +5,18 @@
         <b-form-select
           id="centralEventTypeInput"
           v-model="centralEventType"
-          :options="selectableEventTypes">
+          >
+          <b-form-select-option v-for="(icon, eventType) in getEventTypeIconMapping"
+          :key="eventType + 'dropdownItem'"
+          :value="eventType">
+            {{ eventType + ' ' + icon }}
+          </b-form-select-option>
         </b-form-select>
     </b-form>
   </div>
 </template>
 
 <script lang="ts">
-import { EventDatasetEntry } from '@/models/EventDataset';
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
 import Vue from 'vue';
@@ -25,6 +29,7 @@ export default Vue.extend({
       getEventData: Getters.GET_EVENT_DATA,
       getInitialEventSequenceData: Getters.GET_INITIAL_EVENT_SEQUENCE_DATA,
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
+      getEventTypeIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
     }),
 
     centralEventType: {
@@ -35,19 +40,10 @@ export default Vue.extend({
         this.updateCentralEventType(eventType);
       },
     },
-
-    selectableEventTypes(): string[] {
-      if (this.getEventData) {
-        return [...new Set<string>(this.getEventData.data.map(
-          (event: EventDatasetEntry) => event.eventType,
-        ))];
-      }
-      return [];
-    },
   },
 
   watch: {
-    selectableEventTypes(): void {
+    getEventTypeIconMapping(): void {
       this.centralEventType = this.getEventData.data[0].eventType;
     },
   },
