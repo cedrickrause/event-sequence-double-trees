@@ -2,6 +2,7 @@
 // eslint-disable-next-line import/no-cycle
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventSequence } from '@/models/EventSequenceDataset';
+import _ from 'lodash';
 
 export type DoubleTreeSelection = {
   left: string[][],
@@ -90,4 +91,40 @@ export const applySelectionToSequence = (selection: DoubleTreeSelection, root: E
       current.highlightDescendants(true);
     }
   });
+};
+
+export const matchesLeftSelection = (
+  sequence: string[],
+  selection: DoubleTreeSelection,
+  centralEventType: string,
+): boolean => {
+  const leftSequence = sequence.slice(0, sequence.indexOf(centralEventType) + 1).reverse();
+  let matches = false;
+
+  selection.left.forEach((subsequence) => {
+    if (_.intersection(
+      leftSequence.slice(0, subsequence.length), (subsequence),
+    ).length === subsequence.length) {
+      matches = true;
+    }
+  });
+  return matches;
+};
+
+export const matchesRightSelection = (
+  sequence: string[],
+  selection: DoubleTreeSelection,
+  centralEventType: string,
+): boolean => {
+  const rightSequence = sequence.slice(sequence.indexOf(centralEventType));
+  let matches = false;
+
+  selection.right.forEach((subsequence) => {
+    if (_.intersection(
+      rightSequence.slice(0, subsequence.length), (subsequence),
+    ).length === subsequence.length) {
+      matches = true;
+    }
+  });
+  return matches;
 };
