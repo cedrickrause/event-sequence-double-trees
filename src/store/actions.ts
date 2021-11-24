@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import {
   compressEventSequences,
   removeEventsWithUnusedTypes,
@@ -31,6 +32,7 @@ export enum Actions {
   FILTER_EVENT_SEQUENCE_WITH_QUERY = 'filterEventSequenceWithQuery',
   UPDATE_CENTRAL_EVENT_TYPE = 'updateCentralEventType',
   RESET_EVENT_SEQUENCE_DATA = 'resetEventSequenceData',
+  ADD_SEQUENCE_TO_DOUBLE_TREE_SELECTION = 'addSequenceToDoubleTreeSelection',
 }
 
 export const actions: ActionTree<RootState, RootState> = {
@@ -147,6 +149,10 @@ export const actions: ActionTree<RootState, RootState> = {
   },
 
   [Actions.UPDATE_CENTRAL_EVENT_TYPE](context, payload): void {
+    context.commit(Mutations.SET_DOUBLE_TREE_SELECTION, {
+      left: [],
+      right: [],
+    });
     context.commit(Mutations.SET_CENTRAL_EVENT_TYPE, payload);
     const filteredSequence = context.getters.getInitialEventSequenceData.data.filter(
       (sequence: EventSequence) => sequence.events.findIndex(
@@ -161,5 +167,11 @@ export const actions: ActionTree<RootState, RootState> = {
   [Actions.RESET_EVENT_SEQUENCE_DATA](context): void {
     const initialEventSequenceData = context.getters[Getters.GET_INITIAL_EVENT_SEQUENCE_DATA];
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, initialEventSequenceData);
+  },
+
+  [Actions.ADD_SEQUENCE_TO_DOUBLE_TREE_SELECTION](context, payload): void {
+    const selection = context.getters.getDoubleTreeSelection;
+    selection.left.push(payload);
+    context.commit(Mutations.SET_DOUBLE_TREE_SELECTION, selection);
   },
 };

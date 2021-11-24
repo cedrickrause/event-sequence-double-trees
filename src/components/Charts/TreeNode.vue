@@ -43,14 +43,17 @@
 </template>
 
 <script lang="ts">
+import { getDoubleTreeSelectionFromRoot } from '@/helpers/selection';
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { NumericalVariable } from '@/models/NumericalVariable';
 import { Variable } from '@/models/Variable';
+import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import * as d3 from 'd3';
 import _ from 'lodash';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default Vue.extend({
   props: {
@@ -118,6 +121,14 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapActions({
+      addSequenceToDoubleTreeSelection: Actions.ADD_SEQUENCE_TO_DOUBLE_TREE_SELECTION,
+    }),
+
+    ...mapMutations({
+      setDoubleTreeSelection: Mutations.SET_DOUBLE_TREE_SELECTION,
+    }),
+
     handleClick(): void {
       if (this.node.depth > 0) {
         this.handleClickRightTree();
@@ -126,6 +137,22 @@ export default Vue.extend({
       } else {
         this.handleClickRoot();
       }
+      this.updateDoubleTreeSelection();
+    },
+
+    updateDoubleTreeSelection() {
+      // const sequence = [];
+      // let current = this.node;
+      // while (current.depth >= 0) {
+      //   sequence.push(current.eventType);
+      //   // eslint-disable-next-line prefer-destructuring
+      //   current = current.parents[0];
+      // }
+      // this.addSequenceToDoubleTreeSelection(sequence.reverse());
+      const selection = getDoubleTreeSelectionFromRoot(
+        this.node.allNodes().filter((node) => node.depth === 0)[0],
+      );
+      this.setDoubleTreeSelection(selection);
     },
 
     handleClickRightTree(): void {

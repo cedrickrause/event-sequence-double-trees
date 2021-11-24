@@ -27,6 +27,7 @@ import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
 import { mapGetters } from 'vuex';
 import { Getters } from '@/store/getters';
+import { applySelectionToSequence } from '@/helpers/selection';
 import TreeLink from './TreeLink.vue';
 import SingleSequenceTreeNode from './SingleSequenceTreeNode.vue';
 
@@ -51,6 +52,7 @@ export default Vue.extend({
   computed: {
     ...mapGetters({
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
+      getDoubleTreeSelection: Getters.GET_DOUBLE_TREE_SELECTION,
     }),
 
     xScale(): d3.ScaleLinear<number, number, never> {
@@ -68,10 +70,12 @@ export default Vue.extend({
     },
 
     layoutRootNode(): EventTreeNode {
-      return buildTreeModel(
+      const model = buildTreeModel(
         new EventSequenceDatasetImpl([this.sequenceWithoutStartAndEndEvents]),
         this.getCentralEventType,
       );
+      applySelectionToSequence(this.getDoubleTreeSelection, model);
+      return model;
     },
 
     nodes(): EventTreeNode[] | undefined {

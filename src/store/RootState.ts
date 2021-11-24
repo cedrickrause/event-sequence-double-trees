@@ -1,5 +1,6 @@
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventTypeToIconMapping } from '@/helpers/iconMapping';
+import { DoubleTreeSelection } from '@/helpers/selection';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
@@ -18,4 +19,5 @@ export interface RootState {
   numericalComparisonVariableThreshold: number,
   numericalComparisonVariableMaximum: number,
   variableCount: number,
+  doubleTreeSelection: DoubleTreeSelection,
 }

@@ -1,7 +1,8 @@
 <template>
-  <g :transform="`translate(${this.node.x},${this.node.y})`"
+  <!-- <g :transform="`translate(${this.node.x},${this.node.y})`"
       @click="handleClick()"
-    >
+    > -->
+  <g :transform="`translate(${this.node.x},${this.node.y})`">
     <defs>
            <pattern
                 id="diagonalHatch"
@@ -15,28 +16,28 @@
           </pattern>
     </defs>
     <circle
-      :class="{ highlight: node.highlight }"
+      :class="{ highlight: isHighlight }"
       :r="nodeSize"
       :fill="nodeColor"
-      :stroke-opacity="node.highlight ? 1 : 0.5"
+      :stroke-opacity="isHighlight ? 1 : 0.5"
     />
     <text dy="0.35em"
     :font-size="nodeSize"
-    :opacity="node.highlight ? 1 : 0.5">
+    :opacity="isHighlight ? 1 : 0.5">
       {{ nodeIcon }}
     </text>
     <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
-        :opacity="node.highlight ? 1 : 0.5"
+        :opacity="isHighlight ? 1 : 0.5"
         />
     </g>
     <g v-else>
       <path
         :d="fullArc(node.count)"
         fill="grey"
-        :opacity="node.highlight ? 1 : 0.5"
+        :opacity="isHighlight ? 1 : 0.5"
         />
     </g>
   </g>
@@ -117,39 +118,39 @@ export default Vue.extend({
     },
 
     isHighlight(): boolean {
-      return true;
+      return this.node.highlight;
     },
   },
 
   methods: {
-    handleClick(): void {
-      if (this.node.depth > 0) {
-        this.handleClickRightTree();
-      } else if (this.node.depth < 0) {
-        this.handleClickLeftTree();
-      } else {
-        this.handleClickRoot();
-      }
-    },
+    // handleClick(): void {
+    //   if (this.node.depth > 0) {
+    //     this.handleClickRightTree();
+    //   } else if (this.node.depth < 0) {
+    //     this.handleClickLeftTree();
+    //   } else {
+    //     this.handleClickRoot();
+    //   }
+    // },
 
-    handleClickRightTree(): void {
-      const isTurnOn = this.node.atLeastOneChildIsHighlighted() || !this.node.highlight;
-      this.node.highlightDescendants(false);
-      this.node.highlightAncestors(isTurnOn);
-    },
+    // handleClickRightTree(): void {
+    //   const isTurnOn = this.node.atLeastOneChildIsHighlighted() || !this.node.highlight;
+    //   this.node.highlightDescendants(false);
+    //   this.node.highlightAncestors(isTurnOn);
+    // },
 
-    handleClickLeftTree(): void {
-      const isTurnOn = this.node.atLeastOneParentIsHighlighted() || !this.node.highlight;
-      this.node.highlightAncestors(false);
-      this.node.highlightDescendants(isTurnOn);
-    },
+    // handleClickLeftTree(): void {
+    //   const isTurnOn = this.node.atLeastOneParentIsHighlighted() || !this.node.highlight;
+    //   this.node.highlightAncestors(false);
+    //   this.node.highlightDescendants(isTurnOn);
+    // },
 
-    handleClickRoot(): void {
-      this.node.allNodes().forEach((node) => {
-        node.highlightNode(false);
-      });
-      this.node.highlightNode(true);
-    },
+    // handleClickRoot(): void {
+    //   this.node.allNodes().forEach((node) => {
+    //     node.highlightNode(false);
+    //   });
+    //   this.node.highlightNode(true);
+    // },
 
     arc(value: number, count: number, valuesBefore: {key: string, value: number}[]) {
       const arc = d3.arc();
@@ -189,17 +190,17 @@ text {
   text-anchor: middle;
 }
 
-circle:hover {
-  cursor: pointer;
-}
+// circle:hover {
+//   cursor: pointer;
+// }
 
-text:hover {
-  cursor: pointer;
-}
+// text:hover {
+//   cursor: pointer;
+// }
 
-path:hover {
-  cursor: pointer;
-}
+// path:hover {
+//   cursor: pointer;
+// }
 
 text {
   -webkit-touch-callout: none;
