@@ -1,5 +1,6 @@
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventTypeToIconMapping } from '@/helpers/iconMapping';
+import { DoubleTreeSelection } from '@/helpers/selection';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
@@ -20,6 +21,7 @@ export enum Getters {
   GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD = 'getNumericalComparisonVariableThreshold',
   GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'getNumericalComparisonVariableMaximum',
   GET_VARIABLE_COUNT = 'getVariableCount',
+  GET_DOUBLE_TREE_SELECTION = 'getDoubleTreeSelection',
 }
 
 export const getters: GetterTree<RootState, RootState> = {
@@ -69,5 +71,9 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_VARIABLE_COUNT](state) : number {
     return state.variableCount;
+  },
+
+  [Getters.GET_DOUBLE_TREE_SELECTION](state) : DoubleTreeSelection {
+    return state.doubleTreeSelection;
   },
 };

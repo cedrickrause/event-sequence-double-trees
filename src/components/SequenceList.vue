@@ -11,6 +11,8 @@
 </template>
 
 <script lang="ts">
+import { matchesLeftSelection, matchesRightSelection } from '@/helpers/selection';
+import { EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequence } from '@/models/EventSequenceDataset';
 import { Getters } from '@/store/getters';
 import Vue from 'vue';
@@ -23,10 +25,38 @@ export default Vue.extend({
   computed: {
     ...mapGetters({
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
+      getDoubleTreeSelection: Getters.GET_DOUBLE_TREE_SELECTION,
+      getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
     }),
 
     arrayOfSequences(): EventSequence[] {
-      return this.getEventSequenceData?.data;
+      const sequences = this.getEventSequenceData?.data.slice();
+      if (!sequences) {
+        return sequences;
+      }
+      const c = sequences.sort((a: EventSequence, b: EventSequence) => {
+        let aCount = 0;
+        let bCount = 0;
+        if (matchesLeftSelection(a.events.map((event: EventDatasetEntry) => event.eventType),
+          this.getDoubleTreeSelection, this.getCentralEventType)) {
+          aCount += 2;
+        }
+        if (matchesLeftSelection(b.events.map((event: EventDatasetEntry) => event.eventType),
+          this.getDoubleTreeSelection, this.getCentralEventType)) {
+          bCount += 2;
+        }
+        if (matchesRightSelection(a.events.map((event: EventDatasetEntry) => event.eventType),
+          this.getDoubleTreeSelection, this.getCentralEventType)) {
+          aCount += 1;
+        }
+        if (matchesRightSelection(b.events.map((event: EventDatasetEntry) => event.eventType),
+          this.getDoubleTreeSelection, this.getCentralEventType)) {
+          bCount += 1;
+        }
+        return aCount < bCount;
+      });
+
+      return c;
     },
   },
 

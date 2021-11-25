@@ -9,7 +9,7 @@
             :link="link" />
       </g>
       <g v-if="nodes">
-        <tree-node v-for="(node, index) in nodes"
+        <single-sequence-tree-node v-for="(node, index) in nodes"
           :key="'node' + node.eventType + index"
           :node="node"
           :maxArcWidth="4" />
@@ -27,11 +27,12 @@ import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
 import { mapGetters } from 'vuex';
 import { Getters } from '@/store/getters';
+import { applySelectionToSequence } from '@/helpers/selection';
 import TreeLink from './TreeLink.vue';
-import TreeNode from './TreeNode.vue';
+import SingleSequenceTreeNode from './SingleSequenceTreeNode.vue';
 
 export default Vue.extend({
-  components: { TreeLink, TreeNode },
+  components: { TreeLink, SingleSequenceTreeNode },
   props: {
     sequence: {
       type: Object as () => EventSequence,
@@ -51,6 +52,7 @@ export default Vue.extend({
   computed: {
     ...mapGetters({
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
+      getDoubleTreeSelection: Getters.GET_DOUBLE_TREE_SELECTION,
     }),
 
     xScale(): d3.ScaleLinear<number, number, never> {
@@ -68,10 +70,12 @@ export default Vue.extend({
     },
 
     layoutRootNode(): EventTreeNode {
-      return buildTreeModel(
+      const model = buildTreeModel(
         new EventSequenceDatasetImpl([this.sequenceWithoutStartAndEndEvents]),
         this.getCentralEventType,
       );
+      applySelectionToSequence(this.getDoubleTreeSelection, model);
+      return model;
     },
 
     nodes(): EventTreeNode[] | undefined {

@@ -1,5 +1,7 @@
+/* eslint-disable import/no-cycle */
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventTypeToIconMapping } from '@/helpers/iconMapping';
+import { DoubleTreeSelection } from '@/helpers/selection';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
@@ -20,6 +22,7 @@ export enum Mutations {
   SET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD = 'setNumericalComparisonVariableThreshold',
   SET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'setNumericalComparisonVariableMaximum',
   SET_VARIABLE_COUNT = 'setVariableCount',
+  SET_DOUBLE_TREE_SELECTION = 'setDoubleTreeSelection',
 }
 
 export const mutations: MutationTree<RootState> = {
@@ -69,5 +72,9 @@ export const mutations: MutationTree<RootState> = {
 
   [Mutations.SET_VARIABLE_COUNT](state, payload: number) : void {
     state.variableCount = payload;
+  },
+
+  [Mutations.SET_DOUBLE_TREE_SELECTION](state, payload: DoubleTreeSelection) : void {
+    state.doubleTreeSelection = payload;
   },
 };

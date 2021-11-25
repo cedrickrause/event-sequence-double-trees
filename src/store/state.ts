@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { RootState } from './RootState';
 
 const state: RootState = {
@@ -13,6 +14,10 @@ const state: RootState = {
   numericalComparisonVariableThreshold: 0,
   numericalComparisonVariableMaximum: 0,
   variableCount: 0,
+  doubleTreeSelection: {
+    left: [],
+    right: [],
+  },
 };
 
 export { state as default };
