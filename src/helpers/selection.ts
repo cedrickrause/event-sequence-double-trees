@@ -120,9 +120,8 @@ export const matchesRightSelection = (
   let matches = false;
 
   selection.right.forEach((subsequence) => {
-    if (_.intersection(
-      rightSequence.slice(0, subsequence.length), (subsequence),
-    ).length === subsequence.length) {
+    if (subsequence.filter((eventType, index) => eventType === rightSequence[index])
+      .length === subsequence.length) {
       matches = true;
     }
   });
