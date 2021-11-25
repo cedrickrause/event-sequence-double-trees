@@ -13,7 +13,7 @@
         <b-col cols="9">
           <b-card
             class="h-100"
-            title="Event Sequence DoubleTree"
+            title="Event Sequence Double Tree"
           >
             <double-tree-wrapper />
           </b-card>
