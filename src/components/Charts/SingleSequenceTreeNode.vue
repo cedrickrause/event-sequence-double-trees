@@ -85,7 +85,7 @@ export default Vue.extend({
           return {
             name: variable.name,
             value: variable.value > this.getNumericalComparisonVariableThreshold
-              ? 'Over' : 'Under',
+              ? 'Over' : 'Under or equal',
           };
         }
         return variable;

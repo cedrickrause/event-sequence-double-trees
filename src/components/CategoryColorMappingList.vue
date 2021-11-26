@@ -2,9 +2,6 @@
   <div id="category-color-mapping-list">
     <b-list-group>
       <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key">
-        <span v-if="comparisonVariableIsNumerical">
-          {{ getNumericalComparisonVariableThreshold }}
-        </span>
         <svg width="30" height="30">
           <circle
             cx="15"
@@ -16,6 +13,9 @@
           />
         </svg>
         {{ key }}
+        <span v-if="comparisonVariableIsNumerical">
+          {{ getNumericalComparisonVariableThreshold }}
+        </span>
       </b-list-group-item>
     </b-list-group>
   </div>

@@ -10,7 +10,7 @@ export default (
 ): string[] => {
   if (eventDataset.data[0].variables
     .find((variable) => variable.name === variableName) instanceof NumericalVariable) {
-    return ['Over', 'Under'];
+    return ['Over', 'Under or equal'];
   }
   return _.uniq(eventDataset.data.map(
     (event: EventDatasetEntry) => event.variables
@@ -21,7 +21,7 @@ export default (
             if (variable.value > numericalComparisonValueThreshold) {
               return 'Over';
             }
-            return 'Under';
+            return 'Under or equal';
           }
           return variable.value as string;
         },
