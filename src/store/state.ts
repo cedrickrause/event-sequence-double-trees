@@ -2,6 +2,7 @@
 import { RootState } from './RootState';
 
 const state: RootState = {
+  datasetName: '',
   eventData: null,
   eventTypeIconMapping: null,
   initialEventSequenceData: null,

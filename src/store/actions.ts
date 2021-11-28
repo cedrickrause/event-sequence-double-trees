@@ -103,6 +103,7 @@ export const actions: ActionTree<RootState, RootState> = {
     context.commit(Mutations.SET_COMPARISON_VARIABLE, null);
     context.commit(Mutations.SET_COMPARISON_VARIABLE_VALUES, []);
     context.commit(Mutations.SET_COLOR_SCHEME, null);
+    context.commit(Mutations.SET_DATASET_NAME, payload);
     if (payload === 'soccer') {
       context.dispatch(Actions.LOAD_SOCCER_EVENT_DATA, ('./data/events.json'));
     }

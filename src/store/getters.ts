@@ -10,6 +10,7 @@ import { GetterTree } from 'vuex';
 import { RootState } from './RootState';
 
 export enum Getters {
+  GET_DATASET_NAME = 'getDatasetName',
   GET_EVENT_DATA = 'getEventData',
   GET_EVENT_TYPE_ICON_MAPPING = 'getEventTypeIconMapping',
   GET_INITIAL_EVENT_SEQUENCE_DATA = 'getInitialEventSequenceData',
@@ -26,6 +27,10 @@ export enum Getters {
 }
 
 export const getters: GetterTree<RootState, RootState> = {
+  [Getters.GET_DATASET_NAME](state) : string {
+    return state.datasetName;
+  },
+
   [Getters.GET_EVENT_DATA](state) : EventDataset | undefined | null {
     return state.eventData;
   },

@@ -7,6 +7,7 @@ import { Variable } from '@/models/Variable';
 import { ScalePower } from 'd3-scale';
 
 export interface RootState {
+  datasetName: string,
   eventData: EventDataset | undefined | null,
   eventTypeIconMapping: EventTypeToIconMapping | null,
   initialEventSequenceData: EventSequenceDataset | undefined | null,

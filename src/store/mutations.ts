@@ -10,6 +10,7 @@ import { MutationTree } from 'vuex';
 import { RootState } from './RootState';
 
 export enum Mutations {
+  SET_DATASET_NAME = 'setDatasetName',
   SET_EVENT_DATA = 'setEventData',
   SET_EVENT_TYPE_ICON_MAPPING = 'setEventTypeIconMapping',
   SET_INITIAL_EVENT_SEQUENCE_DATA = 'setInitialEventSequenceData',
@@ -26,6 +27,17 @@ export enum Mutations {
 }
 
 export const mutations: MutationTree<RootState> = {
+  [Mutations.SET_DATASET_NAME](state, payload: string) : void {
+    if (payload === 'soccer') {
+      state.datasetName = 'Soccer World Cup 2018 Final';
+    } else if (payload === 'nobel') {
+      state.datasetName = 'Physics Nobel Prize Laureats until 1921';
+    } else if (payload === 'flatlands') {
+      state.datasetName = 'Flatlands Sample Data';
+    } else {
+      state.datasetName = '';
+    }
+  },
   [Mutations.SET_EVENT_DATA](state, payload: EventDataset) : void {
     state.eventData = payload;
   },
