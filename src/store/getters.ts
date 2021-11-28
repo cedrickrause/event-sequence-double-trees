@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventTypeToIconMapping } from '@/helpers/iconMapping';
 import { DoubleTreeSelection } from '@/helpers/selection';
