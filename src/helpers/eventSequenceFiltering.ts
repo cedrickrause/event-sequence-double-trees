@@ -15,7 +15,7 @@ export default (
         );
         if (indexOfEventType > -1) {
           subQuery = subQuery.slice(1);
-          subSequence = subSequence.slice(indexOfEventType);
+          subSequence = subSequence.slice(indexOfEventType + 1);
         } else {
           return false;
         }
