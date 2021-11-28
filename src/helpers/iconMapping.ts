@@ -24,7 +24,10 @@ export const soccerEventTypeIconMapping: EventTypeToIconMapping = {
   'Foul Won': '📣',
   Interception: '🤚',
   Dribble: '🔀',
-  'Own Goal Against': '❗',
+  'Own Goal Against': '❗🥅',
   Shot: '⚽',
+  Goal: '🥅',
   'Goal Keeper': '🧤',
+  Cross: '🥏',
+  Corner: '🚩',
 };

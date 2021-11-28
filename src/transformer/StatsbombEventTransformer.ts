@@ -32,6 +32,19 @@ type StatsbombEvent = {
   }
   location: [number, number],
   duration: number,
+  shot: {
+    outcome: {
+      id: number,
+      name: string,
+    }
+  },
+  pass: {
+    type: {
+      id: number,
+      name: string,
+    }
+    cross: boolean,
+  }
 }
 
 export enum StatsbombVariableNames {
@@ -50,19 +63,33 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
     const eventDataset = await d3.json<Array<StatsbombEvent>>(filename).then((parsedData) => {
       if (parsedData) {
         const eventDatasetEntries: EventDatasetEntry[] = parsedData.map(
-          (event) => ({
-            id: event.id,
-            eventType: event.type.name,
-            sequence: event.possession.toString(),
-            variables: [
-              new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
-              new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),
-              new CategoricalVariable(StatsbombVariableNames.PLAYER, event.player?.name),
-              new CategoricalVariable(StatsbombVariableNames.POSITION, event.position?.name),
-              new NumericalVariable(StatsbombVariableNames.MINUTE, event.minute),
-              new NumericalVariable(StatsbombVariableNames.DURATION, event.duration),
-            ],
-          }),
+          (event) => {
+            let eventType = event.type.name;
+            if (eventType === 'Shot' && event.shot.outcome.name === 'Goal') {
+              eventType = 'Goal';
+            }
+            if (eventType === 'Pass') {
+              if (event.pass.type && event.pass.type.name === 'Corner') {
+                eventType = 'Corner';
+              } else if (event.pass.cross) {
+                eventType = 'Cross';
+              }
+            }
+            return {
+              id: event.id,
+              eventType,
+              sequence: event.possession.toString(),
+              variables: [
+                new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
+                new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),
+                new CategoricalVariable(StatsbombVariableNames.PLAYER, event.player?.name),
+                new CategoricalVariable(StatsbombVariableNames.POSITION, event.position?.name),
+                new NumericalVariable(StatsbombVariableNames.MINUTE, event.minute),
+                new NumericalVariable(StatsbombVariableNames.DURATION, event.duration),
+              ],
+            };
+          },
+
         );
         return new EventDatasetImpl(
           eventDatasetEntries,
