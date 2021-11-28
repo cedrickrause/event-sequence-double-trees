@@ -36,7 +36,7 @@ export default Vue.extend({
     arrayOfSequences(): EventSequence[] {
       const sequences = this.getEventSequenceData?.data.slice();
       if (!sequences) {
-        return sequences;
+        return [];
       }
       const c = sequences.sort((a: EventSequence, b: EventSequence) => {
         let aCount = 0;
