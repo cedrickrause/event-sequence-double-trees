@@ -4,11 +4,7 @@
       <b-row align-h="center" no-gutters>
         <b-col cols="3">
           <control-panel-card />
-          <b-card
-            class="h-50"
-            title="Event Sequences">
-            <sequence-list />
-          </b-card>
+          <sequence-list />
         </b-col>
         <b-col cols="9">
           <b-card

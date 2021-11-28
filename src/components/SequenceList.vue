@@ -1,13 +1,17 @@
 <template>
-  <div id="sequence-list">
-    <b-list-group>
-      <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id">
-        <single-sequence
-          :sequence="value"
-          />
-      </b-list-group-item>
-    </b-list-group>
-  </div>
+  <b-card
+    class="h-50"
+    :title="'Event Sequences (' + arrayOfSequences.length + ')'">
+    <div id="sequence-list">
+      <b-list-group>
+        <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id">
+          <single-sequence
+            :sequence="value"
+            />
+        </b-list-group-item>
+      </b-list-group>
+    </div>
+  </b-card>
 </template>
 
 <script lang="ts">
