@@ -41,12 +41,6 @@ export default Vue.extend({
   },
 
   watch: {
-    comparisonVariable(): void {
-      this.numericalComparisonVariableThreshold = 0;
-      this.setNumericalComparisonVariableThreshold(this.numericalComparisonVariableThreshold);
-      this.selectComparisonVariable(this.comparisonVariable);
-    },
-
     numericalComparisonVariableThreshold(): void {
       this.setNumericalComparisonVariableThreshold(this.numericalComparisonVariableThreshold);
     },
@@ -65,7 +59,9 @@ export default Vue.extend({
         return this.getComparisonVariable;
       },
       set(value: string): void {
-        this.setComparisonVariable(value);
+        this.selectComparisonVariable(value);
+        this.numericalComparisonVariableThreshold = 0;
+        this.setNumericalComparisonVariableThreshold(this.numericalComparisonVariableThreshold);
       },
     },
 
@@ -94,7 +90,6 @@ export default Vue.extend({
     ...mapMutations({
       setNumericalComparisonVariableThreshold:
       Mutations.SET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
-      setComparisonVariable: Mutations.SET_COMPARISON_VARIABLE,
     }),
   },
 });
