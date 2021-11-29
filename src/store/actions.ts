@@ -12,13 +12,13 @@ import { EventDataset, EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequence, EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
 import { StatsbombEventTransformerImpl } from '@/transformer/StatsbombEventTransformer';
-import { schemeCategory10 } from 'd3-scale-chromatic';
 import _ from 'lodash';
 import { ActionTree } from 'vuex';
 import { scaleSqrt } from 'd3-scale';
 import { NobelCsvTransformerImpl } from '@/transformer/NobelCsvTransformer';
 import { FlatlandsEventTransformerImpl } from '@/transformer/FlatlandsTransformer';
 import { nobelEventTypeIconMapping, soccerEventTypeIconMapping } from '@/helpers/iconMapping';
+import categoryColors20 from '@/helpers/colorScheme';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
 import { RootState } from './RootState';
@@ -122,7 +122,7 @@ export const actions: ActionTree<RootState, RootState> = {
       payload?.name,
       context.getters[Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD],
     );
-    const basicColorScheme = schemeCategory10;
+    const basicColorScheme = categoryColors20;
     const colorScheme = _.reduce(comparisonVariableValues,
       (accumulator, value, index) => Object.assign(accumulator, {
         [value]: basicColorScheme[index],
