@@ -83,7 +83,7 @@ export const actions: ActionTree<RootState, RootState> = {
     context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, Object.fromEntries(
       _.uniq(eventData?.data
         .map((event) => event.eventType))
-        .map((eventType) => [eventType, eventType.slice(0, 2)]),
+        .map((eventType) => [eventType, eventType.slice(eventType.indexOf(' ') + 1)]),
     ));
 
     const eventSequenceData = getEventSequenceDataFromEventData(eventData, 'sequence');

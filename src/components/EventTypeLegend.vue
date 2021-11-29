@@ -1,11 +1,11 @@
 <template>
   <div>
     <b-button-group>
-      <b-button v-for="(eventTypeIcon, eventType) in getEventTypeIconMapping"
+      <b-button v-for="eventType in selectableEventTypes"
         :key="'legend' + eventType"
         :variant="eventType === getCentralEventType ? 'secondary' : 'outline-secondary'"
         @click="updateCentralEventType(eventType)">
-        {{ eventType + ': ' + eventTypeIcon }}
+        {{ eventType + ': ' + getEventTypeIconMapping[eventType] }}
       </b-button>
     </b-button-group>
   </div>
@@ -24,6 +24,15 @@ export default Vue.extend({
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
       getEventTypeIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
     }),
+
+    selectableEventTypes(): string[] {
+      if (this.getEventTypeIconMapping) {
+        return Object.keys(this.getEventTypeIconMapping).sort(
+          (a, b) => (+a.slice(a.indexOf(' ') + 1) > +b.slice(b.indexOf(' ') + 1) ? 1 : -1),
+        );
+      }
+      return [];
+    },
   },
 
   methods: {

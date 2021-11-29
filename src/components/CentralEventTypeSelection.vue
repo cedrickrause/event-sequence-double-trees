@@ -6,10 +6,10 @@
           id="centralEventTypeInput"
           v-model="centralEventType"
           >
-          <b-form-select-option v-for="(icon, eventType) in getEventTypeIconMapping"
+          <b-form-select-option v-for="eventType in selectableEventTypes"
           :key="eventType + 'dropdownItem'"
           :value="eventType">
-            {{ eventType + ' ' + icon }}
+            {{ eventType + ' ' + getEventTypeIconMapping[eventType] }}
           </b-form-select-option>
         </b-form-select>
     </b-form>
@@ -39,6 +39,15 @@ export default Vue.extend({
       set(eventType: string): void {
         this.updateCentralEventType(eventType);
       },
+    },
+
+    selectableEventTypes(): string[] {
+      if (this.getEventTypeIconMapping) {
+        return Object.keys(this.getEventTypeIconMapping).sort(
+          (a, b) => (+a.slice(a.indexOf(' ') + 1) > +b.slice(b.indexOf(' ') + 1) ? 1 : -1),
+        );
+      }
+      return [];
     },
   },
 
