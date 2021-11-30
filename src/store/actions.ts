@@ -19,6 +19,7 @@ import { NobelCsvTransformerImpl } from '@/transformer/NobelCsvTransformer';
 import { FlatlandsEventTransformerImpl } from '@/transformer/FlatlandsTransformer';
 import { nobelEventTypeIconMapping, soccerEventTypeIconMapping } from '@/helpers/iconMapping';
 import categoryColors20 from '@/helpers/colorScheme';
+import { ExampleCsvTransformerImpl } from '@/transformer/ExampleCsvTransformer';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
 import { RootState } from './RootState';
@@ -27,6 +28,7 @@ export enum Actions {
   LOAD_SOCCER_EVENT_DATA = 'loadEventData',
   LOAD_NOBEL_EVENT_DATA = 'loadNobelEventData',
   LOAD_FLATLANDS_EVENT_DATA = 'loadFlatlandsEventData',
+  LOAD_EXAMPLE_EVENT_DATA = 'loadExampleEventData',
   LOAD_DATASET = 'loadDataset',
   SELECT_COMPARISON_VARIABLE = 'selectComparisonVariable',
   FILTER_EVENT_SEQUENCE_WITH_QUERY = 'filterEventSequenceWithQuery',
@@ -99,6 +101,29 @@ export const actions: ActionTree<RootState, RootState> = {
     context.commit(Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA, eventSequenceData);
   },
 
+  async [Actions.LOAD_EXAMPLE_EVENT_DATA](context, payload) : Promise<void> {
+    const eventData = await ExampleCsvTransformerImpl.instance.transform(payload);
+    context.commit(Mutations.SET_EVENT_DATA, eventData);
+    context.commit(Mutations.SET_VARIABLE_COUNT, eventData?.data[0].variables.length);
+    context.commit(Mutations.SET_EVENT_TYPE_ICON_MAPPING, Object.fromEntries(
+      _.uniq(eventData?.data
+        .map((event) => event.eventType))
+        .map((eventType) => [eventType, eventType.slice(0, 2)]),
+    ));
+
+    const eventSequenceData = getEventSequenceDataFromEventData(eventData, 'sequence');
+
+    const nodeScale = scaleSqrt()
+      .domain([1, getMaxNumberOfSequencesWithOneEventType(eventData, eventSequenceData)])
+      .range([nodeMinimumSize, nodeMaximumSize]);
+    context.commit(Mutations.SET_NODE_SCALE, nodeScale);
+
+    eventSequenceData.addEndOfSequenceEvents();
+    eventSequenceData.addStartOfSequenceEvents();
+    context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, eventSequenceData);
+    context.commit(Mutations.SET_INITIAL_EVENT_SEQUENCE_DATA, eventSequenceData);
+  },
+
   async [Actions.LOAD_DATASET](context, payload) : Promise<void> {
     context.commit(Mutations.SET_COMPARISON_VARIABLE, null);
     context.commit(Mutations.SET_COMPARISON_VARIABLE_VALUES, []);
@@ -111,7 +136,10 @@ export const actions: ActionTree<RootState, RootState> = {
       context.dispatch(Actions.LOAD_NOBEL_EVENT_DATA, ('./data/nobel.csv'));
     }
     if (payload === 'flatlands') {
-      context.dispatch(Actions.LOAD_FLATLANDS_EVENT_DATA, ('./data/flatlands.json'));
+      context.dispatch(Actions.LOAD_FLATLANDS_EVENT_DATA, ('./data/level20map3.json'));
+    }
+    if (payload === 'example') {
+      context.dispatch(Actions.LOAD_EXAMPLE_EVENT_DATA, ('./data/example.csv'));
     }
   },
 

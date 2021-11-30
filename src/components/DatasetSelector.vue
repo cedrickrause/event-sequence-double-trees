@@ -24,8 +24,9 @@ export default Vue.extend({
         { value: 'soccer', text: 'Soccer World Cup 2018 Final' },
         { value: 'nobel', text: 'Physics Nobel Prize Laureats until 1921' },
         { value: 'flatlands', text: 'Flatlands Sample Data' },
+        { value: 'example', text: 'Example Data For Screenshots' },
       ],
-      selectedDataset: 'nobel',
+      selectedDataset: 'example',
     };
   },
 

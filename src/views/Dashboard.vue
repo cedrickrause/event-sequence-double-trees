@@ -32,7 +32,7 @@ export default Vue.extend({
   components: { ControlPanelCard, SequenceList, DoubleTreeWrapper },
 
   mounted() {
-    this.loadDataset('nobel');
+    this.loadDataset('example');
   },
 
   methods: {
