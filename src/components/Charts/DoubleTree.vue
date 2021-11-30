@@ -15,7 +15,7 @@
           :d="centralLine"
           stroke="lightgrey" />
         <time-direction-arrow
-          :centerX="doubletree.x ? doubletree.x : 0" />
+          :centerX="doubletree ? doubletree.x : 0" />
         <g v-if="startLinks && middleLinks && endLinks">
           <tree-link v-for="(link, index) in middleLinks"
             :key="'link' + link.source.eventType + index"
