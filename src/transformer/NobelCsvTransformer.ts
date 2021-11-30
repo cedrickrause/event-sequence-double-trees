@@ -54,7 +54,7 @@ export class NobelCsvTransformerImpl implements NobelCsvTransformer {
           // eslint-disable-next-line no-plusplus
           id: counter.toString(),
           eventType: row.eventtype,
-          sequence: row.firstname + row.lastname,
+          sequence: `${row.firstname} ${row.lastname}`,
           variables: [
             new CategoricalVariable(NobelVariableNames.NATIONALITY, row.nationality),
             new NumericalVariable(NobelVariableNames.AGE, +row.age),

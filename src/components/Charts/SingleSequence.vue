@@ -1,4 +1,6 @@
 <template>
+  <div style="font-size: 12px">
+    {{ this.sequence.id }}
     <svg :viewBox="`0 0 ${this.width} ${this.height}`">
       <path
         :d="centralLine"
@@ -15,6 +17,7 @@
           :maxArcWidth="4" />
       </g>
     </svg>
+  </div>
 </template>
 
 <script lang="ts">

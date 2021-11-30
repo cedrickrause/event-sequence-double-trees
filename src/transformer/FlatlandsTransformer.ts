@@ -58,7 +58,7 @@ export class FlatlandsEventTransformerImpl implements FlatlandsEventTransformer 
                   eventDatasetEntries.push({
                     id: `${modelName}${train}:${timestep}`,
                     eventType: `Region ${link.target.id.toString()}`,
-                    sequence: `${modelName}${train}`,
+                    sequence: `${modelName} - train: ${train}`,
                     variables: [
                       new CategoricalVariable(FlatlandsVariableNames.MODEL, modelName),
                       new NumericalVariable(FlatlandsVariableNames.TIMESTEP, +timestep),
