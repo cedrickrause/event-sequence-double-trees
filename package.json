@@ -1,5 +1,5 @@
 {
-  "name": "soccer-event-graph",
+  "name": "event-sequence-double-tree",
   "version": "0.1.0",
   "private": true,
   "scripts": {
