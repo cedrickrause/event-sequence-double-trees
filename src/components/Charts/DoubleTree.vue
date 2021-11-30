@@ -14,6 +14,8 @@
         <path
           :d="centralLine"
           stroke="lightgrey" />
+        <time-direction-arrow
+          :centerX="doubletree.x ? doubletree.x : 0" />
         <g v-if="startLinks && middleLinks && endLinks">
           <tree-link v-for="(link, index) in middleLinks"
             :key="'link' + link.source.eventType + index"
@@ -60,6 +62,7 @@ import EndTreeLink from './EndTreeLink.vue';
 import DoubeTreeBackground from './DoubeTreeBackground.vue';
 import StartTreeLink from './StartTreeLink.vue';
 import StartTreeNode from './StartTreeNode.vue';
+import TimeDirectionArrow from './TimeDirectionArrow.vue';
 
 export default Vue.extend({
   components: {
@@ -70,6 +73,7 @@ export default Vue.extend({
     DoubeTreeBackground,
     StartTreeLink,
     StartTreeNode,
+    TimeDirectionArrow,
   },
   props: {
     eventSequenceData: {
