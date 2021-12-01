@@ -27,10 +27,6 @@ function rowTransformer(
 ): ExampleEvent | null | undefined {
   const sequence = rawRow.sequence ?? '-1';
   const eventType = rawRow.eventType ?? 'No Eventtype';
-  console.log(rawRow);
-  console.log({
-    sequence, eventType,
-  });
   return {
     sequence, eventType,
   };
