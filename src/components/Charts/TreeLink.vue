@@ -48,6 +48,7 @@ export default Vue.extend({
       getComparisonVariable: Getters.GET_COMPARISON_VARIABLE,
       getComparisonVariableValues: Getters.GET_COMPARISON_VARIABLE_VALUES,
       getColorScheme: Getters.GET_COLOR_SCHEME,
+      getNodeScale: Getters.GET_NODE_SCALE,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
     }),
 
@@ -63,6 +64,15 @@ export default Vue.extend({
         return this.link.source.children.filter((sibling) => sibling.eventType !== 'End');
       }
       return this.link.target.parents.filter((sibling) => sibling.eventType !== 'Start');
+    },
+
+    referenceSiblingsCount(): number {
+      if (this.link.target.depth > 0) {
+        return this.link.source.children.filter((sibling) => sibling.eventType !== 'End')
+          .reduce((a, b) => a + b.count, 0);
+      }
+      return this.link.target.parents.filter((sibling) => sibling.eventType !== 'Start')
+        .reduce((a, b) => a + b.count, 0);
     },
 
     otherNode(): EventTreeNode {
@@ -101,17 +111,17 @@ export default Vue.extend({
   methods: {
     linkPath(comparisonVariableValue: {key: string, value: number},
       valuesBefore: {key: string, value: number}[]) {
-      const nodeOffset = this.count / 2;
+      const nodeOffset = this.getNodeScale(this.count) / 2;
       const otherOffset = this.referenceSiblings
-        .reduce((a, b) => a + b.count, 0) / 2;
-      const width = comparisonVariableValue.value;
+        .reduce((a, b) => a + this.getNodeScale(b.count), 0) / 2;
+      const width = (comparisonVariableValue.value / this.count) * this.getNodeScale(this.count);
       const valuesBeforeOffset = valuesBefore.map(
-        (variable) => variable.value,
+        (variable) => (variable.value / this.count) * this.getNodeScale(this.count),
       ).reduce((a, b) => a + b, 0);
       const childIndexInParent = this.referenceSiblings
         .findIndex((sibling) => sibling === this.referenceNode);
       const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
-        .reduce((a, b) => a + b.count, 0);
+        .reduce((a, b) => a + this.getNodeScale(b.count), 0);
 
       let points = [];
       if (this.referenceNode.depth > 0) {
@@ -137,14 +147,14 @@ export default Vue.extend({
     },
 
     linkPathDefault() {
-      const nodeOffset = this.count / 2;
+      const nodeOffset = this.getNodeScale(this.count) / 2;
       const otherOffset = this.referenceSiblings
-        .reduce((a, b) => a + b.count, 0) / 2;
-      const width = this.count;
+        .reduce((a, b) => a + this.getNodeScale(b.count), 0) / 2;
+      const width = this.getNodeScale(this.count);
       const childIndexInParent = this.referenceSiblings
         .findIndex((sibling) => sibling === this.referenceNode);
       const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
-        .reduce((a, b) => a + b.count, 0);
+        .reduce((a, b) => a + this.getNodeScale(b.count), 0);
 
       let points = [];
       if (this.referenceNode.depth > 0) {

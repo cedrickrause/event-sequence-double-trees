@@ -87,7 +87,7 @@ export default Vue.extend({
 
     newX(): number {
       const parent = this.link.source;
-      return parent.x + this.maxArcWidth + this.getNodeScale(this.referenceNode.count) * 1.5;
+      return parent.x + this.maxArcWidth + (this.getNodeScale(this.count) / 2) * 1.5;
     },
 
     newY(): number {
@@ -99,10 +99,10 @@ export default Vue.extend({
   methods: {
     linkPath(comparisonVariableValue: {key: string, value: number},
       valuesBefore: {key: string, value: number}[]) {
-      const offset = this.count / 2;
-      const height = comparisonVariableValue.value;
+      const offset = this.getNodeScale(this.count) / 2;
+      const height = (comparisonVariableValue.value / this.count) * this.getNodeScale(this.count);
       const valuesBeforeOffset = valuesBefore.map(
-        (variable) => variable.value,
+        (variable) => (variable.value / this.count) * this.getNodeScale(this.count),
       ).reduce((a, b) => a + b, 0);
 
       const points = [
@@ -116,8 +116,8 @@ export default Vue.extend({
     },
 
     linkPathDefault() {
-      const offset = this.count / 2;
-      const height = this.count;
+      const offset = this.getNodeScale(this.count) / 2;
+      const height = this.getNodeScale(this.count);
 
       const points = [
         [this.link.source.x, this.link.source.y - offset],

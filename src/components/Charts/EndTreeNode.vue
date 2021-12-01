@@ -36,12 +36,12 @@ export default Vue.extend({
     }),
 
     radius(): number {
-      return this.node.count * 1.5;
+      return this.getNodeScale(this.node.count) * 1.5;
     },
 
     newX(): number {
       const parent = this.node.parents[0];
-      return parent.x + this.maxArcWidth + this.getNodeScale(this.node.count) * 1.5;
+      return parent.x + this.maxArcWidth + (this.getNodeScale(this.node.count) / 2) * 1.5;
     },
 
     newY(): number {
