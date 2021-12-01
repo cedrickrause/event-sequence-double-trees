@@ -9,7 +9,7 @@
           <b-form-select-option v-for="eventType in selectableEventTypes"
           :key="eventType + 'dropdownItem'"
           :value="eventType">
-            {{ eventType + ' ' + getEventTypeIconMapping[eventType] }}
+            {{ eventType + ': ' + getEventTypeIconMapping[eventType] }}
           </b-form-select-option>
         </b-form-select>
     </b-form>
