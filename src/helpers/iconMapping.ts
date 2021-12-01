@@ -29,5 +29,5 @@ export const soccerEventTypeIconMapping: EventTypeToIconMapping = {
   Goal: '🥅',
   'Goal Keeper': '🧤',
   Cross: '🥏',
-  Corner: '🚩',
+  'Set Piece': '🚩',
 };

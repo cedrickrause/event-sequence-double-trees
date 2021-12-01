@@ -69,8 +69,8 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
               eventType = 'Goal';
             }
             if (eventType === 'Pass') {
-              if (event.pass.type && event.pass.type.name === 'Corner') {
-                eventType = 'Corner';
+              if (event.pass.type && (event.pass.type.name === 'Corner' || event.pass.type.name === 'Free Kick')) {
+                eventType = 'Set Piece';
               } else if (event.pass.cross) {
                 eventType = 'Cross';
               }
