@@ -11,7 +11,7 @@
       <b-form-select-option v-for="(icon, eventType) in getEventTypeIconMapping"
       :key="eventType + 'dropdownItem'"
       :value="eventType">
-        {{ eventType + ' ' + icon }}
+        {{ eventType + ': ' + icon }}
       </b-form-select-option>
     </b-form-select>
     <b-button variant="primary" v-on:click="handleQuery">
