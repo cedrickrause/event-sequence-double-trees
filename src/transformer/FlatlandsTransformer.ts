@@ -24,7 +24,17 @@ type FlatlandsLink = {
 }
 
 type FlatlandsModel = {
-  links: Array<FlatlandsLink>,
+  links: FlatlandsLink[],
+  nodes: {
+    [region: string]: {
+      id: number,
+      trains: {
+        [trainNumber: string]: {
+          timesteps: number[]
+        }
+      }
+    }
+  },
 }
 
 type FlatlandsDataset = {
@@ -48,7 +58,7 @@ export class FlatlandsEventTransformerImpl implements FlatlandsEventTransformer 
         Object.keys(parsedData).forEach(
           (modelName: string) => {
             const model = parsedData[modelName];
-            const { links } = model;
+            const { nodes, links } = model;
             links.forEach((link) => {
               link.trains.forEach((train) => {
                 const timesteps = Object.keys(link.timestep_train)
@@ -65,6 +75,40 @@ export class FlatlandsEventTransformerImpl implements FlatlandsEventTransformer 
                     ],
                   });
                 });
+              });
+            });
+            const trainEarliestRegion = {} as {
+              [trainNumber: string]: {
+                region: string,
+                timestep: number,
+              }
+            };
+            Object.keys(nodes).forEach((region) => {
+              const node = nodes[region];
+              Object.keys(node.trains).forEach((trainNumber) => {
+                const trainNodeData = node.trains[trainNumber];
+                const earliestTimestepInRegion = trainNodeData.timesteps[0];
+                if (!trainEarliestRegion[trainNumber]) {
+                  trainEarliestRegion[trainNumber] = {
+                    region,
+                    timestep: earliestTimestepInRegion,
+                  };
+                } else if (trainEarliestRegion[trainNumber].timestep > earliestTimestepInRegion) {
+                  trainEarliestRegion[trainNumber].region = region;
+                  trainEarliestRegion[trainNumber].timestep = earliestTimestepInRegion;
+                }
+              });
+            });
+            Object.keys(trainEarliestRegion).forEach((trainNumber) => {
+              const { region, timestep } = trainEarliestRegion[trainNumber];
+              eventDatasetEntries.push({
+                id: `${modelName}${trainNumber}:${timestep}`,
+                eventType: `Region ${region}`,
+                sequence: `${modelName} - train: ${trainNumber}`,
+                variables: [
+                  new CategoricalVariable(FlatlandsVariableNames.MODEL, modelName),
+                  new NumericalVariable(FlatlandsVariableNames.TIMESTEP, +timestep),
+                ],
               });
             });
           },
