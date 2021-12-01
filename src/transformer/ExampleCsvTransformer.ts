@@ -46,7 +46,6 @@ export class ExampleCsvTransformerImpl implements ExampleCsvTransformer {
       let counter = 0;
       const eventDatasetEntries = loadedData.map((row: ExampleEvent) => {
         counter += 1;
-        console.log(row);
         return {
           id: row.sequence,
           eventType: row.eventType,
