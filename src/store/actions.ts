@@ -18,7 +18,7 @@ import { scaleSqrt } from 'd3-scale';
 import { NobelCsvTransformerImpl } from '@/transformer/NobelCsvTransformer';
 import { FlatlandsEventTransformerImpl } from '@/transformer/FlatlandsTransformer';
 import { nobelEventTypeIconMapping, soccerEventTypeIconMapping } from '@/helpers/iconMapping';
-import categoryColors20 from '@/helpers/colorScheme';
+import { categoryColors20, categoryColors20flatlands } from '@/helpers/colorScheme';
 import { ExampleCsvTransformerImpl } from '@/transformer/ExampleCsvTransformer';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
@@ -136,7 +136,7 @@ export const actions: ActionTree<RootState, RootState> = {
       context.dispatch(Actions.LOAD_NOBEL_EVENT_DATA, ('./data/nobel.csv'));
     }
     if (payload === 'flatlands') {
-      context.dispatch(Actions.LOAD_FLATLANDS_EVENT_DATA, ('./data/level20map3.json'));
+      context.dispatch(Actions.LOAD_FLATLANDS_EVENT_DATA, ('./data/level20map3_v2.json'));
     }
     if (payload === 'example') {
       context.dispatch(Actions.LOAD_EXAMPLE_EVENT_DATA, ('./data/example.csv'));
@@ -150,7 +150,13 @@ export const actions: ActionTree<RootState, RootState> = {
       payload?.name,
       context.getters[Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD],
     );
-    const basicColorScheme = categoryColors20;
+    let basicColorScheme: string[] = [];
+    if (payload.name === 'Model') {
+      console.log(payload.name);
+      basicColorScheme = categoryColors20flatlands;
+    } else {
+      basicColorScheme = categoryColors20;
+    }
     const colorScheme = _.reduce(comparisonVariableValues,
       (accumulator, value, index) => Object.assign(accumulator, {
         [value]: basicColorScheme[index],
