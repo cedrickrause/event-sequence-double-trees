@@ -26,7 +26,7 @@ export default Vue.extend({
         { value: 'flatlands', text: 'Flatlands Sample Data' },
         { value: 'example', text: 'Example Data For Screenshots' },
       ],
-      selectedDataset: 'example',
+      selectedDataset: 'nobel',
     };
   },
 
