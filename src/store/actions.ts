@@ -18,7 +18,7 @@ import { scaleSqrt } from 'd3-scale';
 import { NobelCsvTransformerImpl } from '@/transformer/NobelCsvTransformer';
 import { FlatlandsEventTransformerImpl } from '@/transformer/FlatlandsTransformer';
 import { nobelEventTypeIconMapping, soccerEventTypeIconMapping } from '@/helpers/iconMapping';
-import { categoryColors20, categoryColors20flatlands } from '@/helpers/colorScheme';
+import categoryColors20 from '@/helpers/colorScheme';
 import { ExampleCsvTransformerImpl } from '@/transformer/ExampleCsvTransformer';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
@@ -151,12 +151,7 @@ export const actions: ActionTree<RootState, RootState> = {
       context.getters[Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD],
     );
     let basicColorScheme: string[] = [];
-    if (payload.name === 'Model') {
-      console.log(payload.name);
-      basicColorScheme = categoryColors20flatlands;
-    } else {
-      basicColorScheme = categoryColors20;
-    }
+    basicColorScheme = categoryColors20;
     const colorScheme = _.reduce(comparisonVariableValues,
       (accumulator, value, index) => Object.assign(accumulator, {
         [value]: basicColorScheme[index],
