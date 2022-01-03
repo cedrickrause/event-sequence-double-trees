@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line import/no-cycle
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventSequence } from '@/models/EventSequenceDataset';
 import _ from 'lodash';
-
-export type DoubleTreeSelection = {
-  left: string[][],
-  right: string[][],
-}
+import { DoubleTreeSelection } from '../models/DoubleTreeSelection';
 
 const addHighlightedChildren = (node: EventTreeNode, right: string[][]): void => {
   const highlightedChildren = node.children.filter((child) => child.highlight);

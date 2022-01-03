@@ -1,6 +1,6 @@
 import { CategoryToColorMapping } from '@/helpers/d3helpers';
 import { EventTypeToIconMapping } from '@/helpers/iconMapping';
-import { DoubleTreeSelection } from '@/helpers/selection';
+import { DoubleTreeSelection } from '@/models/DoubleTreeSelection';
 import { EventDataset } from '@/models/EventDataset';
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { Variable } from '@/models/Variable';
