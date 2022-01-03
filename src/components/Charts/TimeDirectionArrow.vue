@@ -3,7 +3,8 @@
     <text
     font-size="6px"
     fill="darkgrey"
-    :x="-27">
+    text-anchor="end"
+    :x="-(arrowLength / 2 + arrowTextPadding)">
       Before
     </text>
     <path
@@ -15,7 +16,8 @@
     <text
     font-size="6px"
     fill="darkgrey"
-    :x="13">
+    text-anchor="start"
+    :x="arrowLength / 2 + arrowTextPadding">
       After
     </text>
   </g>
@@ -29,21 +31,30 @@ export default Vue.extend({
     'centerX',
   ],
 
+  data() {
+    return {
+      arrowLength: 18,
+      arrowHeadWidth: 3,
+      arrowHeadHeight: 2,
+      arrowTextPadding: 6,
+    };
+  },
+
   computed: {
     arrowline() {
-      const y = -2;
+      const y = -this.arrowHeadHeight;
       const points = [
-        [-7, y],
-        [8, y],
+        [-this.arrowLength / 2, y],
+        [this.arrowLength / 2 - this.arrowHeadWidth, y],
       ] as [number, number][];
       return d3.line()(points);
     },
 
     arrowhead() {
       const points = [
-        [8, -4],
-        [11, -2],
-        [8, 0],
+        [this.arrowLength / 2 - this.arrowHeadWidth, -2 * this.arrowHeadHeight],
+        [this.arrowLength / 2, -this.arrowHeadHeight],
+        [this.arrowLength / 2 - this.arrowHeadWidth, 0],
       ] as [number, number][];
       return d3.line()(points);
     },
