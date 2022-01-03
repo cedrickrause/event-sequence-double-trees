@@ -1,5 +1,4 @@
 /* eslint-disable import/no-cycle */
-import store from '@/store/index';
 import _ from 'lodash';
 import { EventDatasetEntry } from './EventDataset';
 import { EventTreeLink } from './EventTreeLink';
@@ -111,7 +110,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       childNode.events.push(childEvent);
       childNode.variables.push(...childEvent.variables);
       childNode.parentVariables.push(
-        ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
+        ...this.variables.slice(this.variables.length - childEvent.variables.length,
           this.variables.length),
       );
       childNode.childVariables.push(...childEvent.variables);
@@ -126,7 +125,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [],
       [childEvent],
       [...childEvent.variables],
-      [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
+      [...this.variables.slice(this.variables.length - childEvent.variables.length,
         this.variables.length)],
       [...childEvent.variables],
     );
@@ -142,7 +141,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       parentNode.variables.push(...parentEvent.variables);
       parentNode.parentVariables.push(...parentEvent.variables);
       parentNode.childVariables.push(
-        ...this.variables.slice(this.variables.length - store.getters.getVariableCount,
+        ...this.variables.slice(this.variables.length - parentEvent.variables.length,
           this.variables.length),
       );
       return parentNode;
@@ -157,7 +156,7 @@ export class EventTreeNodeImpl implements EventTreeNode {
       [parentEvent],
       [...parentEvent.variables],
       [...parentEvent.variables],
-      [...this.variables.slice(this.variables.length - store.getters.getVariableCount,
+      [...this.variables.slice(this.variables.length - parentEvent.variables.length,
         this.variables.length)],
     );
     this.parents.push(newParentNode);
