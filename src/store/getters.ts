@@ -51,7 +51,10 @@ export const getters: GetterTree<RootState, RootState> = {
   },
 
   [Getters.GET_NODE_SCALE](state) : ScalePower<number, number, never> {
-    return state.nodeScale!;
+    if (state.nodeScale) {
+      return state.nodeScale;
+    }
+    throw new Error('No NodeScale has been provided during data loading.');
   },
 
   [Getters.GET_COMPARISON_VARIABLE](state) : Variable | null {
