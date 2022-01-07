@@ -1,48 +1,40 @@
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { DoubleTreeSelection } from '../models/DoubleTreeSelection';
 
-const addHighlightedChildren = (node: EventTreeNode, right: string[][]): void => {
+const getHighlightedChildren = (node: EventTreeNode): string[][] => {
   const highlightedChildren = node.children.filter((child) => child.highlight);
-  highlightedChildren.forEach((child) => {
-    addHighlightedChildren(child, right);
-  });
-  const sequence = [node.eventType];
-  let current = node;
-  while (current.depth >= 1) {
-    [current] = current.parents;
-    sequence.push(current.eventType);
+  if (highlightedChildren.length === 0) {
+    const sequence = [node.eventType];
+    let current = node;
+    while (current.depth >= 1) {
+      [current] = current.parents;
+      sequence.push(current.eventType);
+    }
+    return [sequence.reverse()];
   }
-  if (!(highlightedChildren.length > 0)) {
-    right.push(sequence.reverse());
-  }
+
+  return highlightedChildren.map((child) => getHighlightedChildren(child)[0]);
 };
 
-const addHighlightedParents = (node: EventTreeNode, left: string[][]): void => {
+const getHighlightedParents = (node: EventTreeNode): string[][] => {
   const highlightedParents = node.parents.filter((parent) => parent.highlight);
-  highlightedParents.forEach((parent) => {
-    addHighlightedParents(parent, left);
-  });
-  const sequence = [node.eventType];
-  let current = node;
-  while (current.depth <= -1) {
-    [current] = current.children;
-    sequence.push(current.eventType);
+  if (highlightedParents.length === 0) {
+    const sequence = [node.eventType];
+    let current = node;
+    while (current.depth <= -1) {
+      [current] = current.children;
+      sequence.push(current.eventType);
+    }
+    return [sequence.reverse()];
   }
-  if (!(highlightedParents.length > 0)) {
-    left.push(sequence.reverse());
-  }
+
+  return highlightedParents.map((parent) => getHighlightedParents(parent)[0]);
 };
 
-export const getDoubleTreeSelectionFromRoot = (rootNode: EventTreeNode): DoubleTreeSelection => {
-  const right = [] as string[][];
-  const left = [] as string[][];
-  addHighlightedChildren(rootNode, right);
-  addHighlightedParents(rootNode, left);
-  return {
-    left,
-    right,
-  };
-};
+export const getDoubleTreeSelectionFromRoot = (rootNode: EventTreeNode): DoubleTreeSelection => ({
+  left: getHighlightedParents(rootNode),
+  right: getHighlightedChildren(rootNode),
+});
 
 export const applySelectionToSequence = (selection: DoubleTreeSelection, root: EventTreeNode)
 : void => {
