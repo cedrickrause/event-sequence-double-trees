@@ -46,16 +46,16 @@ export const getDoubleTreeSelectionFromRoot = (rootNode: EventTreeNode): DoubleT
 
 export const applySelectionToSequence = (selection: DoubleTreeSelection, root: EventTreeNode)
 : void => {
-  selection.right.forEach((sequence) => {
+  selection.right.forEach((rightSelection) => {
     let current = root;
     let matches = true;
     let counter = 0;
-    sequence.forEach((eventType) => {
+    rightSelection.forEach((eventType) => {
       if (!(current.eventType === eventType)) {
         matches = false;
       }
       counter += 1;
-      if (current.children[0] && counter < sequence.length) {
+      if (current.children[0] && counter < rightSelection.length) {
         [current] = current.children;
       }
     });
@@ -64,16 +64,16 @@ export const applySelectionToSequence = (selection: DoubleTreeSelection, root: E
     }
   });
 
-  selection.left.forEach((sequence) => {
+  selection.left.forEach((leftSelection) => {
     let current = root;
     let matches = true;
     let counter = 0;
-    sequence.forEach((eventType) => {
+    leftSelection.forEach((eventType) => {
       if (!(current.eventType === eventType)) {
         matches = false;
       }
       counter += 1;
-      if (current.parents[0] && counter < sequence.length) {
+      if (current.parents[0] && counter < leftSelection.length) {
         [current] = current.parents;
       }
     });
