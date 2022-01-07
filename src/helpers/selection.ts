@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { EventTreeNode } from '@/models/EventTreeNode';
-import { EventSequence } from '@/models/EventSequenceDataset';
-import _ from 'lodash';
 import { DoubleTreeSelection } from '../models/DoubleTreeSelection';
 
 const addHighlightedChildren = (node: EventTreeNode, right: string[][]): void => {
@@ -12,8 +9,7 @@ const addHighlightedChildren = (node: EventTreeNode, right: string[][]): void =>
   const sequence = [node.eventType];
   let current = node;
   while (current.depth >= 1) {
-    // eslint-disable-next-line prefer-destructuring
-    current = current.parents[0];
+    [current] = current.parents;
     sequence.push(current.eventType);
   }
   if (!(highlightedChildren.length > 0)) {
@@ -29,8 +25,7 @@ const addHighlightedParents = (node: EventTreeNode, left: string[][]): void => {
   const sequence = [node.eventType];
   let current = node;
   while (current.depth <= -1) {
-    // eslint-disable-next-line prefer-destructuring
-    current = current.children[0];
+    [current] = current.children;
     sequence.push(current.eventType);
   }
   if (!(highlightedParents.length > 0)) {
