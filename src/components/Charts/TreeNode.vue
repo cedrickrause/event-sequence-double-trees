@@ -1,6 +1,8 @@
 <template>
   <g :transform="`translate(${this.node.x},${this.node.y})`"
       @click="handleClick()"
+      @mouseover="setHoveredEventType(node.eventType)"
+      @mouseleave="setHoveredEventType('')"
     >
     <defs>
            <pattern
@@ -19,6 +21,12 @@
       :r="nodeSize"
       :fill="nodeColor"
       :stroke-opacity="node.highlight ? 1 : 0.5"
+    />
+    <circle
+      :r="nodeSize * 1.5"
+      fill="none"
+      :stroke-opacity="node.eventType === getHoveredEventType ? 1 : 0"
+      :stroke-width="nodeSize / 4"
     />
     <text dy="0.35em"
     :font-size="nodeSize"
@@ -76,6 +84,7 @@ export default Vue.extend({
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
       getNodeScale: Getters.GET_NODE_SCALE,
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
+      getHoveredEventType: Getters.GET_HOVERED_EVENT_TYPE,
       getEventTypeToIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
     }),
 
@@ -127,6 +136,7 @@ export default Vue.extend({
 
     ...mapMutations({
       setDoubleTreeSelection: Mutations.SET_DOUBLE_TREE_SELECTION,
+      setHoveredEventType: Mutations.SET_HOVERED_EVENT_TYPE,
     }),
 
     handleClick(): void {

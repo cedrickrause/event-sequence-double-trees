@@ -16,6 +16,7 @@ export enum Mutations {
   SET_INITIAL_EVENT_SEQUENCE_DATA = 'setInitialEventSequenceData',
   SET_EVENT_SEQUENCE_DATA = 'setEventSequenceData',
   SET_CENTRAL_EVENT_TYPE = 'setCentralEventType',
+  SET_HOVERED_EVENT_TYPE = 'setHoveredEventType',
   SET_NODE_SCALE = 'setNodeScale',
   SET_COMPARISON_VARIABLE = 'setComparisonVariable',
   SET_COMPARISON_VARIABLE_VALUES = 'setComparisonVariableValues',
@@ -56,6 +57,10 @@ export const mutations: MutationTree<RootState> = {
 
   [Mutations.SET_CENTRAL_EVENT_TYPE](state, payload: string) : void {
     state.centralEventType = payload;
+  },
+
+  [Mutations.SET_HOVERED_EVENT_TYPE](state, payload: string) : void {
+    state.hoveredEventType = payload;
   },
 
   [Mutations.SET_NODE_SCALE](state, payload: ScalePower<number, number, never>) : void {

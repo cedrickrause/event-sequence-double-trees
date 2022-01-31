@@ -13,6 +13,7 @@ export interface RootState {
   initialEventSequenceData: EventSequenceDataset | undefined | null,
   eventSequenceData: EventSequenceDataset | undefined | null,
   centralEventType: string,
+  hoveredEventType: string,
   nodeScale: ScalePower<number, number, never> | null,
   comparisonVariable: Variable | null,
   comparisonVariableValues: string[],
