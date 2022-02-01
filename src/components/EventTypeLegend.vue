@@ -4,7 +4,10 @@
       <b-button v-for="eventType in selectableEventTypes"
         :key="'legend' + eventType"
         :variant="eventType === getCentralEventType ? 'secondary' : 'outline-secondary'"
-        @click="updateCentralEventType(eventType)">
+        @click="updateCentralEventType(eventType)"
+        @mouseover="setHoveredEventType(eventType)"
+        @mouseleave="setHoveredEventType('')"
+        >
         {{ eventType + ': ' + getEventTypeIconMapping[eventType] }}
       </b-button>
     </b-button-group>
@@ -14,8 +17,9 @@
 <script lang="ts">
 import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default Vue.extend({
 
@@ -38,6 +42,9 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       updateCentralEventType: Actions.UPDATE_CENTRAL_EVENT_TYPE,
+    }),
+    ...mapMutations({
+      setHoveredEventType: Mutations.SET_HOVERED_EVENT_TYPE,
     }),
   },
 });
