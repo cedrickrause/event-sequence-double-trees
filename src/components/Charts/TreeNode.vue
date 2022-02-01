@@ -22,12 +22,6 @@
       :fill="nodeColor"
       :stroke-opacity="node.highlight ? 1 : 0.5"
     />
-    <circle
-      :r="nodeSize * 1.5"
-      fill="none"
-      :stroke-opacity="node.eventType === getHoveredEventType ? 1 : 0"
-      :stroke-width="nodeSize / 4"
-    />
     <text dy="0.35em"
     :font-size="nodeSize"
     :opacity="node.highlight ? 1 : 0.5">
@@ -190,18 +184,22 @@ export default Vue.extend({
       const share = count / total;
       const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
       const start = sumBefore / total;
+      const factor = this.node.eventType === this.getHoveredEventType ? 1.5 : 1;
       return arc({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + 2 + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
+        outerRadius: factor * this.nodeSize + 2
+        + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
     },
 
     fullArc(value: number) {
+      const factor = this.node.eventType === this.getHoveredEventType ? 1.5 : 1;
       return d3.arc()({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + 2 + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
+        outerRadius: factor * this.nodeSize + 2
+        + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
         startAngle: 0,
         endAngle: 2 * Math.PI,
       });
