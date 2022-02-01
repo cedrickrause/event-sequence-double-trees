@@ -27,7 +27,7 @@ export class EventSequenceDatasetImpl implements EventSequenceDataset {
         id: '0',
         eventType: 'End',
         sequence: sequence.id,
-        variables: [],
+        variables: new Array(sequence.events[0].variables.length),
       });
     });
     return this;
@@ -39,7 +39,7 @@ export class EventSequenceDatasetImpl implements EventSequenceDataset {
         id: '-1',
         eventType: 'Start',
         sequence: sequence.id,
-        variables: [],
+        variables: new Array(sequence.events[0].variables.length),
       });
     });
     return this;
