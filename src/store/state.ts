@@ -9,6 +9,7 @@ const state: RootState = {
   eventSequenceData: null,
   centralEventType: '',
   hoveredEventType: '',
+  hoveredAttribute: '',
   nodeScale: null,
   comparisonVariable: null,
   comparisonVariableValues: [],

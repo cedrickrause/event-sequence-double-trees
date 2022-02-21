@@ -16,6 +16,7 @@ export enum Getters {
   GET_EVENT_SEQUENCE_DATA = 'getEventSequenceData',
   GET_CENTRAL_EVENT_TYPE = 'getCentralEventType',
   GET_HOVERED_EVENT_TYPE = 'getHoveredEventType',
+  GET_HOVERED_ATTRIBUTE = 'getHoveredAttribute',
   GET_NODE_SCALE = 'getNodeScale',
   GET_COMPARISON_VARIABLE = 'getComparisonVariable',
   GET_COMPARISON_VARIABLE_VALUES = 'getComparisonVariableValues',
@@ -53,6 +54,10 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_HOVERED_EVENT_TYPE](state) : string {
     return state.hoveredEventType;
+  },
+
+  [Getters.GET_HOVERED_ATTRIBUTE](state) : string {
+    return state.hoveredAttribute;
   },
 
   [Getters.GET_NODE_SCALE](state) : ScalePower<number, number, never> {

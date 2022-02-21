@@ -21,7 +21,6 @@
       :class="{ highlight: node.highlight }"
       :r="nodeSize"
       :fill="nodeColor"
-      :stroke-opacity="node.highlight ? 1 : 0.5"
     />
     <text dy="0.35em"
     :font-size="nodeSize"
@@ -33,6 +32,7 @@
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
+        :stroke="getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
         />
     </g>
     <g v-else>
@@ -40,6 +40,7 @@
         :d="fullArc(node.count)"
         fill="grey"
         :opacity="node.highlight ? 1 : 0.5"
+        stroke="white"
         />
     </g>
   </g>
@@ -81,6 +82,7 @@ export default Vue.extend({
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
       getHoveredEventType: Getters.GET_HOVERED_EVENT_TYPE,
       getEventTypeToIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
+      getHoveredAttribute: Getters.GET_HOVERED_ATTRIBUTE,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
@@ -210,11 +212,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 @import '@/style/custom.scss';
-
-circle {
-  stroke: #555;
-  stroke-linejoin: round;
-}
 
 text {
   text-anchor: middle;

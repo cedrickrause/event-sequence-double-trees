@@ -14,6 +14,7 @@ export interface RootState {
   eventSequenceData: EventSequenceDataset | undefined | null,
   centralEventType: string,
   hoveredEventType: string,
+  hoveredAttribute: string,
   nodeScale: ScalePower<number, number, never> | null,
   comparisonVariable: Variable | null,
   comparisonVariableValues: string[],

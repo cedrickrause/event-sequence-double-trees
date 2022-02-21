@@ -1,7 +1,9 @@
 <template>
   <div id="category-color-mapping-list">
     <b-list-group>
-      <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key">
+      <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key"
+        @mouseover="setHoveredAttribute(key)"
+        @mouseleave="setHoveredAttribute('')">
         <svg width="30" height="30">
           <circle
             cx="15"
@@ -24,8 +26,9 @@
 <script lang="ts">
 import { NumericalVariable } from '@/models/NumericalVariable';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default Vue.extend({
 
@@ -40,9 +43,17 @@ export default Vue.extend({
       return this.getComparisonVariable instanceof NumericalVariable;
     },
   },
+
+  methods: {
+    ...mapMutations({
+      setHoveredAttribute: Mutations.SET_HOVERED_ATTRIBUTE,
+    }),
+  },
 });
 </script>
 <style lang="scss" scoped>
+@import '@/style/custom.scss';
+
 .list-group{
     max-height: 70%;
     overflow-y: auto;
@@ -50,6 +61,10 @@ export default Vue.extend({
 
 .list-group-item {
   padding: 5px;
+}
+
+.list-group-item:hover {
+  background-color: $hover-non-clickable;
 }
 
 #category-color-mapping-list {
