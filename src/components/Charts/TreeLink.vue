@@ -1,5 +1,5 @@
 <template>
-  <g v-if="comparisonValues.length > 0">
+  <g>
     <path v-for="(comparisonVariableValue, index) in comparisonValues"
     :key="comparisonVariableValue.key"
       :class="{ highlight: isHighlight() }"
@@ -8,12 +8,10 @@
       :stroke-width="linkWidth(comparisonVariableValue.key)"
       :d="linkPath(comparisonVariableValue, comparisonValues.slice(0, index))"
       />
-  </g>
-  <g v-else>
     <path
       :class="{ highlight: isHighlight() }"
-      stroke="none"
-      fill="#aaa"
+      :stroke="isHoveredSequence ? 'black' : 'none'"
+      :fill="comparisonValues.length > 0 ? 'none' : '#aaa'"
       :d="linkPathDefault()"
       />
   </g>
@@ -50,6 +48,7 @@ export default Vue.extend({
       getColorScheme: Getters.GET_COLOR_SCHEME,
       getNodeScale: Getters.GET_NODE_SCALE,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
+      getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
     }),
 
     referenceNode(): EventTreeNode {
@@ -105,6 +104,12 @@ export default Vue.extend({
       ).sort((a, b) => (
         (Object.keys(colorScheme).indexOf(a.key) > Object.keys(colorScheme).indexOf(b.key))
           ? 1 : -1));
+    },
+
+    isHoveredSequence(): boolean {
+      return this.referenceNode.events.map(
+        (event) => event.sequence,
+      ).includes(this.getHoveredSequence);
     },
   },
 

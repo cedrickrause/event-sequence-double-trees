@@ -1,6 +1,6 @@
 <template>
   <g :transform="`translate(${node.x},${node.y})
-  scale(${getHoveredEventType === node.eventType ? 1.5 : 1})`"
+  scale(${isHoveredEventType ? 1.5 : 1})`"
       @click="handleClick()"
       @mouseover="setHoveredEventType(node.eventType)"
       @mouseleave="setHoveredEventType('')"
@@ -32,7 +32,7 @@
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
-        :stroke="getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
+        :stroke="getHoveredAttribute === keyValuePair.key || isHoveredSequence ? 'black' : 'white'"
         />
     </g>
     <g v-else>
@@ -40,7 +40,7 @@
         :d="fullArc(node.count)"
         fill="grey"
         :opacity="node.highlight ? 1 : 0.5"
-        stroke="white"
+        :stroke="isHoveredSequence ? 'black' : 'white'"
         />
     </g>
   </g>
@@ -83,6 +83,7 @@ export default Vue.extend({
       getHoveredEventType: Getters.GET_HOVERED_EVENT_TYPE,
       getEventTypeToIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
       getHoveredAttribute: Getters.GET_HOVERED_ATTRIBUTE,
+      getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
@@ -123,6 +124,14 @@ export default Vue.extend({
 
     nodeIcon(): string {
       return this.getEventTypeToIconMapping[this.node.eventType];
+    },
+
+    isHoveredEventType(): boolean {
+      return this.getHoveredEventType === this.node.eventType;
+    },
+
+    isHoveredSequence(): boolean {
+      return this.node.events.map((event) => event.sequence).includes(this.getHoveredSequence);
     },
   },
 

@@ -4,7 +4,9 @@
     :title="'Event Sequences (' + arrayOfSequences.length + ')'">
     <div id="sequence-list">
       <b-list-group>
-        <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id">
+        <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id"
+          @mouseover="setHoveredSequence(value.id)"
+          @mouseleave="setHoveredSequence('')">
           <single-sequence
             :sequence="value"
             />
@@ -19,8 +21,9 @@ import { matchesLeftSelection, matchesRightSelection } from '@/helpers/selection
 import { EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequence } from '@/models/EventSequenceDataset';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import SingleSequence from './Charts/SingleSequence.vue';
 
 export default Vue.extend({
@@ -64,10 +67,18 @@ export default Vue.extend({
     },
   },
 
+  methods: {
+    ...mapMutations({
+      setHoveredSequence: Mutations.SET_HOVERED_SEQUENCE,
+    }),
+  },
+
 });
 </script>
 
 <style lang="scss" scoped>
+@import '@/style/custom.scss';
+
 .list-group{
     max-height: 95%;
     overflow-y: auto;
@@ -85,5 +96,9 @@ span {
 
 .list-group-item {
   padding: 1px;
+}
+
+.list-group-item:hover {
+  background-color: $hover-non-clickable;
 }
 </style>
