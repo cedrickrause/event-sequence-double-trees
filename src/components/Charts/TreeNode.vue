@@ -148,14 +148,6 @@ export default Vue.extend({
     },
 
     updateDoubleTreeSelection() {
-      // const sequence = [];
-      // let current = this.node;
-      // while (current.depth >= 0) {
-      //   sequence.push(current.eventType);
-      //   // eslint-disable-next-line prefer-destructuring
-      //   current = current.parents[0];
-      // }
-      // this.addSequenceToDoubleTreeSelection(sequence.reverse());
       const selection = getDoubleTreeSelectionFromRoot(
         this.node.allNodes().filter((node) => node.depth === 0)[0],
       );
