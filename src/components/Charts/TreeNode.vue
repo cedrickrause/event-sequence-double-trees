@@ -1,5 +1,6 @@
 <template>
-  <g :transform="`translate(${node.x},${node.y})`"
+  <g :transform="`translate(${node.x},${node.y})
+  scale(${getHoveredEventType === node.eventType ? 1.5 : 1})`"
       @click="handleClick()"
       @mouseover="setHoveredEventType(node.eventType)"
       @mouseleave="setHoveredEventType('')"
@@ -184,10 +185,10 @@ export default Vue.extend({
       const share = count / total;
       const sumBefore = valuesBefore.reduce((sum, n) => sum + n.value, 0);
       const start = sumBefore / total;
-      const factor = this.node.eventType === this.getHoveredEventType ? 1.5 : 1;
+
       return arc({
         innerRadius: this.nodeSize,
-        outerRadius: factor * this.nodeSize + 2
+        outerRadius: this.nodeSize + 2
         + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
@@ -195,10 +196,9 @@ export default Vue.extend({
     },
 
     fullArc(value: number) {
-      const factor = this.node.eventType === this.getHoveredEventType ? 1.5 : 1;
       return d3.arc()({
         innerRadius: this.nodeSize,
-        outerRadius: factor * this.nodeSize + 2
+        outerRadius: this.nodeSize + 2
         + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
         startAngle: 0,
         endAngle: 2 * Math.PI,
