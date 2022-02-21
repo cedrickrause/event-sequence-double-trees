@@ -1,5 +1,5 @@
 <template>
-  <g :transform="`translate(${this.node.x},${this.node.y})`"
+  <g :transform="`translate(${node.x},${node.y})`"
       @click="handleClick()"
       @mouseover="setHoveredEventType(node.eventType)"
       @mouseleave="setHoveredEventType('')"
