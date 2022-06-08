@@ -15,6 +15,7 @@ export interface RootState {
   centralEventType: string,
   hoveredEventType: string,
   hoveredAttribute: string,
+  hoveredSequence: string,
   nodeScale: ScalePower<number, number, never> | null,
   comparisonVariable: Variable | null,
   comparisonVariableValues: string[],
