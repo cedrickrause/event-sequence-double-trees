@@ -1,8 +1,8 @@
 <template>
   <div id="tree">
-    <svg :viewBox="`0 0 ${this.width} ${this.height}`">
+    <svg :viewBox="`0 0 ${width} ${height}`">
       <g class="container"
-        :transform="`translate(${this.margin.left},${this.margin.top})`"
+        :transform="`translate(${margin.left},${margin.top})`"
         font-size="14"
         font-family="sans-serif"
         >
