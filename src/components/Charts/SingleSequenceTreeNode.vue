@@ -2,7 +2,8 @@
   <!-- <g :transform="`translate(${this.node.x},${this.node.y})`"
       @click="handleClick()"
     > -->
-  <g :transform="`translate(${node.x},${node.y})`">
+  <g :transform="`translate(${node.x},${node.y})
+  scale(${isHoveredEventType ? 1.25 : 1})`">
     <defs>
            <pattern
                 id="diagonalHatch"
@@ -31,6 +32,9 @@
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="isHighlight ? 1 : 0.35"
+        :stroke="isHoveredSequence || getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
+        @mouseover="setHoveredAttribute(keyValuePair.key)"
+        @mouseleave="setHoveredAttribute('')"
         />
     </g>
     <g v-else>
@@ -38,6 +42,7 @@
         :d="fullArc(node.count)"
         fill="grey"
         :opacity="isHighlight ? 1 : 0.35"
+        :stroke="isHoveredSequence ? 'black' : 'white'"
         />
     </g>
   </g>
@@ -48,10 +53,11 @@ import { EventTreeNode } from '@/models/EventTreeNode';
 import { NumericalVariable } from '@/models/NumericalVariable';
 import { Variable } from '@/models/Variable';
 import { Getters } from '@/store/getters';
+import { Mutations } from '@/store/mutations';
 import * as d3 from 'd3';
 import _ from 'lodash';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default Vue.extend({
   props: {
@@ -75,6 +81,9 @@ export default Vue.extend({
       getNodeScale: Getters.GET_NODE_SCALE,
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
       getEventTypeToIconMapping: Getters.GET_EVENT_TYPE_ICON_MAPPING,
+      getHoveredEventType: Getters.GET_HOVERED_EVENT_TYPE,
+      getHoveredAttribute: Getters.GET_HOVERED_ATTRIBUTE,
+      getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
     }),
 
     comparisonValues(): {key: string, value: number}[] {
@@ -120,9 +129,22 @@ export default Vue.extend({
     isHighlight(): boolean {
       return this.node.highlight;
     },
+
+    isHoveredEventType(): boolean {
+      return this.getHoveredEventType === this.node.eventType;
+    },
+
+    isHoveredSequence(): boolean {
+      return this.node.events.map((event) => event.sequence).includes(this.getHoveredSequence);
+    },
   },
 
   methods: {
+    ...mapMutations({
+      setHoveredEventType: Mutations.SET_HOVERED_EVENT_TYPE,
+      setHoveredAttribute: Mutations.SET_HOVERED_ATTRIBUTE,
+    }),
+
     // handleClick(): void {
     //   if (this.node.depth > 0) {
     //     this.handleClickRightTree();

@@ -32,7 +32,7 @@
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
-        :stroke="getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
+        :stroke="isHoveredSequence || getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
         @mouseover="setHoveredAttribute(keyValuePair.key)"
         @mouseleave="setHoveredAttribute('')"
         />
