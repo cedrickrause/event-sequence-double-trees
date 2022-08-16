@@ -55,6 +55,9 @@ import Vue from 'vue';
 import { EventTreeNode } from '@/models/EventTreeNode';
 import { EventTreeLink } from '@/models/EventTreeLink';
 import * as d3 from 'd3';
+import { applySelectionToDoubleTree } from '@/helpers/selection';
+import { mapGetters } from 'vuex';
+import { Getters } from '@/store/getters';
 import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
 import EndTreeNode from './EndTreeNode.vue';
@@ -95,16 +98,22 @@ export default Vue.extend({
   },
 
   computed: {
+    ...mapGetters({
+      getDoubleTreeSelection: Getters.GET_DOUBLE_TREE_SELECTION,
+    }),
+
     doubletree(): EventTreeNode | undefined {
       if (!this.eventSequenceData) {
         return undefined;
       }
-      return buildTreeLayout(
+      const layout = buildTreeLayout(
         this.eventSequenceData,
         this.centralEventType,
         this.width - this.margin.left - this.margin.right,
         this.height - this.margin.top - this.margin.bottom,
       );
+      applySelectionToDoubleTree(this.getDoubleTreeSelection, layout);
+      return layout;
     },
 
     nodes(): EventTreeNode[] | undefined {

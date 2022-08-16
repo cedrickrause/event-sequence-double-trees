@@ -199,9 +199,16 @@ export const actions: ActionTree<RootState, RootState> = {
     context.commit(Mutations.SET_EVENT_SEQUENCE_DATA, initialEventSequenceData);
   },
 
-  [Actions.ADD_SEQUENCE_TO_DOUBLE_TREE_SELECTION](context, payload): void {
+  [Actions.ADD_SEQUENCE_TO_DOUBLE_TREE_SELECTION](context, payload: EventSequence): void {
+    const before = payload.events.slice(1, payload.events
+      .map((event) => event.eventType).indexOf(context.getters.getCentralEventType) + 1)
+      .map((event) => event.eventType);
+    const after = payload.events.slice(payload.events
+      .map((event) => event.eventType).indexOf(context.getters.getCentralEventType), -1)
+      .map((event) => event.eventType);
     const selection = context.getters.getDoubleTreeSelection;
-    selection.left.push(payload);
+    selection.left.push(before);
+    selection.right.push(after);
     context.commit(Mutations.SET_DOUBLE_TREE_SELECTION, selection);
   },
 };

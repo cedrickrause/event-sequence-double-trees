@@ -75,6 +75,24 @@ export const applySelectionToSequence = (selection: DoubleTreeSelection, root: E
   });
 };
 
+export const applySelectionToDoubleTree = (selection: DoubleTreeSelection, root: EventTreeNode)
+: void => {
+  selection.right.forEach((rightSelection) => {
+    let current = root;
+    let counter = 0;
+    rightSelection.forEach((eventType) => {
+      if (!(current.eventType === eventType)) {
+        return;
+      }
+      counter += 1;
+      if (current.children[0] && counter < rightSelection.length) {
+        [current] = current.children;
+      }
+    });
+    current.highlightAncestors(true);
+  });
+};
+
 export const matchesLeftSelection = (
   sequence: string[],
   selection: DoubleTreeSelection,

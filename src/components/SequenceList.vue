@@ -6,7 +6,9 @@
       <b-list-group>
         <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id"
           @mouseover="setHoveredSequence(value.id)"
-          @mouseleave="setHoveredSequence('')">
+          @mouseleave="setHoveredSequence('')"
+          @click="addSequenceToDoubleTreeSelection(value)"
+          >
           <single-sequence
             :sequence="value"
             />
@@ -20,10 +22,11 @@
 import { matchesLeftSelection, matchesRightSelection } from '@/helpers/selection';
 import { EventDatasetEntry } from '@/models/EventDataset';
 import { EventSequence } from '@/models/EventSequenceDataset';
+import { Actions } from '@/store/actions';
 import { Getters } from '@/store/getters';
 import { Mutations } from '@/store/mutations';
 import Vue from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import SingleSequence from './Charts/SingleSequence.vue';
 
 export default Vue.extend({
@@ -70,6 +73,10 @@ export default Vue.extend({
   methods: {
     ...mapMutations({
       setHoveredSequence: Mutations.SET_HOVERED_SEQUENCE,
+      setDoubleTreeSelection: Mutations.SET_DOUBLE_TREE_SELECTION,
+    }),
+    ...mapActions({
+      addSequenceToDoubleTreeSelection: Actions.ADD_SEQUENCE_TO_DOUBLE_TREE_SELECTION,
     }),
   },
 
