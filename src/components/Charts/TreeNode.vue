@@ -33,6 +33,8 @@
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
         :stroke="getHoveredAttribute === keyValuePair.key || isHoveredSequence ? 'black' : 'white'"
+        @mouseover="setHoveredAttribute(keyValuePair.key)"
+        @mouseleave="setHoveredAttribute('')"
         />
     </g>
     <g v-else>
@@ -143,6 +145,7 @@ export default Vue.extend({
     ...mapMutations({
       setDoubleTreeSelection: Mutations.SET_DOUBLE_TREE_SELECTION,
       setHoveredEventType: Mutations.SET_HOVERED_EVENT_TYPE,
+      setHoveredAttribute: Mutations.SET_HOVERED_ATTRIBUTE,
     }),
 
     handleClick(): void {
