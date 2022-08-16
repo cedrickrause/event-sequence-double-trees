@@ -87,12 +87,12 @@ export default Vue.extend({
 
     newX(): number {
       const child = this.link.target;
-      return child.x - this.maxArcWidth - (this.getNodeScale(this.count) / 2) * 1.5;
+      return child.x - this.maxArcWidth - (this.getNodeScale(this.count) / 2);
     },
 
     newY(): number {
       const child = this.link.target;
-      return child.y - this.maxArcWidth - this.getNodeScale(child.count) * 1.5;
+      return child.y - this.maxArcWidth - this.getNodeScale(child.count) * 1.25;
     },
   },
 

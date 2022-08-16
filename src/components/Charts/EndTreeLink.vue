@@ -87,12 +87,12 @@ export default Vue.extend({
 
     newX(): number {
       const parent = this.link.source;
-      return parent.x + this.maxArcWidth + (this.getNodeScale(this.count) / 2) * 1.5;
+      return parent.x + this.maxArcWidth + (this.getNodeScale(this.count) / 2);
     },
 
     newY(): number {
       const parent = this.link.source;
-      return parent.y - this.maxArcWidth - this.getNodeScale(parent.count) * 1.5;
+      return parent.y + this.maxArcWidth + this.getNodeScale(parent.count) * 1.25;
     },
   },
 
@@ -107,8 +107,8 @@ export default Vue.extend({
 
       const points = [
         [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset],
-        [this.newX - offset + valuesBeforeOffset, this.newY],
         [this.newX - offset + valuesBeforeOffset + height, this.newY],
+        [this.newX - offset + valuesBeforeOffset, this.newY],
         [this.link.source.x, this.link.source.y - offset + valuesBeforeOffset + height]] as
         [number, number][];
       return d3.line()
@@ -121,8 +121,8 @@ export default Vue.extend({
 
       const points = [
         [this.link.source.x, this.link.source.y - offset],
-        [this.newX - offset, this.newY],
         [this.newX - offset + height, this.newY],
+        [this.newX - offset, this.newY],
         [this.link.source.x, this.link.source.y - offset + height]] as [number, number][];
       return d3.line()
         .curve(d3.curveBumpY)(points);

@@ -2,7 +2,6 @@
   <g :transform="`translate(${newX},${newY})`">
     <rect
       :x="-radius/2"
-      :y="-1"
       :width="radius"
       :height="1"
       :opacity="node.children[0].highlight ? 1 : 0.25"
@@ -36,17 +35,17 @@ export default Vue.extend({
     }),
 
     radius(): number {
-      return this.getNodeScale(this.node.count) * 1.5;
+      return this.getNodeScale(this.node.count) * 1.25;
     },
 
     newX(): number {
       const child = this.node.children[0];
-      return child.x - this.maxArcWidth - (this.getNodeScale(this.node.count) / 2) * 1.5;
+      return child.x - this.maxArcWidth - (this.getNodeScale(this.node.count) / 2);
     },
 
     newY(): number {
       const child = this.node.children[0];
-      return child.y - this.maxArcWidth - this.getNodeScale(child.count) * 1.5;
+      return child.y - this.maxArcWidth - this.getNodeScale(child.count) * 1.25;
     },
   },
 });
