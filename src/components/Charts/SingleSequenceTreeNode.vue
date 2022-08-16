@@ -2,7 +2,7 @@
   <!-- <g :transform="`translate(${this.node.x},${this.node.y})`"
       @click="handleClick()"
     > -->
-  <g :transform="`translate(${this.node.x},${this.node.y})`">
+  <g :transform="`translate(${node.x},${node.y})`">
     <defs>
            <pattern
                 id="diagonalHatch"
