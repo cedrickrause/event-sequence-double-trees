@@ -1,6 +1,5 @@
 <template>
-  <g :transform="`translate(${node.x},${node.y})
-  scale(${isHoveredEventType ? 1.5 : 1})`"
+  <g :transform="`translate(${node.x},${node.y})`"
       @click="handleClick()"
       @mouseover="setHoveredEventType(node.eventType)"
       @mouseleave="setHoveredEventType('')"
@@ -20,7 +19,7 @@
     <circle
       :class="{ highlight: node.highlight }"
       :r="nodeSize"
-      :fill="nodeColor"
+      :fill="isHoveredEventType ? 'grey' : nodeColor"
     />
     <text dy="0.35em"
     :font-size="nodeSize"
@@ -32,7 +31,8 @@
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
-        :stroke="isHoveredSequence || getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
+        :stroke="isHoveredSequence
+        || getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
         @mouseover="setHoveredAttribute(keyValuePair.key)"
         @mouseleave="setHoveredAttribute('')"
         />

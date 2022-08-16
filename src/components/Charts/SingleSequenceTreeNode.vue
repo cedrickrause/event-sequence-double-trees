@@ -2,8 +2,7 @@
   <!-- <g :transform="`translate(${this.node.x},${this.node.y})`"
       @click="handleClick()"
     > -->
-  <g :transform="`translate(${node.x},${node.y})
-  scale(${isHoveredEventType ? 1.25 : 1})`">
+  <g :transform="`translate(${node.x},${node.y})`">
     <defs>
            <pattern
                 id="diagonalHatch"
@@ -19,7 +18,7 @@
     <circle
       :class="{ highlight: isHighlight }"
       :r="nodeSize"
-      :fill="nodeColor"
+      :fill="isHoveredEventType ? 'grey' : nodeColor"
       :stroke-opacity="isHighlight ? 1 : 0.35"
     />
     <text dy="0.35em"
@@ -32,7 +31,8 @@
         :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="isHighlight ? 1 : 0.35"
-        :stroke="isHoveredSequence || getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
+        :stroke="isHoveredSequence
+        || getHoveredAttribute === keyValuePair.key ? 'black' : 'white'"
         @mouseover="setHoveredAttribute(keyValuePair.key)"
         @mouseleave="setHoveredAttribute('')"
         />
