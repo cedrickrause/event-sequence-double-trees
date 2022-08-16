@@ -13,7 +13,7 @@ const getHighlightedChildren = (node: EventTreeNode): string[][] => {
     return [sequence.reverse()];
   }
 
-  return highlightedChildren.map((child) => getHighlightedChildren(child)[0]);
+  return highlightedChildren.map((child) => getHighlightedChildren(child)).flat();
 };
 
 const getHighlightedParents = (node: EventTreeNode): string[][] => {
@@ -28,7 +28,7 @@ const getHighlightedParents = (node: EventTreeNode): string[][] => {
     return [sequence.reverse()];
   }
 
-  return highlightedParents.map((parent) => getHighlightedParents(parent)[0]);
+  return highlightedParents.map((parent) => getHighlightedParents(parent)).flat();
 };
 
 export const getDoubleTreeSelectionFromRoot = (rootNode: EventTreeNode): DoubleTreeSelection => ({
