@@ -1,7 +1,7 @@
 <template>
   <div style="font-size: 12px">
-    {{ this.sequence.id }}
-    <svg :viewBox="`0 0 ${this.width} ${this.height}`">
+    {{ sequence.id }}
+    <svg :viewBox="`0 0 ${width} ${height}`">
       <path
         :d="centralLine"
         stroke="lightgrey" />
