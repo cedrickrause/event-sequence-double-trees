@@ -135,7 +135,8 @@ function yExtentLeft(rootNode: EventTreeNode): number[] {
 function scalePositions(
   width: number, height: number, rootNode: EventTreeNode, direction: string,
 ): void {
-  const xScale = d3.scaleSqrt()
+  const xScale = d3.scalePow()
+    .exponent(0.75)
     .domain([rootNode.leftMaximumWidth(), rootNode.leftMaximumWidth() / 4,
       rootNode.rightMaximumWidth() / 4, rootNode.rightMaximumWidth()])
     .range([0, width / 4, width * 0.75, width]);

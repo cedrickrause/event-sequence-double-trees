@@ -28,7 +28,8 @@ export default Vue.extend({
 
   computed: {
     xScale(): d3.ScalePower<number, number, never> {
-      return d3.scaleSqrt()
+      return d3.scalePow()
+        .exponent(0.75)
         .domain([this.rootNode.leftMaximumWidth(), this.rootNode.leftMaximumWidth() / 4,
           this.rootNode.rightMaximumWidth() / 4, this.rootNode.rightMaximumWidth()])
         .range([0, this.width / 4, this.width * 0.75, this.width]);
