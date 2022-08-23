@@ -1,6 +1,8 @@
 <template>
-  <div style="font-size: 12px">
-    {{ sequence.id }}
+  <div style="font-size: 10px;">
+    <div style="margin-bottom: -5px;">
+      {{ sequence.id }}
+    </div>
     <svg :viewBox="`0 0 ${width} ${height}`">
       <path
         :d="centralLine"

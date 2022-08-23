@@ -95,7 +95,7 @@ span {
 }
 
 .list-group-item {
-  padding: 1px;
+  padding: 0px;
 }
 
 .list-group-item:hover {
