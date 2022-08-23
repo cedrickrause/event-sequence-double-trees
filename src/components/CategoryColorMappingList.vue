@@ -3,12 +3,11 @@
     <b-list-group>
       <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key"
         @mouseover="setHoveredAttribute(key)"
-        @mouseleave="setHoveredAttribute('')">
-        <svg width="30" height="30">
+        <svg width="20" height="20">
           <circle
-            cx="15"
-            cy="15"
-            r="10"
+            cx="10"
+            cy="10"
+            r="7"
             fill="none"
             stroke-width="5"
             :stroke="value ? value : 'black'"
@@ -55,12 +54,12 @@ export default Vue.extend({
 @import '@/style/custom.scss';
 
 .list-group{
-    max-height: 70%;
+    max-height: 93%;
     overflow-y: auto;
 }
-
 .list-group-item {
-  padding: 5px;
+  padding: 1px;
+  font-size: 12px;
 }
 
 .list-group-item:hover {

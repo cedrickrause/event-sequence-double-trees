@@ -1,7 +1,8 @@
 <template>
   <b-card
       class="h-50"
-      :title="getDatasetName">
+      title="">
+      <dataset-selector />
       <b-card-header header-tag="nav">
         <b-tabs content-class="h-100 mt-3">
           <b-tab title="Settings" active>
@@ -20,10 +21,11 @@ import { Getters } from '@/store/getters';
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import ControlPanel from './ControlPanel.vue';
+import DatasetSelector from './DatasetSelector.vue';
 import QueryBuilder from './QueryBuilder.vue';
 
 export default Vue.extend({
-  components: { ControlPanel, QueryBuilder },
+  components: { ControlPanel, QueryBuilder, DatasetSelector },
 
   computed: {
     ...mapGetters({
@@ -39,6 +41,11 @@ div, nav {
 
 .card-header {
   background-color: white;
+  padding: 5px;
+}
+
+.card-body {
+  padding: 5px;
 }
 
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div id="control-panel">
-      <dataset-selector />
       <central-event-type-selection />
       <comparison-variable-selection />
     </div>
@@ -10,10 +9,12 @@
 import Vue from 'vue';
 import CentralEventTypeSelection from './CentralEventTypeSelection.vue';
 import ComparisonVariableSelection from './ComparisonVariableSelection.vue';
-import DatasetSelector from './DatasetSelector.vue';
 
 export default Vue.extend({
-  components: { ComparisonVariableSelection, CentralEventTypeSelection, DatasetSelector },
+  components: {
+    ComparisonVariableSelection,
+    CentralEventTypeSelection,
+  },
 });
 </script>
 

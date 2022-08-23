@@ -94,6 +94,22 @@ span {
   padding: 1px;
 }
 
+.card-text {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.card-body {
+  padding: 5px;
+}
+
+.card-title {
+  margin-bottom: 0px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
 .list-group-item {
   padding: 0px;
 }

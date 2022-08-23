@@ -7,10 +7,7 @@
           <sequence-list />
         </b-col>
         <b-col cols="9">
-          <b-card
-            class="h-100"
-            title="Event Sequence Double Tree"
-          >
+          <b-card>
             <double-tree-wrapper />
           </b-card>
         </b-col>
@@ -47,6 +44,10 @@ export default Vue.extend({
 .container-fluid {
   height: 100vh;
   overflow: hidden;
+}
+
+.card-body {
+  padding: 5px;
 }
 
 .row {
