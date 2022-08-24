@@ -1,5 +1,5 @@
 <template>
-  <g :transform="`translate(${centerX}, ${0})`">
+  <g :transform="`translate(${centerX}, ${-10})`">
     <text
     font-size="6px"
     fill="darkgrey"

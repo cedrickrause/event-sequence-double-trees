@@ -1,2 +1,2 @@
 export const nodeMinimumSize = 4;
-export const nodeMaximumSize = 35;
+export const nodeMaximumSize = 25;
