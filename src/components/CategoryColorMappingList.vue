@@ -3,6 +3,7 @@
     <b-list-group>
       <b-list-group-item  v-for="(value, key) in getColorScheme" :key="'color' + key"
         @mouseover="setHoveredAttribute(key)"
+        @mouseleave="setHoveredAttribute('')">
         <svg width="20" height="20">
           <circle
             cx="10"
