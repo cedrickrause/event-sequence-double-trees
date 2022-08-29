@@ -3,7 +3,11 @@
       @click="handleClick()"
       @mouseover="setHoveredEventType(node.eventType)"
       @mouseleave="setHoveredEventType('')"
+      :id="node.events[0].id"
     >
+    <b-popover :target="node.events[0].id" triggers="hover" placement="top">
+      {{ node.eventType }}
+    </b-popover>
     <defs>
            <pattern
                 id="diagonalHatch"
