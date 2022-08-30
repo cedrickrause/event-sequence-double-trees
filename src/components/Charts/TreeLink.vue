@@ -147,8 +147,7 @@ export default Vue.extend({
         [number, number][];
       }
 
-      return d3.line()
-        .curve(d3.curveBumpX)(points);
+      return d3.line()(points);
     },
 
     linkPathDefault() {
@@ -178,8 +177,7 @@ export default Vue.extend({
           [number, number][];
       }
 
-      return d3.line()
-        .curve(d3.curveBumpX)(points);
+      return d3.line()(points);
     },
 
     isHighlight(): boolean {
