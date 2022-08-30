@@ -4,7 +4,7 @@
     :title="'Event Sequences (' + arrayOfSequences.length + ')'">
     <div id="sequence-list">
       <b-list-group>
-        <b-list-group-item  v-for="value in arrayOfSequences" :key="'sequence' + value.id"
+        <b-list-group-item  v-for="value in arrayOfSequences" :key="value.id"
           @mouseover="setHoveredSequence(value.id)"
           @mouseleave="setHoveredSequence('')">
           <single-sequence
@@ -60,7 +60,8 @@ export default Vue.extend({
           this.getDoubleTreeSelection, this.getCentralEventType)) {
           bCount += 1;
         }
-        return aCount < bCount;
+
+        return bCount - aCount;
       });
 
       return c;
