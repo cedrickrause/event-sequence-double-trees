@@ -19,7 +19,6 @@
       :class="{ highlight: isHighlight }"
       :r="nodeSize"
       :fill="isHoveredEventType ? 'grey' : nodeColor"
-      :stroke-opacity="isHighlight ? 1 : 0.35"
     />
     <text dy="0.35em"
     :font-size="nodeSize"
@@ -204,11 +203,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 @import '@/style/custom.scss';
-
-circle {
-  stroke: #555;
-  stroke-linejoin: round;
-}
 
 text {
   text-anchor: middle;
