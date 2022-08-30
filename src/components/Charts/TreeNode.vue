@@ -22,7 +22,7 @@
       :fill="isHoveredEventType ? 'grey' : nodeColor"
     />
     <text dy="0.35em"
-    :font-size="nodeSize"
+    :font-size="nodeSize * 1.5"
     :opacity="node.highlight ? 1 : 0.5">
       {{ nodeIcon }}
     </text>
