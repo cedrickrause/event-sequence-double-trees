@@ -32,7 +32,7 @@ export default Vue.extend({
     selectableEventTypes(): string[] {
       if (this.getEventTypeIconMapping) {
         return Object.keys(this.getEventTypeIconMapping).sort(
-          (a, b) => (+a.slice(a.indexOf(' ') + 1) > +b.slice(b.indexOf(' ') + 1) ? 1 : -1),
+          (a, b) => (+b.slice(b.indexOf(' ') + 1) - +a.slice(a.indexOf(' ') + 1)),
         );
       }
       return [];
