@@ -46,7 +46,7 @@ export default Vue.extend({
 
   data() {
     return {
-      height: 16,
+      height: 12,
       width: 200,
       margin: {
         top: 10, right: 10, bottom: 10, left: 10,

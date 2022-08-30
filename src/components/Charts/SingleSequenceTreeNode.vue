@@ -21,7 +21,7 @@
       :fill="isHoveredEventType ? 'grey' : nodeColor"
     />
     <text dy="0.35em"
-    :font-size="nodeSize"
+    :font-size="nodeSize * 1.5"
     :opacity="isHighlight ? 1 : 0.35">
       {{ nodeIcon }}
     </text>
@@ -113,7 +113,7 @@ export default Vue.extend({
     },
 
     nodeSize(): number {
-      return this.getNodeScale(this.node.count);
+      return this.getNodeScale(this.node.count) * 0.75;
     },
 
     nodeColor(): string {
