@@ -13,6 +13,7 @@ type StatsbombEvent = {
   id: string,
   period: string,
   minute: number,
+  second: number,
   type: {
     id: number,
     name: string,
@@ -75,10 +76,13 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
                 eventType = 'Cross';
               }
             }
+            const minuteToSecond = event.minute ? event.minute * 60 : 0;
+            const second = event.second ? event.second : 0;
             return {
               id: event.id,
               eventType,
               sequence: `possession: ${event.possession.toString()}`,
+              time: minuteToSecond + second,
               variables: [
                 new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
                 new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),

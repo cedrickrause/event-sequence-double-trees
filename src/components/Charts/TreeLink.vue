@@ -1,24 +1,28 @@
 <template>
-  <g>
-    <path v-for="(comparisonVariableValue, index) in comparisonValues"
-    :key="comparisonVariableValue.key"
-      :class="{ highlight: isHighlight() }"
-      stroke="none"
-      :fill="getColorScheme[comparisonVariableValue.key]"
-      :stroke-width="linkWidth(comparisonVariableValue.key)"
-      :d="linkPath(comparisonVariableValue, comparisonValues.slice(0, index))"
+  <g :transform="`translate(${link.source.x}, ${link.source.y})
+     rotate(${angle})`">
+      <rect
+        :x="length"
+        :width="this.distance - length"
+        height="1"
+        y="-0.5"
+        :class="{ highlight: isHighlight }"
+        :fill="isHoveredSequence ? 'black' : '#aaa'"
+        :opacity="isHighlight ? 1 : 0.25"
       />
-    <path
-      :class="{ highlight: isHighlight() }"
-      :stroke="isHoveredSequence ? 'black' : 'none'"
-      :fill="comparisonValues.length > 0 ? 'none' : '#aaa'"
-      :d="linkPathDefault()"
+      <rect
+        :class="{ highlight: isHighlight }"
+        :y="-width/2"
+        :width="length"
+        :height="width"
+        :stroke="isHoveredSequence ? 'black' : 'none'"
+        :fill="comparisonValues.length > 0 ? 'none' : '#aaa'"
+        :opacity="isHighlight ? 1 : 0.25"
       />
   </g>
 </template>
 
 <script lang="ts">
-import * as d3 from 'd3';
 import Vue from 'vue';
 import { EventTreeLink } from '@/models/EventTreeLink';
 import { mapGetters } from 'vuex';
@@ -27,6 +31,8 @@ import { Variable } from '@/models/Variable';
 import { NumericalVariable } from '@/models/NumericalVariable';
 import _ from 'lodash';
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { EventSequence } from '@/models/EventSequenceDataset';
+import { EventDatasetEntry } from '@/models/EventDataset';
 
 export default Vue.extend({
   props: {
@@ -49,6 +55,7 @@ export default Vue.extend({
       getNodeScale: Getters.GET_NODE_SCALE,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
       getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
+      getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
     }),
 
     referenceNode(): EventTreeNode {
@@ -81,8 +88,72 @@ export default Vue.extend({
       return this.link.target;
     },
 
+    sequences(): EventSequence[] {
+      const sequenceData = this.getEventSequenceData.data;
+      return sequenceData
+        .filter((sequence: EventSequence) => this.link.source.events.map((event) => event.sequence)
+          .includes(sequence.id)
+        && this.link.target.events.map((event) => event.sequence)
+          .includes(sequence.id));
+    },
+
+    sourceEvents(): EventDatasetEntry[] {
+      return this.link.source.events
+        .filter((event) => this.sequences.map((sequence) => sequence.id).includes(event.sequence));
+    },
+
+    targetEvents(): EventDatasetEntry[] {
+      return this.link.target.events
+        .filter((event) => this.sequences.map((sequence) => sequence.id).includes(event.sequence));
+    },
+
     count(): number {
       return this.referenceNode.count;
+    },
+
+    width(): number {
+      return this.getNodeScale(this.count);
+    },
+
+    length(): number {
+      const left = this.sourceEvents
+        .map((event) => event.time).reduce((a, b) => a + b, 0) / this.sourceEvents.length;
+
+      const right = this.targetEvents
+        .map((event) => event.time).reduce((a, b) => a + b, 0) / this.targetEvents.length;
+
+      let total = this.sequences
+        .map((sequence) => sequence.duration)
+        .reduce((a, b) => a + b, 0) / this.sequences.length;
+
+      // Catch sequence with total duration of 0
+      if (total === 0) {
+        total = 1;
+      }
+
+      const sourceRadius = this.getNodeScale(this.link.source.count);
+      const targetRadius = this.getNodeScale(this.link.target.count);
+
+      return ((right - left) / total)
+      * (this.distance - sourceRadius - targetRadius)
+      + sourceRadius;
+    },
+
+    distance(): number {
+      const left = this.link.source;
+      const right = this.link.target;
+
+      return Math.sqrt((right.y - left.y) ** 2 + (right.x - left.x) ** 2);
+    },
+
+    angle(): number {
+      const left = this.link.source;
+      const right = this.link.target;
+
+      const yDiff = right.y - left.y;
+      const hypotenuse = this.distance;
+
+      return (Math.asin(yDiff / hypotenuse) * 180) / Math.PI;
     },
 
     comparisonValues(): {key: string, value: number}[] {
@@ -111,97 +182,10 @@ export default Vue.extend({
         (event) => event.sequence,
       ).includes(this.getHoveredSequence);
     },
-  },
-
-  methods: {
-    linkPath(comparisonVariableValue: {key: string, value: number},
-      valuesBefore: {key: string, value: number}[]) {
-      const nodeOffset = this.getNodeScale(this.count) / 2;
-      const otherOffset = this.referenceSiblings
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0) / 2;
-      const width = (comparisonVariableValue.value / this.count) * this.getNodeScale(this.count);
-      const valuesBeforeOffset = valuesBefore.map(
-        (variable) => (variable.value / this.count) * this.getNodeScale(this.count),
-      ).reduce((a, b) => a + b, 0);
-      const childIndexInParent = this.referenceSiblings
-        .findIndex((sibling) => sibling === this.referenceNode);
-      const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0);
-
-      let points = [];
-      if (this.referenceNode.depth > 0) {
-        points = [
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - nodeOffset + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - nodeOffset + valuesBeforeOffset + width],
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore
-          + valuesBeforeOffset + width]] as
-        [number, number][];
-      } else {
-        points = [
-          [this.link.source.x, this.link.source.y - nodeOffset + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore
-          + valuesBeforeOffset + width],
-          [this.link.source.x, this.link.source.y - nodeOffset + valuesBeforeOffset + width]] as
-        [number, number][];
-      }
-
-      return d3.line()(points);
-    },
-
-    linkPathDefault() {
-      const nodeOffset = this.getNodeScale(this.count) / 2;
-      const otherOffset = this.referenceSiblings
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0) / 2;
-      const width = this.getNodeScale(this.count);
-      const childIndexInParent = this.referenceSiblings
-        .findIndex((sibling) => sibling === this.referenceNode);
-      const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0);
-
-      let points = [];
-      if (this.referenceNode.depth > 0) {
-        points = [
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore],
-          [this.link.target.x, this.link.target.y - nodeOffset],
-          [this.link.target.x, this.link.target.y - nodeOffset + width],
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore + width]] as
-          [number, number][];
-      } else {
-        points = [
-          [this.link.source.x, this.link.source.y - nodeOffset],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore + width],
-          [this.link.source.x, this.link.source.y - nodeOffset + width]] as
-          [number, number][];
-      }
-
-      return d3.line()(points);
-    },
 
     isHighlight(): boolean {
       return this.referenceNode.highlight;
     },
-
-    linkWidth(comparisonVariableValue: string): number {
-      const comparisonVariable = this.comparisonValues.find(
-        (value) => value.key === comparisonVariableValue.toString(),
-      );
-      return comparisonVariable ? comparisonVariable.value : 0;
-    },
   },
 });
 </script>
-
-<style lang="scss" scoped>
-@import '@/style/custom.scss';
-
-path {
-  opacity: 0.25;
-}
-
-path.highlight {
-  opacity: 1;
-}
-</style>

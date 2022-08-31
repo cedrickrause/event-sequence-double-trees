@@ -38,6 +38,7 @@ function compressPassAndCarryForSequence(sequence: EventSequence) {
   );
   return {
     id: sequence.id,
+    duration: sequence.duration,
     events: filteredEventsForSequence,
   };
 }
@@ -72,6 +73,7 @@ export const getEventSequenceDataFromEventData = (
   return new EventSequenceDatasetImpl(
     groupedEventArrays.map((sequence) => ({
       id: sequence[0].sequence,
+      duration: sequence[sequence.length - 1].time - sequence[0].time,
       events: sequence,
     })),
   );

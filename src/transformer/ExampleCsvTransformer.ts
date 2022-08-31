@@ -40,12 +40,13 @@ export class ExampleCsvTransformerImpl implements ExampleCsvTransformer {
       filename, rowTransformer,
     ).then((loadedData) => {
       let counter = 0;
-      const eventDatasetEntries = loadedData.map((row: ExampleEvent) => {
+      const eventDatasetEntries = loadedData.map((row: ExampleEvent, index: number) => {
         counter += 1;
         return {
           id: row.sequence,
           eventType: row.eventType,
           sequence: row.sequence,
+          time: index,
           variables: [
           ],
         };
