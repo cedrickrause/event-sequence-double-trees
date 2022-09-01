@@ -55,6 +55,7 @@ export class NobelCsvTransformerImpl implements NobelCsvTransformer {
           id: counter.toString(),
           eventType: row.eventtype,
           sequence: `${row.firstname} ${row.lastname}`,
+          time: +row.age,
           variables: [
             new CategoricalVariable(NobelVariableNames.NATIONALITY, row.nationality),
             new NumericalVariable(NobelVariableNames.AGE, +row.age),

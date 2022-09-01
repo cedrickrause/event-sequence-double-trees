@@ -69,6 +69,7 @@ export class FlatlandsEventTransformerImpl implements FlatlandsEventTransformer 
                     id: `${modelName}${train}:${timestep}`,
                     eventType: `Region ${link.target.id.toString()}`,
                     sequence: `${modelName} - train: ${train}`,
+                    time: +timestep,
                     variables: [
                       new CategoricalVariable(FlatlandsVariableNames.MODEL, modelName),
                       new NumericalVariable(FlatlandsVariableNames.TIMESTEP, +timestep),
@@ -105,6 +106,7 @@ export class FlatlandsEventTransformerImpl implements FlatlandsEventTransformer 
                 id: `${modelName}${trainNumber}:${timestep}`,
                 eventType: `Region ${region}`,
                 sequence: `${modelName} - train: ${trainNumber}`,
+                time: +timestep,
                 variables: [
                   new CategoricalVariable(FlatlandsVariableNames.MODEL, modelName),
                   new NumericalVariable(FlatlandsVariableNames.TIMESTEP, +timestep),

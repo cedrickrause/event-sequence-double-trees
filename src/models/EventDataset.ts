@@ -5,6 +5,7 @@ export type EventDatasetEntry = {
   id: string,
   eventType: string,
   sequence: string,
+  time: number,
   variables: Variable[],
 };
 
