@@ -1,24 +1,53 @@
 <template>
-  <g :transform="`translate(${link.source.x}, ${link.source.y})
-     rotate(${angle})`">
-      <rect
-        :x="length"
-        :width="this.distance - length"
-        height="1"
-        y="-0.5"
-        :class="{ highlight: isHighlight }"
-        :fill="isHoveredSequence ? 'black' : '#aaa'"
-        :opacity="isHighlight ? 1 : 0.25"
-      />
-      <rect
-        :class="{ highlight: isHighlight }"
-        :y="-width/2"
-        :width="length"
-        :height="width"
-        :stroke="isHoveredSequence ? 'black' : 'none'"
-        :fill="comparisonValues.length > 0 ? 'none' : '#aaa'"
-        :opacity="isHighlight ? 1 : 0.25"
-      />
+  <g v-if="comparisonValues.length === 0"
+    :transform="`translate(${link.source.x}, ${link.source.y})
+    rotate(${angle})`">
+    <rect
+      :x="length"
+      :width="distance - length"
+      height="1"
+      y="-0.5"
+      :class="{ highlight: isHighlight }"
+      :fill="isHoveredSequence ? 'black' : '#aaa'"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
+    <rect
+      :class="{ highlight: isHighlight }"
+      :y="-width/2"
+      :width="length"
+      :height="width"
+      :stroke="isHoveredSequence ? 'black' : 'none'"
+      fill="#aaa"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
+  </g>
+  <g v-else
+    :transform="`translate(${link.source.x}, ${link.source.y})
+    rotate(${angle})`">
+    <rect v-for="(comparisonValue, index) in comparisonValues"
+      :key="comparisonValue.key + 'connector'"
+      :x="lengthForComparisonValue(comparisonValue.key)"
+      :width="distance - lengthForComparisonValue(comparisonValue.key)"
+      height="1"
+      :y="- 0.5 -width/2
+        + (width / count * comparisonValue.value) /2
+        + width / count
+        * comparisonValues.slice(0, index).map((val) => val.value).reduce((a,b) => a+b, 0)"
+      :class="{ highlight: isHighlight }"
+      :fill="isHoveredSequence ? 'black' : getColorScheme[comparisonValue.key]"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
+    <rect v-for="(comparisonValue, index) in comparisonValues"
+      :key="comparisonValue.key"
+      :class="{ highlight: isHighlight }"
+      :y="-width/2 + width / count
+        * comparisonValues.slice(0, index).map((val) => val.value).reduce((a,b) => a+b, 0)"
+      :width="lengthForComparisonValue(comparisonValue.key)"
+      :height="width / count * comparisonValue.value"
+      :stroke="isHoveredSequence ? 'black' : 'none'"
+      :fill="getColorScheme[comparisonValue.key]"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
   </g>
 </template>
 
@@ -73,12 +102,7 @@ export default Vue.extend({
     },
 
     referenceSiblingsCount(): number {
-      if (this.link.target.depth > 0) {
-        return this.link.source.children.filter((sibling) => sibling.eventType !== 'End')
-          .reduce((a, b) => a + b.count, 0);
-      }
-      return this.link.target.parents.filter((sibling) => sibling.eventType !== 'Start')
-        .reduce((a, b) => a + b.count, 0);
+      return this.referenceSiblings.reduce((a, b) => a + b.count, 0);
     },
 
     otherNode(): EventTreeNode {
@@ -185,6 +209,47 @@ export default Vue.extend({
 
     isHighlight(): boolean {
       return this.referenceNode.highlight;
+    },
+  },
+
+  methods: {
+    lengthForComparisonValue(comparisonValue: string): number {
+      const sourceEventsForComparisonValue = this.sourceEvents
+        .filter((event) => event.variables
+          .find((variable) => variable.name === this.getComparisonVariable.name)
+          ?.value === comparisonValue);
+
+      const sequencesForComparisonValue = this.sequences
+        .filter((sequence: EventSequence) => sourceEventsForComparisonValue
+          .map((event) => event.sequence)
+          .includes(sequence.id));
+
+      const targetEventsForComparisonValue = this.targetEvents
+        .filter((event) => sequencesForComparisonValue.map((sequence) => sequence.id)
+          .includes(event.sequence));
+
+      const left = sourceEventsForComparisonValue
+        .map((event) => event.time).reduce((a, b) => a + b, 0)
+        / sourceEventsForComparisonValue.length;
+      const right = targetEventsForComparisonValue
+        .map((event) => event.time).reduce((a, b) => a + b, 0)
+        / targetEventsForComparisonValue.length;
+
+      let total = sequencesForComparisonValue
+        .map((sequence) => sequence.duration)
+        .reduce((a, b) => a + b, 0) / sequencesForComparisonValue.length;
+
+      // Catch sequence with total duration of 0
+      if (total === 0 || !(typeof total === 'number')) {
+        total = 1;
+      }
+
+      const sourceRadius = this.getNodeScale(this.link.source.count);
+      const targetRadius = this.getNodeScale(this.link.target.count);
+
+      return ((right - left) / total)
+      * (this.distance - sourceRadius - targetRadius)
+      + sourceRadius;
     },
   },
 });
