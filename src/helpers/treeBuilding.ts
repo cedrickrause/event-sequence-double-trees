@@ -137,9 +137,8 @@ function scalePositions(
 ): void {
   const xScale = d3.scalePow()
     .exponent(0.75)
-    .domain([rootNode.leftMaximumWidth() + 1, rootNode.leftMaximumWidth() / 2,
-      rootNode.rightMaximumWidth() / 2, rootNode.rightMaximumWidth() - 1])
-    .range([0, width / 4, width * 0.75, width]);
+    .domain([rootNode.leftMaximumWidth(), rootNode.rightMaximumWidth()])
+    .range([0, width]);
 
   const yExtent = direction === 'right' ? yExtentRight(rootNode) : yExtentLeft(rootNode);
   const yScale = d3.scaleLinear()
