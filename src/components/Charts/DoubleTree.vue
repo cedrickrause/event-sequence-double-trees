@@ -59,7 +59,7 @@ import TreeNode from './TreeNode.vue';
 import TreeLink from './TreeLink.vue';
 import EndTreeNode from './EndTreeNode.vue';
 import EndTreeLink from './EndTreeLink.vue';
-import DoubeTreeBackground from './DoubeTreeBackground.vue';
+import DoubeTreeBackground from './DoubleTreeBackground.vue';
 import StartTreeLink from './StartTreeLink.vue';
 import StartTreeNode from './StartTreeNode.vue';
 import TimeDirectionArrow from './TimeDirectionArrow.vue';
