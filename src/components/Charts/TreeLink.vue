@@ -155,12 +155,12 @@ export default Vue.extend({
         total = 1;
       }
 
-      const sourceRadius = this.getNodeScale(this.link.source.count);
-      const targetRadius = this.getNodeScale(this.link.target.count);
+      const sourceRadius = this.getNodeScale(this.link.source.count) * (4 / 3);
+      const targetRadius = this.getNodeScale(this.link.target.count) * (4 / 3);
 
       return ((right - left) / total)
       * (this.distance - sourceRadius - targetRadius)
-      + sourceRadius;
+      + sourceRadius * (4 / 3);
     },
 
     distance(): number {
@@ -244,12 +244,12 @@ export default Vue.extend({
         total = 1;
       }
 
-      const sourceRadius = this.getNodeScale(this.link.source.count);
-      const targetRadius = this.getNodeScale(this.link.target.count);
+      const sourceRadius = this.getNodeScale(this.link.source.count) * (4 / 3);
+      const targetRadius = this.getNodeScale(this.link.target.count) * (4 / 3);
 
       return ((right - left) / total)
       * (this.distance - sourceRadius - targetRadius)
-      + sourceRadius;
+      + sourceRadius * (4 / 3);
     },
   },
 });

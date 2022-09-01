@@ -28,7 +28,7 @@
     </text>
     <g v-if="comparisonValues.length > 0">
       <path v-for="(keyValuePair, index) in comparisonValues" :key="keyValuePair.key"
-        :d="arc(node.count, keyValuePair.value, comparisonValues.slice(0, index))"
+        :d="arc(keyValuePair.value, comparisonValues.slice(0, index))"
         :fill="getColorScheme[keyValuePair.key]"
         :opacity="node.highlight ? 1 : 0.5"
         :stroke="isHoveredSequence
@@ -39,7 +39,7 @@
     </g>
     <g v-else>
       <path
-        :d="fullArc(node.count)"
+        :d="fullArc()"
         fill="grey"
         :opacity="node.highlight ? 1 : 0.5"
         :stroke="isHoveredSequence ? 'black' : 'none'"
@@ -185,7 +185,7 @@ export default Vue.extend({
       this.node.highlightNode(true);
     },
 
-    arc(value: number, count: number, valuesBefore: {key: string, value: number}[]) {
+    arc(count: number, valuesBefore: {key: string, value: number}[]) {
       const arc = d3.arc();
       const total = this.comparisonValueTotal;
       const share = count / total;
@@ -194,18 +194,16 @@ export default Vue.extend({
 
       return arc({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + 2
-        + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
+        outerRadius: this.nodeSize * (4 / 3),
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
     },
 
-    fullArc(value: number) {
+    fullArc() {
       return d3.arc()({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + 2
-        + (value / this.getNodeScale.domain()[1]) * this.maxArcWidth,
+        outerRadius: this.nodeSize * (4 / 3),
         startAngle: 0,
         endAngle: 2 * Math.PI,
       });

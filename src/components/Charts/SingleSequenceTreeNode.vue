@@ -183,7 +183,7 @@ export default Vue.extend({
       const start = sumBefore / total;
       return arc({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + 1,
+        outerRadius: this.nodeSize * (4 / 3),
         startAngle: start * 2 * Math.PI,
         endAngle: (start + share) * 2 * Math.PI,
       });
@@ -192,7 +192,7 @@ export default Vue.extend({
     fullArc() {
       return d3.arc()({
         innerRadius: this.nodeSize,
-        outerRadius: this.nodeSize + 1,
+        outerRadius: this.nodeSize * (4 / 3),
         startAngle: 0,
         endAngle: 2 * Math.PI,
       });
