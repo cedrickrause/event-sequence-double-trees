@@ -145,27 +145,27 @@ export default Vue.extend({
     },
 
     length(): number {
-      const left = this.sourceEvents
+      const leftAverageTime = this.sourceEvents
         .map((event) => event.time).reduce((a, b) => a + b, 0) / this.sourceEvents.length;
 
-      const right = this.targetEvents
+      const rightAverageTime = this.targetEvents
         .map((event) => event.time).reduce((a, b) => a + b, 0) / this.targetEvents.length;
 
-      let total = this.sequences
+      let sequencesAverageTime = this.sequences
         .map((sequence) => sequence.duration)
         .reduce((a, b) => a + b, 0) / this.sequences.length;
 
       // Catch sequence with total duration of 0
-      if (total === 0) {
-        total = 1;
+      if (sequencesAverageTime === 0) {
+        sequencesAverageTime = 1;
       }
 
-      const sourceRadius = this.getNodeScale(this.link.source.count) * (4 / 3);
-      const targetRadius = this.getNodeScale(this.link.target.count) * (4 / 3);
+      const sourceRadius = this.getNodeScale(this.link.source.count);
+      const targetRadius = this.getNodeScale(this.link.target.count);
 
-      return ((right - left) / total)
+      return ((rightAverageTime - leftAverageTime) / sequencesAverageTime)
       * (this.distance - sourceRadius - targetRadius)
-      + sourceRadius * (4 / 3);
+      + sourceRadius * (4 / 3); // Factor for arc width
     },
 
     distance(): number {
@@ -233,28 +233,28 @@ export default Vue.extend({
         .filter((event) => sequencesForComparisonValue.map((sequence) => sequence.id)
           .includes(event.sequence));
 
-      const left = sourceEventsForComparisonValue
+      const leftAverageTime = sourceEventsForComparisonValue
         .map((event) => event.time).reduce((a, b) => a + b, 0)
         / sourceEventsForComparisonValue.length;
-      const right = targetEventsForComparisonValue
+      const rightAverageTime = targetEventsForComparisonValue
         .map((event) => event.time).reduce((a, b) => a + b, 0)
         / targetEventsForComparisonValue.length;
 
-      let total = sequencesForComparisonValue
+      let sequencesAverageTime = sequencesForComparisonValue
         .map((sequence) => sequence.duration)
         .reduce((a, b) => a + b, 0) / sequencesForComparisonValue.length;
 
       // Catch sequence with total duration of 0
-      if (total === 0 || !(typeof total === 'number')) {
-        total = 1;
+      if (sequencesAverageTime === 0 || !(typeof sequencesAverageTime === 'number')) {
+        sequencesAverageTime = 1;
       }
 
-      const sourceRadius = this.getNodeScale(this.link.source.count) * (4 / 3);
-      const targetRadius = this.getNodeScale(this.link.target.count) * (4 / 3);
+      const sourceRadius = this.getNodeScale(this.link.source.count);
+      const targetRadius = this.getNodeScale(this.link.target.count);
 
-      return ((right - left) / total)
+      return ((rightAverageTime - leftAverageTime) / sequencesAverageTime)
       * (this.distance - sourceRadius - targetRadius)
-      + sourceRadius * (4 / 3);
+      + sourceRadius * (4 / 3); // Factor for arc width
     },
 
     isHoveredSequenceForComparisonValue(comparisonValue: string): boolean {
