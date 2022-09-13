@@ -58,11 +58,12 @@ export default Vue.extend({
     ...mapGetters({
       getCentralEventType: Getters.GET_CENTRAL_EVENT_TYPE,
       getDoubleTreeSelection: Getters.GET_DOUBLE_TREE_SELECTION,
+      getLongestSequenceLength: Getters.GET_LONGEST_SEQUENCE_LENGTH,
     }),
 
     xScale(): d3.ScaleLinear<number, number, never> {
       return d3.scaleLinear()
-        .domain([this.layoutRootNode.leftMaximumWidth(), this.layoutRootNode.rightMaximumWidth()])
+        .domain([0, this.getLongestSequenceLength - 3])
         .range([0 + this.margin.left, this.width - this.margin.right]);
     },
 
@@ -86,7 +87,7 @@ export default Vue.extend({
     nodes(): EventTreeNode[] | undefined {
       return this.layoutRootNode?.allNodes().map((node) => {
         node.y = this.height / 2;
-        node.x = this.xScale(node.depth);
+        node.x = this.xScale(node.depth - this.layoutRootNode.leftMaximumWidth());
         return node;
       });
     },
@@ -96,7 +97,7 @@ export default Vue.extend({
     },
 
     centralLine() {
-      const x = this.xScale(0);
+      const x = this.xScale(-this.layoutRootNode.leftMaximumWidth());
       const points = [
         [x, 0],
         [x, this.height],

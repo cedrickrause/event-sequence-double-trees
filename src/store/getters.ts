@@ -14,6 +14,7 @@ export enum Getters {
   GET_EVENT_TYPE_ICON_MAPPING = 'getEventTypeIconMapping',
   GET_INITIAL_EVENT_SEQUENCE_DATA = 'getInitialEventSequenceData',
   GET_EVENT_SEQUENCE_DATA = 'getEventSequenceData',
+  GET_LONGEST_SEQUENCE_LENGTH = 'getLongestSequenceLength',
   GET_CENTRAL_EVENT_TYPE = 'getCentralEventType',
   GET_HOVERED_EVENT_TYPE = 'getHoveredEventType',
   GET_HOVERED_ATTRIBUTE = 'getHoveredAttribute',
@@ -47,6 +48,12 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_EVENT_SEQUENCE_DATA](state) : EventSequenceDataset | undefined | null {
     return state.eventSequenceData;
+  },
+
+  [Getters.GET_LONGEST_SEQUENCE_LENGTH](state) : number | undefined {
+    const copy = state.eventSequenceData?.data.slice();
+    return copy?.sort((a, b) => b.events.length - a.events.length)[0]
+      .events.length;
   },
 
   [Getters.GET_CENTRAL_EVENT_TYPE](state) : string {
