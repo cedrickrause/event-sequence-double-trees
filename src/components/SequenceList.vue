@@ -3,15 +3,13 @@
     class="h-50"
     :title="'Event Sequences (' + arrayOfSequences.length + ')'">
     <div id="sequence-list">
-      <b-list-group>
-        <b-list-group-item  v-for="value in arrayOfSequences" :key="value.id"
-          @mouseover="setHoveredSequence(value.id)"
-          @mouseleave="setHoveredSequence('')">
-          <single-sequence
-            :sequence="value"
-            />
-        </b-list-group-item>
-      </b-list-group>
+      <div class="single-sequence-container" v-for="value in arrayOfSequences" :key="value.id"
+        @mouseover="setHoveredSequence(value.id)"
+        @mouseleave="setHoveredSequence('')">
+        <single-sequence
+          :sequence="value"
+          />
+      </div>
     </div>
   </b-card>
 </template>
@@ -80,14 +78,14 @@ export default Vue.extend({
 <style lang="scss" scoped>
 @import '@/style/custom.scss';
 
-.list-group{
-    max-height: 95%;
-    overflow-y: auto;
-}
-
 #sequence-list {
   text-align: left;
-  height: 100%;
+  max-height: 97%;
+  overflow-y: auto;
+}
+
+.single-sequence-container:hover {
+  background: #eee;
 }
 
 span {
@@ -109,13 +107,5 @@ span {
   margin-bottom: 0px;
   font-size: 15px;
   font-weight: bold;
-}
-
-.list-group-item {
-  padding: 0px;
-}
-
-.list-group-item:hover {
-  background-color: $hover-non-clickable;
 }
 </style>
