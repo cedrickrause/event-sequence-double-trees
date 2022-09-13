@@ -49,7 +49,7 @@ export default Vue.extend({
       height: 12,
       width: 200,
       margin: {
-        top: 10, right: 10, bottom: 10, left: 10,
+        top: 5, right: 5, bottom: 5, left: 5,
       },
     };
   },
