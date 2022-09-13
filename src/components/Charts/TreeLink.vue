@@ -34,7 +34,9 @@
         + width / count
         * comparisonValues.slice(0, index).map((val) => val.value).reduce((a,b) => a+b, 0)"
       :class="{ highlight: isHighlight }"
-      :fill="isHoveredSequence ? 'black' : getColorScheme[comparisonValue.key]"
+      :fill="isHoveredSequenceOrHoveredCategoryForComparisonValue(comparisonValue.key)
+        ? 'black'
+        : getColorScheme[comparisonValue.key]"
       :opacity="isHighlight ? 1 : 0.25"
     />
     <rect v-for="(comparisonValue, index) in comparisonValues"
@@ -44,7 +46,9 @@
         * comparisonValues.slice(0, index).map((val) => val.value).reduce((a,b) => a+b, 0)"
       :width="lengthForComparisonValue(comparisonValue.key)"
       :height="width / count * comparisonValue.value"
-      :stroke="isHoveredSequence ? 'black' : 'none'"
+      :stroke="isHoveredSequenceOrHoveredCategoryForComparisonValue(comparisonValue.key)
+        ? 'black'
+        : 'none'"
       :fill="getColorScheme[comparisonValue.key]"
       :opacity="isHighlight ? 1 : 0.25"
     />
@@ -84,6 +88,7 @@ export default Vue.extend({
       getNodeScale: Getters.GET_NODE_SCALE,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
       getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
+      getHoveredAttribute: Getters.GET_HOVERED_ATTRIBUTE,
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
     }),
 
@@ -250,6 +255,22 @@ export default Vue.extend({
       return ((right - left) / total)
       * (this.distance - sourceRadius - targetRadius)
       + sourceRadius * (4 / 3);
+    },
+
+    isHoveredSequenceForComparisonValue(comparisonValue: string): boolean {
+      const sourceEventsForComparisonValue = this.sourceEvents
+        .filter((event) => event.variables
+          .find((variable) => variable.name === this.getComparisonVariable.name)
+          ?.value === comparisonValue);
+
+      return sourceEventsForComparisonValue.findIndex(
+        (event) => event.sequence === this.getHoveredSequence,
+      ) !== -1;
+    },
+
+    isHoveredSequenceOrHoveredCategoryForComparisonValue(comparisonValue: string): boolean {
+      return this.isHoveredSequenceForComparisonValue(comparisonValue)
+        || comparisonValue === this.getHoveredAttribute;
     },
   },
 });
