@@ -113,7 +113,7 @@ export default Vue.extend({
     },
 
     nodeSize(): number {
-      return this.getNodeScale(this.node.count) * 0.75;
+      return this.getNodeScale(this.node.count);
     },
 
     nodeColor(): string {

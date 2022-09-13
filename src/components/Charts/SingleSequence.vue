@@ -46,10 +46,10 @@ export default Vue.extend({
 
   data() {
     return {
-      height: 12,
+      height: 14,
       width: 200,
       margin: {
-        top: 5, right: 5, bottom: 5, left: 5,
+        top: 6, right: 6, bottom: 6, left: 6,
       },
     };
   },
