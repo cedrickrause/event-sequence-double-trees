@@ -1,7 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { EventSequenceDataset } from '@/models/EventSequenceDataset';
 import { EventTreeNode, EventTreeNodeImpl } from '@/models/EventTreeNode';
+import { Getters } from '@/store/getters';
 import * as d3 from 'd3';
+import store from '../store/index';
 
 const createEmptyRoot = (centralEventType: string): EventTreeNode => new EventTreeNodeImpl(
   centralEventType, 0, 0, true, [], [], [], [], [], [],
@@ -65,7 +67,7 @@ function getChildrenLeftContour(node: EventTreeNode, modSum: number): number[] {
 }
 
 function getChildrenRightContour(node: EventTreeNode, modSum: number): number[] {
-  let contour = [node.y + modSum];
+  let contour = [node.y + store.getters[Getters.GET_NODE_SCALE](node.count) + modSum];
   modSum += node.mod ?? 0;
   const nonEndChildren = node.children.filter((child) => child.eventType !== 'End');
 
@@ -91,7 +93,7 @@ function getParentsLeftContour(node: EventTreeNode, modSum: number): number[] {
 }
 
 function getParentsRightContour(node: EventTreeNode, modSum: number): number[] {
-  let contour = [node.y + modSum];
+  let contour = [node.y + store.getters[Getters.GET_NODE_SCALE](node.count) + modSum];
   modSum += node.mod ?? 0;
   const nonStartParents = node.parents.filter((parent) => parent.eventType !== 'Start');
 
