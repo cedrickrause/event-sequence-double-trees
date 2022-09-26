@@ -22,6 +22,7 @@ const state: RootState = {
     left: [],
     right: [],
   },
+  absoluteTimeUsed: true,
 };
 
 export { state as default };

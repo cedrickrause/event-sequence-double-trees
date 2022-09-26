@@ -90,6 +90,8 @@ export default Vue.extend({
       getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
       getHoveredAttribute: Getters.GET_HOVERED_ATTRIBUTE,
       getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
+      getLongestSequenceDuration: Getters.GET_LONGEST_SEQUENCE_DURATION,
+      getAbsoluteTimeUsed: Getters.GET_ABSOLUTE_TIME_USED,
     }),
 
     referenceNode(): EventTreeNode {
@@ -151,19 +153,22 @@ export default Vue.extend({
       const rightAverageTime = this.targetEvents
         .map((event) => event.time).reduce((a, b) => a + b, 0) / this.targetEvents.length;
 
-      let sequencesAverageTime = this.sequences
+      const sequencesAverageDuration = this.sequences
         .map((sequence) => sequence.duration)
         .reduce((a, b) => a + b, 0) / this.sequences.length;
 
       // Catch sequence with total duration of 0
-      if (sequencesAverageTime === 0) {
-        sequencesAverageTime = 1;
+      if (sequencesAverageDuration === 0 && !this.getAbsoluteTimeUsed) {
+        return 0;
       }
+
+      const divisor = this.getAbsoluteTimeUsed ? this.getLongestSequenceDuration
+        : sequencesAverageDuration;
 
       const sourceRadius = this.getNodeScale(this.link.source.count);
       const targetRadius = this.getNodeScale(this.link.target.count);
 
-      return ((rightAverageTime - leftAverageTime) / sequencesAverageTime)
+      return ((rightAverageTime - leftAverageTime) / divisor)
       * (this.distance - sourceRadius - targetRadius)
       + sourceRadius * (4 / 3); // Factor for arc width
     },
@@ -240,19 +245,24 @@ export default Vue.extend({
         .map((event) => event.time).reduce((a, b) => a + b, 0)
         / targetEventsForComparisonValue.length;
 
-      let sequencesAverageTime = sequencesForComparisonValue
+      const sequencesAverageDuration = sequencesForComparisonValue
         .map((sequence) => sequence.duration)
         .reduce((a, b) => a + b, 0) / sequencesForComparisonValue.length;
 
       // Catch sequence with total duration of 0
-      if (sequencesAverageTime === 0 || !(typeof sequencesAverageTime === 'number')) {
-        sequencesAverageTime = 1;
+      if ((sequencesAverageDuration === 0
+      || !(typeof sequencesAverageDuration === 'number'))
+      && !this.getAbsoluteTimeUsed) {
+        return 0;
       }
+
+      const divisor = this.getAbsoluteTimeUsed ? this.getLongestSequenceDuration
+        : sequencesAverageDuration;
 
       const sourceRadius = this.getNodeScale(this.link.source.count);
       const targetRadius = this.getNodeScale(this.link.target.count);
 
-      return ((rightAverageTime - leftAverageTime) / sequencesAverageTime)
+      return ((rightAverageTime - leftAverageTime) / divisor)
       * (this.distance - sourceRadius - targetRadius)
       + sourceRadius * (4 / 3); // Factor for arc width
     },
