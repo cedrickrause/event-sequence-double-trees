@@ -1,10 +1,16 @@
 <template>
   <div class="d-flex">
   <label for="absolute-time-switch">Relative Time</label>
-    <b-form-checkbox class="ml-2"
+    <b-form-checkbox class="ml-2 mr-2"
       size="sm" v-model="absoluteTimeUsed" name="absolute-time-switch" switch>
       Absolute Time
     </b-form-checkbox>
+    <span v-b-popover.hover="'Absolute time calculates the length of the temporal links relative '
+     + 'to the longest sequence (comparing absolute time values), '
+     + 'while relative time calculates it to the duration of the sequence the event occurs in '
+     + '(comparing relative time values).'">
+      🛈
+    </span>
   </div>
 </template>
 <script lang="ts">
