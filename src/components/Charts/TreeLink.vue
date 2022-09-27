@@ -226,7 +226,17 @@ export default Vue.extend({
     lengthForComparisonValue(comparisonValue: string): number {
       const sourceEventsForComparisonValue = this.sourceEvents
         .filter((event) => event.variables
-          .find((variable) => variable.name === this.getComparisonVariable.name)
+          .filter((variable) => variable.name === this.getComparisonVariable.name)
+          .map((variable) => {
+            if (variable instanceof NumericalVariable) {
+              return {
+                name: variable.name,
+                value: variable.value > this.getNumericalComparisonVariableThreshold
+                  ? 'Over' : 'Under or equal',
+              };
+            }
+            return variable;
+          })[0]
           ?.value === comparisonValue);
 
       const sequencesForComparisonValue = this.sequences
