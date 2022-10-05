@@ -84,7 +84,7 @@ export class StatsbombEventTransformerImpl implements StatsbombEventTransformer 
               sequence: `possession: ${event.possession.toString()}`,
               time: minuteToSecond + second,
               variables: [
-                new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period),
+                new CategoricalVariable(StatsbombVariableNames.HALF_TIME, event.period.toString()),
                 new CategoricalVariable(StatsbombVariableNames.TEAM, event.team?.name),
                 new CategoricalVariable(StatsbombVariableNames.PLAYER, event.player?.name),
                 new CategoricalVariable(StatsbombVariableNames.POSITION, event.position?.name),
