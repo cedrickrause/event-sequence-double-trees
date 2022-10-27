@@ -14,6 +14,8 @@ export enum Getters {
   GET_EVENT_TYPE_ICON_MAPPING = 'getEventTypeIconMapping',
   GET_INITIAL_EVENT_SEQUENCE_DATA = 'getInitialEventSequenceData',
   GET_EVENT_SEQUENCE_DATA = 'getEventSequenceData',
+  GET_LONGEST_SEQUENCE_LENGTH = 'getLongestSequenceLength',
+  GET_LONGEST_SEQUENCE_DURATION = 'getLongestSequenceDuration',
   GET_CENTRAL_EVENT_TYPE = 'getCentralEventType',
   GET_HOVERED_EVENT_TYPE = 'getHoveredEventType',
   GET_HOVERED_ATTRIBUTE = 'getHoveredAttribute',
@@ -26,6 +28,7 @@ export enum Getters {
   GET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'getNumericalComparisonVariableMaximum',
   GET_VARIABLE_COUNT = 'getVariableCount',
   GET_DOUBLE_TREE_SELECTION = 'getDoubleTreeSelection',
+  GET_ABSOLUTE_TIME_USED = 'getAbsoluteTimeUsed',
 }
 
 export const getters: GetterTree<RootState, RootState> = {
@@ -47,6 +50,18 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_EVENT_SEQUENCE_DATA](state) : EventSequenceDataset | undefined | null {
     return state.eventSequenceData;
+  },
+
+  [Getters.GET_LONGEST_SEQUENCE_LENGTH](state) : number | undefined {
+    const copy = state.eventSequenceData?.data.slice();
+    return copy?.sort((a, b) => b.events.length - a.events.length)[0]
+      .events.length;
+  },
+
+  [Getters.GET_LONGEST_SEQUENCE_DURATION](state) : number | undefined {
+    const copy = state.eventSequenceData?.data.slice();
+    return copy?.sort((a, b) => b.duration - a.duration)[0]
+      .duration;
   },
 
   [Getters.GET_CENTRAL_EVENT_TYPE](state) : string {
@@ -98,5 +113,9 @@ export const getters: GetterTree<RootState, RootState> = {
 
   [Getters.GET_DOUBLE_TREE_SELECTION](state) : DoubleTreeSelection {
     return state.doubleTreeSelection;
+  },
+
+  [Getters.GET_ABSOLUTE_TIME_USED](state) : boolean {
+    return state.absoluteTimeUsed;
   },
 };

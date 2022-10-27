@@ -30,9 +30,8 @@ export default Vue.extend({
     xScale(): d3.ScalePower<number, number, never> {
       return d3.scalePow()
         .exponent(0.75)
-        .domain([this.rootNode.leftMaximumWidth() + 1, this.rootNode.leftMaximumWidth() / 2,
-          this.rootNode.rightMaximumWidth() / 2, this.rootNode.rightMaximumWidth() - 1])
-        .range([0, this.width / 4, this.width * 0.75, this.width]);
+        .domain([this.rootNode.leftMaximumWidth(), this.rootNode.rightMaximumWidth()])
+        .range([0, this.width]);
     },
 
     colorScale(): d3.ScaleSequential<string, never> {

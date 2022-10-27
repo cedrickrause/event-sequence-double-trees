@@ -24,4 +24,5 @@ export interface RootState {
   numericalComparisonVariableMaximum: number,
   variableCount: number,
   doubleTreeSelection: DoubleTreeSelection,
+  absoluteTimeUsed: boolean,
 }

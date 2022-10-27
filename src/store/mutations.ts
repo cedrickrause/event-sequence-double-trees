@@ -27,6 +27,7 @@ export enum Mutations {
   SET_NUMERICAL_COMPARISON_VARIABLE_MAXIMUM = 'setNumericalComparisonVariableMaximum',
   SET_VARIABLE_COUNT = 'setVariableCount',
   SET_DOUBLE_TREE_SELECTION = 'setDoubleTreeSelection',
+  SET_ABSOLUTE_TIME_USED = 'setAbsoluteTimeUsed',
 }
 
 export const mutations: MutationTree<RootState> = {
@@ -102,5 +103,9 @@ export const mutations: MutationTree<RootState> = {
 
   [Mutations.SET_DOUBLE_TREE_SELECTION](state, payload: DoubleTreeSelection) : void {
     state.doubleTreeSelection = payload;
+  },
+
+  [Mutations.SET_ABSOLUTE_TIME_USED](state, payload: boolean) : void {
+    state.absoluteTimeUsed = payload;
   },
 };

@@ -93,8 +93,8 @@ Braun,Karl Ferdinand,Birth,0,German
 Braun,Karl Ferdinand,Doctorate,22,German
 Braun,Karl Ferdinand,Professorship,27,German
 Braun,Karl Ferdinand,Marriage,35,German
-Braun,Karl Ferdinand,Abroad,64,German
 Braun,Karl Ferdinand,Nobel Prize,59,German
+Braun,Karl Ferdinand,Abroad,64,German
 Braun,Karl Ferdinand,Death,67,German
 Marconi,Guglielmo,Birth,0,Italian
 Marconi,Guglielmo,Marriage,31,Italian
@@ -181,17 +181,17 @@ Guillaume,Charles Édouard,Abroad,22,Swiss
 Guillaume,Charles Édouard,Marriage,27,Swiss
 Guillaume,Charles Édouard,Nobel Prize,59,Swiss
 Guillaume,Charles Édouard,Death,77,Swiss
-Einstein,Albert Abraham,Birth,0,German
-Einstein,Albert Abraham,Abroad,15,German
-Einstein,Albert Abraham,Abroad,16,German
-Einstein,Albert Abraham,Postgraduate,21,None
-Einstein,Albert Abraham,Marriage,23,Swiss
-Einstein,Albert Abraham,Doctorate,26,Swiss
-Einstein,Albert Abraham,Professorship,30,Swiss
-Einstein,Albert Abraham,Abroad,32,Swiss
-Einstein,Albert Abraham,Abroad,33,Swiss
-Einstein,Albert Abraham,Abroad,34,Swiss
-Einstein,Albert Abraham,Marriage,40,Swiss
-Einstein,Albert Abraham,Nobel Prize,42,Swiss
-Einstein,Albert Abraham,Abroad,44,Swiss
-Einstein,Albert Abraham,Death,76,Swiss
+Einstein,Albert,Birth,0,German
+Einstein,Albert,Abroad,15,German
+Einstein,Albert,Abroad,16,German
+Einstein,Albert,Postgraduate,21,None
+Einstein,Albert,Marriage,23,Swiss
+Einstein,Albert,Doctorate,26,Swiss
+Einstein,Albert,Professorship,30,Swiss
+Einstein,Albert,Abroad,32,Swiss
+Einstein,Albert,Abroad,33,Swiss
+Einstein,Albert,Abroad,34,Swiss
+Einstein,Albert,Marriage,40,Swiss
+Einstein,Albert,Nobel Prize,42,Swiss
+Einstein,Albert,Abroad,44,Swiss
+Einstein,Albert,Death,76,Swiss

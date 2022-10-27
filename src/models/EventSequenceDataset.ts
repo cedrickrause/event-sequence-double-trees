@@ -3,6 +3,7 @@ import { EventDatasetEntry } from './EventDataset';
 
 export type EventSequence = {
   id: string,
+  duration: number,
   events: Array<EventDatasetEntry>
 };
 
@@ -27,6 +28,7 @@ export class EventSequenceDatasetImpl implements EventSequenceDataset {
         id: '0',
         eventType: 'End',
         sequence: sequence.id,
+        time: -1,
         variables: new Array(sequence.events[0].variables.length),
       });
     });
@@ -39,6 +41,7 @@ export class EventSequenceDatasetImpl implements EventSequenceDataset {
         id: '-1',
         eventType: 'Start',
         sequence: sequence.id,
+        time: -1,
         variables: new Array(sequence.events[0].variables.length),
       });
     });

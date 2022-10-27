@@ -1,24 +1,61 @@
 <template>
-  <g>
-    <path v-for="(comparisonVariableValue, index) in comparisonValues"
-    :key="comparisonVariableValue.key"
-      :class="{ highlight: isHighlight() }"
-      stroke="none"
-      :fill="getColorScheme[comparisonVariableValue.key]"
-      :stroke-width="linkWidth(comparisonVariableValue.key)"
-      :d="linkPath(comparisonVariableValue, comparisonValues.slice(0, index))"
-      />
-    <path
-      :class="{ highlight: isHighlight() }"
+  <g v-if="comparisonValues.length === 0"
+    :transform="`translate(${link.source.x}, ${link.source.y})
+    rotate(${angle})`">
+    <rect
+      :x="length"
+      :width="distance - length"
+      height="1"
+      y="-0.5"
+      :class="{ highlight: isHighlight }"
+      :fill="isHoveredSequence ? 'black' : '#aaa'"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
+    <rect
+      :class="{ highlight: isHighlight }"
+      :y="-width/2"
+      :width="length"
+      :height="width"
       :stroke="isHoveredSequence ? 'black' : 'none'"
-      :fill="comparisonValues.length > 0 ? 'none' : '#aaa'"
-      :d="linkPathDefault()"
-      />
+      fill="#aaa"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
+  </g>
+  <g v-else
+    :transform="`translate(${link.source.x}, ${link.source.y})
+    rotate(${angle})`">
+    <rect v-for="(comparisonValue, index) in comparisonValues"
+      :key="comparisonValue.key + 'connector'"
+      :x="lengthForComparisonValue(comparisonValue.key)"
+      :width="distance - lengthForComparisonValue(comparisonValue.key)"
+      height="1"
+      :y="- 0.5 -width/2
+        + (width / count * comparisonValue.value) /2
+        + width / count
+        * comparisonValues.slice(0, index).map((val) => val.value).reduce((a,b) => a+b, 0)"
+      :class="{ highlight: isHighlight }"
+      :fill="isHoveredSequenceOrHoveredCategoryForComparisonValue(comparisonValue.key)
+        ? 'black'
+        : getColorScheme[comparisonValue.key]"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
+    <rect v-for="(comparisonValue, index) in comparisonValues"
+      :key="comparisonValue.key"
+      :class="{ highlight: isHighlight }"
+      :y="-width/2 + width / count
+        * comparisonValues.slice(0, index).map((val) => val.value).reduce((a,b) => a+b, 0)"
+      :width="lengthForComparisonValue(comparisonValue.key)"
+      :height="width / count * comparisonValue.value"
+      :stroke="isHoveredSequenceOrHoveredCategoryForComparisonValue(comparisonValue.key)
+        ? 'black'
+        : 'none'"
+      :fill="getColorScheme[comparisonValue.key]"
+      :opacity="isHighlight ? 1 : 0.25"
+    />
   </g>
 </template>
 
 <script lang="ts">
-import * as d3 from 'd3';
 import Vue from 'vue';
 import { EventTreeLink } from '@/models/EventTreeLink';
 import { mapGetters } from 'vuex';
@@ -27,6 +64,8 @@ import { Variable } from '@/models/Variable';
 import { NumericalVariable } from '@/models/NumericalVariable';
 import _ from 'lodash';
 import { EventTreeNode } from '@/models/EventTreeNode';
+import { EventSequence } from '@/models/EventSequenceDataset';
+import { EventDatasetEntry } from '@/models/EventDataset';
 
 export default Vue.extend({
   props: {
@@ -49,6 +88,10 @@ export default Vue.extend({
       getNodeScale: Getters.GET_NODE_SCALE,
       getNumericalComparisonVariableThreshold: Getters.GET_NUMERICAL_COMPARISON_VARIABLE_THRESHOLD,
       getHoveredSequence: Getters.GET_HOVERED_SEQUENCE,
+      getHoveredAttribute: Getters.GET_HOVERED_ATTRIBUTE,
+      getEventSequenceData: Getters.GET_EVENT_SEQUENCE_DATA,
+      getLongestSequenceDuration: Getters.GET_LONGEST_SEQUENCE_DURATION,
+      getAbsoluteTimeUsed: Getters.GET_ABSOLUTE_TIME_USED,
     }),
 
     referenceNode(): EventTreeNode {
@@ -66,12 +109,7 @@ export default Vue.extend({
     },
 
     referenceSiblingsCount(): number {
-      if (this.link.target.depth > 0) {
-        return this.link.source.children.filter((sibling) => sibling.eventType !== 'End')
-          .reduce((a, b) => a + b.count, 0);
-      }
-      return this.link.target.parents.filter((sibling) => sibling.eventType !== 'Start')
-        .reduce((a, b) => a + b.count, 0);
+      return this.referenceSiblings.reduce((a, b) => a + b.count, 0);
     },
 
     otherNode(): EventTreeNode {
@@ -81,8 +119,75 @@ export default Vue.extend({
       return this.link.target;
     },
 
+    sequences(): EventSequence[] {
+      const sequenceData = this.getEventSequenceData.data;
+      return sequenceData
+        .filter((sequence: EventSequence) => this.link.source.events.map((event) => event.sequence)
+          .includes(sequence.id)
+        && this.link.target.events.map((event) => event.sequence)
+          .includes(sequence.id));
+    },
+
+    sourceEvents(): EventDatasetEntry[] {
+      return this.link.source.events
+        .filter((event) => this.sequences.map((sequence) => sequence.id).includes(event.sequence));
+    },
+
+    targetEvents(): EventDatasetEntry[] {
+      return this.link.target.events
+        .filter((event) => this.sequences.map((sequence) => sequence.id).includes(event.sequence));
+    },
+
     count(): number {
       return this.referenceNode.count;
+    },
+
+    width(): number {
+      return this.getNodeScale(this.count);
+    },
+
+    length(): number {
+      const leftAverageTime = this.sourceEvents
+        .map((event) => event.time).reduce((a, b) => a + b, 0) / this.sourceEvents.length;
+
+      const rightAverageTime = this.targetEvents
+        .map((event) => event.time).reduce((a, b) => a + b, 0) / this.targetEvents.length;
+
+      const sequencesAverageDuration = this.sequences
+        .map((sequence) => sequence.duration)
+        .reduce((a, b) => a + b, 0) / this.sequences.length;
+
+      // Catch sequence with total duration of 0
+      if (sequencesAverageDuration === 0 && !this.getAbsoluteTimeUsed) {
+        return 0;
+      }
+
+      const divisor = this.getAbsoluteTimeUsed ? this.getLongestSequenceDuration
+        : sequencesAverageDuration;
+
+      const sourceRadius = this.getNodeScale(this.link.source.count);
+      const targetRadius = this.getNodeScale(this.link.target.count);
+
+      return ((rightAverageTime - leftAverageTime) / divisor)
+      * (this.distance - sourceRadius - targetRadius)
+      + sourceRadius * (4 / 3); // Factor for arc width
+    },
+
+    distance(): number {
+      const left = this.link.source;
+      const right = this.link.target;
+
+      return Math.sqrt((right.y - left.y) ** 2 + (right.x - left.x) ** 2);
+    },
+
+    angle(): number {
+      const left = this.link.source;
+      const right = this.link.target;
+
+      const yDiff = right.y - left.y;
+      const hypotenuse = this.distance;
+
+      return (Math.asin(yDiff / hypotenuse) * 180) / Math.PI;
     },
 
     comparisonValues(): {key: string, value: number}[] {
@@ -111,99 +216,82 @@ export default Vue.extend({
         (event) => event.sequence,
       ).includes(this.getHoveredSequence);
     },
-  },
-
-  methods: {
-    linkPath(comparisonVariableValue: {key: string, value: number},
-      valuesBefore: {key: string, value: number}[]) {
-      const nodeOffset = this.getNodeScale(this.count) / 2;
-      const otherOffset = this.referenceSiblings
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0) / 2;
-      const width = (comparisonVariableValue.value / this.count) * this.getNodeScale(this.count);
-      const valuesBeforeOffset = valuesBefore.map(
-        (variable) => (variable.value / this.count) * this.getNodeScale(this.count),
-      ).reduce((a, b) => a + b, 0);
-      const childIndexInParent = this.referenceSiblings
-        .findIndex((sibling) => sibling === this.referenceNode);
-      const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0);
-
-      let points = [];
-      if (this.referenceNode.depth > 0) {
-        points = [
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - nodeOffset + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - nodeOffset + valuesBeforeOffset + width],
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore
-          + valuesBeforeOffset + width]] as
-        [number, number][];
-      } else {
-        points = [
-          [this.link.source.x, this.link.source.y - nodeOffset + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore + valuesBeforeOffset],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore
-          + valuesBeforeOffset + width],
-          [this.link.source.x, this.link.source.y - nodeOffset + valuesBeforeOffset + width]] as
-        [number, number][];
-      }
-
-      return d3.line()
-        .curve(d3.curveBumpX)(points);
-    },
-
-    linkPathDefault() {
-      const nodeOffset = this.getNodeScale(this.count) / 2;
-      const otherOffset = this.referenceSiblings
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0) / 2;
-      const width = this.getNodeScale(this.count);
-      const childIndexInParent = this.referenceSiblings
-        .findIndex((sibling) => sibling === this.referenceNode);
-      const linksBefore = this.referenceSiblings.slice(0, childIndexInParent)
-        .reduce((a, b) => a + this.getNodeScale(b.count), 0);
-
-      let points = [];
-      if (this.referenceNode.depth > 0) {
-        points = [
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore],
-          [this.link.target.x, this.link.target.y - nodeOffset],
-          [this.link.target.x, this.link.target.y - nodeOffset + width],
-          [this.link.source.x, this.link.source.y - otherOffset + linksBefore + width]] as
-          [number, number][];
-      } else {
-        points = [
-          [this.link.source.x, this.link.source.y - nodeOffset],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore],
-          [this.link.target.x, this.link.target.y - otherOffset + linksBefore + width],
-          [this.link.source.x, this.link.source.y - nodeOffset + width]] as
-          [number, number][];
-      }
-
-      return d3.line()
-        .curve(d3.curveBumpX)(points);
-    },
 
     isHighlight(): boolean {
       return this.referenceNode.highlight;
     },
+  },
 
-    linkWidth(comparisonVariableValue: string): number {
-      const comparisonVariable = this.comparisonValues.find(
-        (value) => value.key === comparisonVariableValue.toString(),
-      );
-      return comparisonVariable ? comparisonVariable.value : 0;
+  methods: {
+    lengthForComparisonValue(comparisonValue: string): number {
+      const sourceEventsForComparisonValue = this.sourceEvents
+        .filter((event) => event.variables
+          .filter((variable) => variable.name === this.getComparisonVariable.name)
+          .map((variable) => {
+            if (variable instanceof NumericalVariable) {
+              return {
+                name: variable.name,
+                value: variable.value > this.getNumericalComparisonVariableThreshold
+                  ? 'Over' : 'Under or equal',
+              };
+            }
+            return variable;
+          })[0]
+          ?.value === comparisonValue);
+
+      const sequencesForComparisonValue = this.sequences
+        .filter((sequence: EventSequence) => sourceEventsForComparisonValue
+          .map((event) => event.sequence)
+          .includes(sequence.id));
+
+      const targetEventsForComparisonValue = this.targetEvents
+        .filter((event) => sequencesForComparisonValue.map((sequence) => sequence.id)
+          .includes(event.sequence));
+
+      const leftAverageTime = sourceEventsForComparisonValue
+        .map((event) => event.time).reduce((a, b) => a + b, 0)
+        / sourceEventsForComparisonValue.length;
+      const rightAverageTime = targetEventsForComparisonValue
+        .map((event) => event.time).reduce((a, b) => a + b, 0)
+        / targetEventsForComparisonValue.length;
+
+      const sequencesAverageDuration = sequencesForComparisonValue
+        .map((sequence) => sequence.duration)
+        .reduce((a, b) => a + b, 0) / sequencesForComparisonValue.length;
+
+      // Catch sequence with total duration of 0
+      if ((sequencesAverageDuration === 0
+      || !(typeof sequencesAverageDuration === 'number'))
+      && !this.getAbsoluteTimeUsed) {
+        return 0;
+      }
+
+      const divisor = this.getAbsoluteTimeUsed ? this.getLongestSequenceDuration
+        : sequencesAverageDuration;
+
+      const sourceRadius = this.getNodeScale(this.link.source.count);
+      const targetRadius = this.getNodeScale(this.link.target.count);
+
+      return ((rightAverageTime - leftAverageTime) / divisor)
+      * (this.distance - sourceRadius - targetRadius)
+      + sourceRadius * (4 / 3); // Factor for arc width
+    },
+
+    isHoveredSequenceForComparisonValue(comparisonValue: string): boolean {
+      const sourceEventsForComparisonValue = this.sourceEvents
+        .filter((event) => event.variables
+          .find((variable) => variable.name === this.getComparisonVariable.name)
+          ?.value === comparisonValue);
+
+      return sourceEventsForComparisonValue.findIndex(
+        (event) => event.sequence === this.getHoveredSequence,
+      ) !== -1;
+    },
+
+    isHoveredSequenceOrHoveredCategoryForComparisonValue(comparisonValue: string): boolean {
+      return this.isHoveredSequenceForComparisonValue(comparisonValue)
+        || comparisonValue === this.getHoveredAttribute;
     },
   },
 });
 </script>
-
-<style lang="scss" scoped>
-@import '@/style/custom.scss';
-
-path {
-  opacity: 0.25;
-}
-
-path.highlight {
-  opacity: 1;
-}
-</style>

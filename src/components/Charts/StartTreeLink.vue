@@ -111,8 +111,7 @@ export default Vue.extend({
         [this.link.target.x, this.link.target.y + offset - valuesBeforeOffset - height],
         [this.newX - offset + valuesBeforeOffset + height, this.newY]] as
         [number, number][];
-      return d3.line()
-        .curve(d3.curveBumpY)(points);
+      return d3.line()(points);
     },
 
     linkPathDefault() {
@@ -125,8 +124,7 @@ export default Vue.extend({
         [this.link.target.x, this.link.target.y - offset + height],
         [this.newX - offset, this.newY]] as
         [number, number][];
-      return d3.line()
-        .curve(d3.curveBumpY)(points);
+      return d3.line()(points);
     },
 
     isHighlight(): boolean {
